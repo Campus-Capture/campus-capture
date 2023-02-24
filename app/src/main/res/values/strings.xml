@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Bootcamp</string>
+    <string name="textview">TextView</string>
+    <string name="your_name">Your Name</string>
+    <string name="submit">Submit</string>
+    <string name="name">Name</string>
+</resources>
