@@ -29,7 +29,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCDQ6tzZ9Azpba8ZAEysJ4VskXTnW4_LAo"/>
+            android:value="API_KEY"/>
 <!--             TODO: Change exported value AND key in gradle secrets -->
         <activity
             android:name=".MapsActivity"
