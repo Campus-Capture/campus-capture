@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,9 +21,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Create the toolbar
+        // Create the toolbar and add the navigation icon
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.baseline_menu_24);
         setSupportActionBar(toolbar);
+
+        // Set the behavior of the navigation icon
+        toolbar.setNavigationOnClickListener(v -> {
+            // TODO change screen
+        });
 
         Button mainGoButton = findViewById(R.id.mainGoButton);
         TextView userNameText = findViewById(R.id.mainUserNameText);
@@ -51,17 +58,5 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the toolbar to add the items to the tool bar if they are present
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId())
-        {
-            case R.id.action_navigate:
-                // TODO: open the navigation screen
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }
