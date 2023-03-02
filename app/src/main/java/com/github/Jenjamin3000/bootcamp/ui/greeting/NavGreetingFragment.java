@@ -1,4 +1,4 @@
-package com.github.Jenjamin3000.bootcamp.ui.slideshow;
+package com.github.Jenjamin3000.bootcamp.ui.greeting;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,22 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.github.Jenjamin3000.bootcamp.databinding.FragmentSlideshowBinding;
+import com.github.Jenjamin3000.bootcamp.databinding.FragmentGreetingBinding;
 
-public class SlideshowFragment extends Fragment {
+public class NavGreetingFragment extends Fragment {
 
-    private FragmentSlideshowBinding binding;
+    private FragmentGreetingBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        SlideshowViewModel slideshowViewModel =
-                new ViewModelProvider(this).get(SlideshowViewModel.class);
+        NavGreetingViewModel navMainViewModel =
+                new ViewModelProvider(this).get(NavGreetingViewModel.class);
 
-        binding = FragmentSlideshowBinding.inflate(inflater, container, false);
+        binding = FragmentGreetingBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textSlideshow;
-        slideshowViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final TextView textView = binding.textGreeting;
+        navMainViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

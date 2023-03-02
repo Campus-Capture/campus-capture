@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainFragment">
+    tools:context=".ui.main.NavMainFragment">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textMain"
         android:layout_width="316dp"
         android:layout_height="334dp"
         android:text="@string/main_fragment_text"
