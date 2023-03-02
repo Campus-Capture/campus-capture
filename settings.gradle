@@ -12,20 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Bootcamp"
+rootProject.name = "My Application"
 include ':app'
-
-ext.isCiServer = System.getenv().containsKey("CIRRUS_CI")
-ext.isMasterBranch = System.getenv()["CIRRUS_BRANCH"] == "main"
-ext.buildCacheHost = System.getenv().getOrDefault("CIRRUS_HTTP_CACHE_HOST", "localhost:12321")
-
-buildCache {
-    local {
-        enabled = !isCiServer
-    }
-    remote(HttpBuildCache) {
-        url = "http://${buildCacheHost}/"
-        enabled = isCiServer
-        push = isMasterBranch
-    }
-}
