@@ -13,7 +13,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="250dp"
         android:layout_marginEnd="30dp"
-        android:text="Get"
+        android:text="@string/get"
         app:layout_constraintEnd_toStartOf="@+id/SetButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,7 +25,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="250dp"
         android:layout_marginEnd="32dp"
-        android:text="Set"
+        android:text="@string/set"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/GetButton"
@@ -39,12 +39,13 @@
         android:layout_marginEnd="101dp"
         android:layout_marginBottom="20dp"
         android:ems="10"
-        android:hint="Email"
+        android:hint="@string/email"
         android:inputType="textEmailAddress"
         app:layout_constraintBottom_toTopOf="@+id/GetSetPhone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.483"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/GetSetPhone"
@@ -54,12 +55,13 @@
         android:layout_marginEnd="101dp"
         android:layout_marginBottom="124dp"
         android:ems="10"
-        android:hint="Phone"
+        android:hint="@string/phone"
         android:inputType="phone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.475"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:autofillHints="" />
 
     <TextView
         android:id="@+id/GetSetAnswer"
@@ -68,7 +70,6 @@
         android:layout_marginStart="174dp"
         android:layout_marginTop="89dp"
         android:layout_marginEnd="179dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

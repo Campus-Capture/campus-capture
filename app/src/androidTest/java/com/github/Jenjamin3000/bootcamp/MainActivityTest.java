@@ -1,10 +1,10 @@
 package com.github.Jenjamin3000.bootcamp;
 
+import static androidx.test.espresso.Espresso.onView;
+
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.assertion.ViewAssertions;
-import androidx.test.espresso.intent.Intents;
-import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -12,12 +12,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import  static androidx.test.espresso.Espresso.onView;
-
-import android.inputmethodservice.Keyboard;
-
-import java.util.regex.Matcher;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
@@ -33,6 +27,11 @@ public class MainActivityTest {
         Espresso.closeSoftKeyboard();
         onView(ViewMatchers.withId(R.id.GetSetPhone)).perform(ViewActions.typeText(phone));
         Espresso.closeSoftKeyboard();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         onView(ViewMatchers.withId(R.id.SetButton)).perform(ViewActions.click());
         onView(ViewMatchers.withId(R.id.GetButton)).perform(ViewActions.click());
 
