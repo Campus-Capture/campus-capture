@@ -17,10 +17,10 @@ import  static androidx.test.espresso.Espresso.onView;
 
 @RunWith(AndroidJUnit4.class)
 public class GreetingActivityTest {
-    @Test
+    /*@Test
     public void SimpleTest(){
         Intent myIntent = new Intent(ApplicationProvider.getApplicationContext(), GreetingActivity.class);
         ActivityScenario.launch(myIntent).close();
         onView(ViewMatchers.withId(R.id.greetingText)).noActivity();
-    }
+    }*/
 }

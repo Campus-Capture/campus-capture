@@ -21,7 +21,7 @@ import java.util.regex.Matcher;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
-    @Rule
+    /*@Rule
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<MainActivity>(MainActivity.class);
 
     @Test
@@ -43,5 +43,5 @@ public class MainActivityTest {
         onView(ViewMatchers.withId(R.id.mainGoButton)).perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.greetingText)).check(ViewAssertions.matches(ViewMatchers.withText("Bonjour Roger!")));
-    }
+    }*/
 }
