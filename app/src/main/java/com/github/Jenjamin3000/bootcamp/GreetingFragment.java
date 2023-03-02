@@ -25,7 +25,6 @@ public class GreetingFragment extends Fragment {
      *
      * @return A new instance of fragment GreetingFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static GreetingFragment newInstance() {
         GreetingFragment fragment = new GreetingFragment();
         fragment.setArguments(new Bundle());

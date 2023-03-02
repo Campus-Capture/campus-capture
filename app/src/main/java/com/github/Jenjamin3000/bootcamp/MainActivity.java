@@ -1,24 +1,15 @@
 package com.github.Jenjamin3000.bootcamp;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -35,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Create the toolbar and add the navigation icon
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.baseline_menu_24);
+        toolbar.setNavigationIcon(R.drawable.menu_icon);
         setSupportActionBar(toolbar);
 
         // Set the behavior of the navigation icon
@@ -47,17 +38,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        // Open the main fragment inside the fragment container
         openFragment(true);
 
+        // Add a listener for the navigation drawer
         NavigationView navView = findViewById(R.id.nav_view);
         navView.setNavigationItemSelectedListener(this);
     }
 
     /**
-     * Fragment manager
+     * Method which opens one of the two fragments
      */
     private void openFragment(boolean isMain)
     {
+        // Fragments are managed by transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (isMain)
@@ -69,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.replace(R.id.fragmentContainerViewMain, new GreetingFragment());
         }
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        fragmentTransaction.commit(); // Commit the transaction
     }
 
 
@@ -88,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     /**
-     * Method to close the drawer
+     * Method to close the navigation drawer if it is open
      */
     private void closeDrawer()
     {
@@ -98,6 +92,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /**
+     * When an item is selected in the navigation drawer, switch to the corresponding fragment
+     * and close the drawer
+     * @param item The selected item
+     * @return success
+     */
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
