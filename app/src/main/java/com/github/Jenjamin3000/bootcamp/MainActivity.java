@@ -1,5 +1,6 @@
 package com.github.Jenjamin3000.bootcamp;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -20,10 +22,11 @@ import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.android.material.navigation.NavigationView;
 
-    private boolean drawerIsOpen = false;
-    private boolean fragmentIsMain = true;
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private DrawerLayout drawer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,21 +39,18 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Set the behavior of the navigation icon
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         toolbar.setNavigationOnClickListener(v -> {
-            if(drawerIsOpen)
+            if(!drawer.isOpen())
             {
-                drawer.openDrawer(Gravity.LEFT);
-                drawerIsOpen = false;
-            }
-            else
-            {
-                drawer.openDrawer(Gravity.LEFT);
-                drawerIsOpen = true;
+                drawer.openDrawer(GravityCompat.START);
             }
         });
 
         openFragment(true);
+
+        NavigationView navView = findViewById(R.id.nav_view);
+        navView.setNavigationItemSelectedListener(this);
     }
 
     /**
@@ -72,14 +72,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    /**
-     * Switch the fragment to the greeting fragment
-     */
-    public void switchFragment()
-    {
-        openFragment(!fragmentIsMain);
-        fragmentIsMain = !fragmentIsMain;
-    }
+
 
     /**
      * Create the options menu when initializing the toolbar
@@ -91,6 +84,35 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the toolbar to add the items to the tool bar if they are present
         getMenuInflater().inflate(R.menu.toolbar, menu);
+        return true;
+    }
+
+    /**
+     * Method to close the drawer
+     */
+    private void closeDrawer()
+    {
+        if(drawer.isOpen())
+        {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId())
+        {
+            case R.id.nav_main:
+                openFragment(true);
+                break;
+            case R.id.nav_greeting:
+                openFragment(false);
+                break;
+            default:
+                break;
+        }
+        closeDrawer();
         return true;
     }
 }
