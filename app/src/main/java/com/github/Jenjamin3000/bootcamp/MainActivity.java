@@ -1,8 +1,6 @@
 package com.github.Jenjamin3000.bootcamp;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -10,25 +8,29 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+    TextView emailText;
+    TextView phoneText;
+    TextView answerText;
+
+    SDPDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button mainGoButton = findViewById(R.id.mainGoButton);
-        TextView userNameText = findViewById(R.id.mainUserNameText);
+        Button getButton = findViewById(R.id.GetButton);
+        Button setButton = findViewById(R.id.SetButton);
+        emailText = findViewById(R.id.GetSetEmail);
+        phoneText = findViewById(R.id.GetSetPhone);
+        answerText = findViewById(R.id.GetSetAnswer);
 
-        mainGoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent myIntent = new Intent(MainActivity.this, GreetingActivity.class);
+        database = new MockDatabase(emailText, phoneText, answerText);
 
-                //Pass arguments
-                myIntent.putExtra("userNameText", userNameText.getText().toString());
+        getButton.setOnClickListener(database::get);
 
-                MainActivity.this.startActivity(myIntent);
-            }
-        });
+        setButton.setOnClickListener(database::set);
     }
+
+
 }
