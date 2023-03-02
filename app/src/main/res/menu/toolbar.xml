@@ -2,10 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_navigate"
-        android:icon="@drawable/baseline_menu_24"
-        android:title="@string/action_navigate"
-        app:showAsAction="always"/>
+    <!--
+        Add toolbar actions here;
+        these will appear on the right of the app label
+    -->
 
 </menu>
