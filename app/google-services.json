@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "213185384651",
+    "firebase_url": "https://sdp-firebase-bootcamp-72e24-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "sdp-firebase-bootcamp-72e24",
+    "storage_bucket": "sdp-firebase-bootcamp-72e24.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213185384651:android:79f4fc37ebc4ce96f3cb4e",
+        "android_client_info": {
+          "package_name": "com.github.Jenjamin3000.bootcamp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "213185384651-1etbs75gll6ge3lufsodk85trl4q92vg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOJwSYjN-2BJDGUcSVwQnoW5uV72Ohj-w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "213185384651-1etbs75gll6ge3lufsodk85trl4q92vg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213185384651:android:7d519dc202f8de90f3cb4e",
+        "android_client_info": {
+          "package_name": "com.github.jenjamin3000.sdpfirebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "213185384651-1etbs75gll6ge3lufsodk85trl4q92vg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOJwSYjN-2BJDGUcSVwQnoW5uV72Ohj-w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "213185384651-1etbs75gll6ge3lufsodk85trl4q92vg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
