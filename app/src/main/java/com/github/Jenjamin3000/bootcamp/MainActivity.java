@@ -1,5 +1,9 @@
 package com.github.Jenjamin3000.bootcamp;
 
+import static com.github.Jenjamin3000.bootcamp.Fragments.GREETING_FRAGMENT;
+import static com.github.Jenjamin3000.bootcamp.Fragments.MAIN_FRAGMENT;
+import static com.github.Jenjamin3000.bootcamp.Fragments.TEST_FRAGMENT;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Menu;
@@ -39,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         // Open the main fragment inside the fragment container
-        openFragment(true);
+        openFragment(MAIN_FRAGMENT);
 
         // Add a listener for the navigation drawer
         NavigationView navView = findViewById(R.id.nav_view);
@@ -47,26 +51,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     /**
-     * Method which opens one of the two fragments
+     * Method which opens a given fragment
+     * @param fragment The fragment to be switched
      */
-    private void openFragment(boolean isMain)
+    private void openFragment(Fragments fragment)
     {
         // Fragments are managed by transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        if (isMain)
+
+        switch(fragment)
         {
-            fragmentTransaction.replace(R.id.fragmentContainerViewMain, new MainFragment());
-        }
-        else
-        {
-            fragmentTransaction.replace(R.id.fragmentContainerViewMain, new GreetingFragment());
+            case MAIN_FRAGMENT:
+                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new MainFragment());
+                break;
+
+            case GREETING_FRAGMENT:
+                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new GreetingFragment());
+                break;
+
+            case TEST_FRAGMENT:
+                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new TestFragment());
+                break;
+            default:
+                return;
         }
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit(); // Commit the transaction
     }
-
-
 
     /**
      * Create the options menu when initializing the toolbar
@@ -104,11 +116,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(item.getItemId())
         {
             case R.id.nav_main:
-                openFragment(true);
+                openFragment(MAIN_FRAGMENT);
                 break;
             case R.id.nav_greeting:
-                openFragment(false);
+                openFragment(GREETING_FRAGMENT);
                 break;
+            case R.id.nav_test:
+                openFragment(TEST_FRAGMENT);
             default:
                 break;
         }
