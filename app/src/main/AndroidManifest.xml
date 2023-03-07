@@ -11,6 +11,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCErcZ4CYdJ_EKp0-IGpikzB9E88k6QMVs" />
+
         <activity
             android:name=".NavigationDrawerActivity"
             android:exported="false"
