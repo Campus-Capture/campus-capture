@@ -5,6 +5,7 @@ import static com.github.Jenjamin3000.bootcamp.Fragments.MAIN_FRAGMENT;
 import static com.github.Jenjamin3000.bootcamp.Fragments.TEST_FRAGMENT;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -144,15 +145,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(item.getItemId())
         {
             case R.id.action_logout:
-                // TODO put your code here Benji, something like:
-                /*
-                Intent log_in_intent = new Intent(this, LoginActivity.class);
+
+                Intent log_in_intent = new Intent(this, AuthenticationActivity.class);
 
                 // Use this to pass the name of the origin activity
-                log_in_intent.putExtra("message", "From: " + FirstActivity.class.getSimpleName());
+                //log_in_intent.putExtra("message", "From: " + FirstActivity.class.getSimpleName());
 
-                startActivity(log_int_intent);
-                 */
+                startActivity(log_in_intent);
+
             default:
                 break;
         }
