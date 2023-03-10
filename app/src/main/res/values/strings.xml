@@ -18,4 +18,7 @@
     <string name="main_fragment_text">Main fragment</string>
     <string name="greeting_fragment_text">Greeting fragment</string>
     <string name="menu_test">Test fragment</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_rules">Rules</string>
 </resources>

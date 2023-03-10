@@ -23,4 +23,10 @@
         android:label="@string/menu_test"
         tools:layout="@layout/fragment_test" />
 
+    <fragment
+        android:id="@+id/nav_rules"
+        android:name="com.github.Jenjamin3000.bootcamp.ui.rules.NavRulesFragment"
+        android:label="@string/menu_rules"
+        tools:layout="@layout/fragment_rules" />
+
 </navigation>
