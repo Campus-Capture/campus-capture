@@ -2,9 +2,7 @@ package com.github.Jenjamin3000.bootcamp;
 
 import static android.content.ContentValues.TAG;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -35,9 +33,9 @@ public class FireDatabase{
     }
 
     /**
-     * Return the username of the user.
+     * Return the name of the user.
      */
-    public static DatabaseReference getUserName() {
+    public static void getUser() {
         DatabaseReference dbRef = db.getReference(User.getUid());
 
         // Read from the database
@@ -46,7 +44,10 @@ public class FireDatabase{
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
+                HashMap<String, String> value = dataSnapshot.getValue(HashMap.class);
+                if(value!=null) {
+                    User.setName(value.get("name"));
+                }
                 Log.w(TAG, "Value: "+value);
             }
 
@@ -56,7 +57,5 @@ public class FireDatabase{
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
-
-        return dbRef;
     }
 }

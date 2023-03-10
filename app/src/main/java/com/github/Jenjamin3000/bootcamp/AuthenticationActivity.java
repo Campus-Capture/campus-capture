@@ -50,7 +50,7 @@ public class AuthenticationActivity extends AppCompatActivity {
             // Successfully signed in
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             assert user != null;
-            Toast.makeText(this, "Sign in succeed, User: "+user.getUid(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Sign in succeeded, User: "+user.getUid(), Toast.LENGTH_SHORT).show();
 
             User.setUid(user.getUid());
             User.setName(user.getDisplayName());
