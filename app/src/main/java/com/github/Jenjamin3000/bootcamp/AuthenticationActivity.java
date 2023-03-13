@@ -52,9 +52,14 @@ public class AuthenticationActivity extends AppCompatActivity {
             assert user != null;
             Toast.makeText(this, "Sign in succeeded, User: "+user.getUid(), Toast.LENGTH_SHORT).show();
 
+            //Set the User
             User.setUid(user.getUid());
             User.setName(user.getDisplayName());
             FireDatabase.addUserIfAbsent();
+
+            //Go to main activity
+            Intent mainIntent = new Intent(AuthenticationActivity.this, MainActivity.class);
+            startActivity(mainIntent);
 
             // ...
         } else {
