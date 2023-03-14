@@ -23,4 +23,10 @@
         android:label="@string/menu_test"
         tools:layout="@layout/fragment_test" />
 
+    <fragment
+        android:id="@+id/nav_scoreboard"
+        android:name="com.github.Jenjamin3000.bootcamp.ui.scoreboard.NavScoreboardFragment"
+        android:label="@string/menu_scoreboard"
+        tools:layout="@layout/fragment_scoreboard" />
+
 </navigation>

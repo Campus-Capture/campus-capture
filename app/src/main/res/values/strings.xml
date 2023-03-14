@@ -18,4 +18,6 @@
     <string name="main_fragment_text">Main fragment</string>
     <string name="greeting_fragment_text">Greeting fragment</string>
     <string name="menu_test">Test fragment</string>
+    <string name="scoreboard_title">Scores</string>
+    <string name="menu_scoreboard">Scoreboard</string>
 </resources>

@@ -16,5 +16,9 @@
             android:id="@+id/nav_test"
             android:icon="@drawable/test_icon"
             android:title="@string/menu_test" />
+        <item
+            android:id="@+id/nav_scoreboard"
+            android:icon="@drawable/scoreboard_icon"
+            android:title="@string/menu_scoreboard" />
     </group>
 </menu>
