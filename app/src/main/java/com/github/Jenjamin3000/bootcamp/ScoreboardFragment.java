@@ -3,10 +3,17 @@ package com.github.Jenjamin3000.bootcamp;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.github.Jenjamin3000.bootcamp.scoreboard.ScoreHandler;
+import com.github.Jenjamin3000.bootcamp.scoreboard.ScoreListFragment;
+import com.github.Jenjamin3000.bootcamp.scoreboard.ScoreRecyclerViewAdapter;
+import com.github.Jenjamin3000.bootcamp.scoreboard.placeholder.PlaceholderScoreHandler;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,8 +22,15 @@ import android.view.ViewGroup;
  */
 public class ScoreboardFragment extends Fragment {
 
+    private ScoreHandler handler;
+
     public ScoreboardFragment() {
         // Required empty public constructor
+    }
+
+    public ScoreboardFragment(ScoreHandler handler)
+    {
+        this.handler = handler;
     }
 
     /**
@@ -40,6 +54,13 @@ public class ScoreboardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_scoreboard, container, false);
+        View view =  inflater.inflate(R.layout.fragment_scoreboard, container, false);
+
+        RecyclerView recyclerView = view.findViewById(R.id.scoreboard_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        recyclerView.setAdapter(new ScoreRecyclerViewAdapter(handler.getScores()));
+
+        return view;
     }
 }

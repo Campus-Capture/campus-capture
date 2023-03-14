@@ -18,10 +18,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.github.Jenjamin3000.bootcamp.scoreboard.ScoreHandler;
+import com.github.Jenjamin3000.bootcamp.scoreboard.placeholder.PlaceholderScoreHandler;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
+
+    private ScoreHandler scoreHandler;
 
 
     @Override
@@ -33,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.menu_icon);
         setSupportActionBar(toolbar);
+
+        // TODO replace once a real score handler has been implemented
+        scoreHandler = new PlaceholderScoreHandler();
 
         // Set the behavior of the navigation icon
         drawer = findViewById(R.id.drawer_layout);
@@ -76,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case SCOREBOARD_FRAGMENT:
-                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new ScoreboardFragment());
+                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new ScoreboardFragment(scoreHandler));
                 break;
 
             default:

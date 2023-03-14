@@ -11,4 +11,13 @@
         android:text="@string/scoreboard_title"
         android:textSize="34sp" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/scoreboard_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp" />
+
 </FrameLayout>
