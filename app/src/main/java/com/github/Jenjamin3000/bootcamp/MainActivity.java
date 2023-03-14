@@ -2,6 +2,7 @@ package com.github.Jenjamin3000.bootcamp;
 
 import static com.github.Jenjamin3000.bootcamp.Fragments.GREETING_FRAGMENT;
 import static com.github.Jenjamin3000.bootcamp.Fragments.MAIN_FRAGMENT;
+import static com.github.Jenjamin3000.bootcamp.Fragments.SCOREBOARD_FRAGMENT;
 import static com.github.Jenjamin3000.bootcamp.Fragments.TEST_FRAGMENT;
 
 import android.annotation.SuppressLint;
@@ -128,6 +129,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_test:
                 openFragment(TEST_FRAGMENT);
+                break;
+            case R.id.nav_scoreboard:
+                openFragment(SCOREBOARD_FRAGMENT);
+                break;
             default:
                 break;
         }
