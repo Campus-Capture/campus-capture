@@ -7,6 +7,7 @@ public enum Fragments {
 
     MAIN_FRAGMENT,
     GREETING_FRAGMENT,
-    TEST_FRAGMENT
+    TEST_FRAGMENT,
+    SCOREBOARD_FRAGMENT
 
 }

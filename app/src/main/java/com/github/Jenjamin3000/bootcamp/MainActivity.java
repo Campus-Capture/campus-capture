@@ -73,6 +73,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case TEST_FRAGMENT:
                 fragmentTransaction.replace(R.id.fragmentContainerViewMain, new TestFragment());
                 break;
+
+            case SCOREBOARD_FRAGMENT:
+                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new ScoreboardFragment());
+                break;
+
             default:
                 return;
         }
