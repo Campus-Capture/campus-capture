@@ -22,11 +22,12 @@ public class FireDatabase{
     /**
      * Add the user to the database if absent.
      */
-    public static void addUserIfAbsent() {
-        DatabaseReference dbRef = db.getReference(User.getUid());
+    public static void initUser(Section section) {
+        DatabaseReference dbRef = db.getReference("Users/"+User.getUid());
 
         Map<String, String> datas = new HashMap<>();
         datas.put("name", User.getName());
+        datas.put("section", section.name());
 
         dbRef.setValue(datas);
 
@@ -35,8 +36,8 @@ public class FireDatabase{
     /**
      * Return the name of the user.
      */
-    public static void getUser() {
-        DatabaseReference dbRef = db.getReference(User.getUid());
+    /*public static void getUser() {
+        DatabaseReference dbRef = db.getReference("Users/"+User.getUid());
 
         // Read from the database
         dbRef.addValueEventListener(new ValueEventListener() {
@@ -57,5 +58,5 @@ public class FireDatabase{
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
-    }
+    }*/
 }

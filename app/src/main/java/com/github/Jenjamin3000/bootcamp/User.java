@@ -4,6 +4,7 @@ public class User {
 
     private static String name;
     private static String uid;
+    private static Section section;
 
     public static String getName(){
         return name;
@@ -19,5 +20,13 @@ public class User {
 
     public static void setUid(String uid){
         User.uid = uid;
+    }
+
+    public static Section getSection() {
+        return section;
+    }
+
+    public static void setSection(Section section) {
+        User.section = section;
     }
 }
