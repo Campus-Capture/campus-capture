@@ -7,6 +7,9 @@ container:
   memory: 16G
   kvm: true
 
+before_script:
+  - touch local.properties
+
 check_android_task:
   name: Run Android tests
   install_emulator_script:
