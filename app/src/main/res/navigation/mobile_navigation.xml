@@ -23,7 +23,7 @@
         android:label="@string/menu_test"
         tools:layout="@layout/fragment_test" />
     <fragment
-        android:id="@+id/profileFragment"
+        android:id="@+id/nav_profile"
         android:name="com.github.Jenjamin3000.bootcamp.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
