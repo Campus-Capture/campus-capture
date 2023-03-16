@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible"
+    tools:context=".AuthenticationActivity">
+
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="32dp"
+        android:checkedButton="@id/radioButtonIN"
+        android:paddingStart="50dp"
+        android:paddingEnd="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/authSubmitButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioButton
+            android:id="@+id/radioButtonArchi"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:onClick="onSectionClicked"
+            android:text="Archi" />
+
+        <RadioButton
+            android:id="@+id/radioButtonGC"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:onClick="onSectionClicked"
+            android:text="GC" />
+
+        <RadioButton
+            android:id="@+id/radioButtonSIE"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:onClick="onSectionClicked"
+            android:text="SIE" />
+
+        <RadioButton
+            android:id="@+id/radioButtonIN"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:onClick="onSectionClicked"
+            android:text="IN" />
+
+        <RadioButton
+            android:id="@+id/radioButtonSC"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:onClick="onSectionClicked"
+            android:text="SC" />
+
+        <RadioButton
+            android:id="@+id/radioButtonCH"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:onClick="onSectionClicked"
+            android:text="CH" />
+
+        <RadioButton
+            android:id="@+id/radioButtonMA"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:onClick="onSectionClicked"
+            android:text="MA" />
+
+        <RadioButton
+            android:id="@+id/radioButtonPH"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:onClick="onSectionClicked"
+            android:text="PH" />
+
+        <RadioButton
+            android:id="@+id/radioButtonEL"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:onClick="onSectionClicked"
+            android:text="EL" />
+
+        <RadioButton
+            android:id="@+id/radioButtonSV"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:onClick="onSectionClicked"
+            android:text="SV" />
+
+        <RadioButton
+            android:id="@+id/radioButtonMX"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:onClick="onSectionClicked"
+            android:text="MX" />
+
+        <RadioButton
+            android:id="@+id/radioButtonMECA"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:onClick="onSectionClicked"
+            android:text="MECA" />
+
+        <RadioButton
+            android:id="@+id/radioButtonMT"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:onClick="onSectionClicked"
+            android:text="MT" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/authSubmitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="80dp"
+        android:text="Submit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

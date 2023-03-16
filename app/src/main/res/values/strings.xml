@@ -19,6 +19,7 @@
     <string name="greeting_fragment_text">Greeting fragment</string>
     <string name="menu_maps">Map</string>
     <string name="menu_test">Test fragment</string>
+    <string name="toolbar_action_logout">Log out</string>
     <string name="scoreboard_title">Scores</string>
     <string name="menu_scoreboard">Scoreboard</string>
     <string name="permission_required_toast">Precise location is required</string>

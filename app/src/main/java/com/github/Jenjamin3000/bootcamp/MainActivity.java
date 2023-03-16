@@ -3,6 +3,7 @@ package com.github.Jenjamin3000.bootcamp;
 import static com.github.Jenjamin3000.bootcamp.Fragments.*;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -124,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param item The selected item
      * @return success
      */
+
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -148,6 +150,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         closeDrawer();
+        return true;
+    }
+
+    /**
+     * Method to catch when an item in the options is selected
+     * @param item The menu item that was selected.
+     *
+     * @return success
+     */
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch(item.getItemId())
+        {
+            case R.id.action_logout:
+
+                Intent log_in_intent = new Intent(this, AuthenticationActivity.class);
+
+                // Use this to pass the name of the origin activity
+                //log_in_intent.putExtra("message", "From: " + FirstActivity.class.getSimpleName());
+
+                startActivity(log_in_intent);
+
+            default:
+                break;
+        }
         return true;
     }
 }
