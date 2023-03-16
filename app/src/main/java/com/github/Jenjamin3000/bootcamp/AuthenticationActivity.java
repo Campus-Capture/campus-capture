@@ -24,7 +24,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
@@ -70,49 +69,46 @@ public class AuthenticationActivity extends AppCompatActivity {
 
         submitButton.setEnabled(false);
 
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Go to main activity
-                if(authOK) {
-                    Section section;
-                    switch(mRadioGroup.getCheckedRadioButtonId()){
-                        case R.id.radioButtonArchi:
-                            section = Section.Archi;
-                            break;
-                        case R.id.radioButtonGC:
-                            section = Section.GC;
-                            break;
-                        case R.id.radioButtonSIE:
-                            section = Section.SIE;
-                            break;
-                        case R.id.radioButtonIN:
-                            section = Section.IN;
-                            break;
-                        case R.id.radioButtonSC:
-                            section = Section.SC;
-                            break;
-                        case R.id.radioButtonCH:
-                            section = Section.CH;
-                            break;
-                        case R.id.radioButtonMA:
-                            section = Section.MA;
-                            break;
-                        case R.id.radioButtonPH:
-                            section = Section.PH;
-                            break;
-                        default:
-                            section = Section.MECA;
-                    }
-                    Toast.makeText(AuthenticationActivity.this, String.valueOf(section.toString()), Toast.LENGTH_SHORT).show();
-                    User.setSection(section);
+        setListenerToSubmitButton(submitButton);
+    }
 
-                    FireDatabase.initUser(section);
+    private void setListenerToSubmitButton(Button submitButton){
+        submitButton.setOnClickListener(view -> {
+            //Go to main activity
+            if(authOK) {
+                Section section = switchForButtonSection(mRadioGroup);
 
-                    goToMainActivity();
-                }
+                Toast.makeText(AuthenticationActivity.this, section.toString(), Toast.LENGTH_SHORT).show();
+                User.setSection(section);
+
+                FireDatabase.initUser(section);
+
+                goToMainActivity();
             }
         });
+    }
+
+    private Section switchForButtonSection(RadioGroup mRadioGroup){
+        switch(mRadioGroup.getCheckedRadioButtonId()){
+            case R.id.radioButtonArchi:
+                return Section.Archi;
+            case R.id.radioButtonGC:
+                return Section.GC;
+            case R.id.radioButtonSIE:
+                return Section.SIE;
+            case R.id.radioButtonIN:
+                return Section.IN;
+            case R.id.radioButtonSC:
+                return Section.SC;
+            case R.id.radioButtonCH:
+                return Section.CH;
+            case R.id.radioButtonMA:
+                return Section.MA;
+            case R.id.radioButtonPH:
+                return Section.PH;
+            default:
+                return Section.MECA;
+        }
     }
 
     private void goToMainActivity(){
@@ -136,12 +132,8 @@ public class AuthenticationActivity extends AppCompatActivity {
             authOK = true;
 
             verifyIfSectionKnown();
-            // ...
         } else {
-            // Sign in failed. If response is null the user canceled the
-            // sign-in flow using the back button. Otherwise check
-            // response.getError().getErrorCode() and handle the error.
-            // ...
+            // Sign in failed.
             Toast.makeText(this, "Sign in failed", Toast.LENGTH_SHORT).show();
         }
     }
