@@ -20,6 +20,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "MAPS_API_KEY", "AIzaSyAy5-75aLbkhfiq2CyqXmoW2MRiRBhLg1Q"
 
     }
 
