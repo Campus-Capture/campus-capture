@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.Jenjamin3000.bootcamp.databinding.FragmentScoreListBinding;
+import com.github.Jenjamin3000.bootcamp.databinding.FragmentScoreItemBinding;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class ScoreRecyclerViewAdapter extends RecyclerView.Adapter<ScoreRecycler
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(FragmentScoreListBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        return new ViewHolder(FragmentScoreItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
 
     }
 
@@ -48,7 +48,7 @@ public class ScoreRecyclerViewAdapter extends RecyclerView.Adapter<ScoreRecycler
         public final TextView mContentView;
         public ScoreItem mItem;
 
-        public ViewHolder(FragmentScoreListBinding binding) {
+        public ViewHolder(FragmentScoreItemBinding binding) {
             super(binding.getRoot());
             mIdView = binding.itemNumber;
             mContentView = binding.content;
