@@ -31,8 +31,7 @@
         <activity
             android:name=".AuthenticationActivity"
             android:exported="true"
-            android:label="@string/title_activity_navigation_drawer"
-            android:theme="@style/NoActionBar" >
+            android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -6,29 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
 
-    <EditText
-        android:id="@+id/login_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/login_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_email"
-        app:layout_constraintVertical_bias="0.229" />
-
     <TextView
         android:id="@+id/login_greeting"
         android:layout_width="wrap_content"
@@ -38,59 +15,31 @@
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/login_email"
+        app:layout_constraintBottom_toTopOf="@+id/login_confirm_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/login_mail_label"
-        android:layout_width="216dp"
-        android:layout_height="25dp"
-        android:layout_marginBottom="8dp"
-        android:ems="10"
-        android:text="Email:"
-        app:layout_constraintBottom_toTopOf="@+id/login_email"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_greeting"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <TextView
-        android:id="@+id/login_password_label"
-        android:layout_width="208dp"
-        android:layout_height="33dp"
-        android:layout_marginBottom="8dp"
-        android:text="Password:"
-        app:layout_constraintBottom_toTopOf="@+id/login_password"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_email"
-        app:layout_constraintVertical_bias="1.0" />
-
     <Button
         android:id="@+id/login_spactator_button"
-        android:layout_width="140dp"
-        android:layout_height="46dp"
+        android:layout_width="255dp"
+        android:layout_height="50dp"
         android:text="Spectator"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_password"
-        app:layout_constraintVertical_bias="0.65999997" />
+        app:layout_constraintTop_toBottomOf="@+id/login_confirm_button"
+        app:layout_constraintVertical_bias="0.04000002" />
 
     <Button
         android:id="@+id/login_confirm_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="log in"
-        app:layout_constraintBottom_toTopOf="@+id/login_spactator_button"
+        android:text="log in with google"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_password"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
