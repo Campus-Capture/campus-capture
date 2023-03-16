@@ -17,7 +17,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="API_KEY" />
+            android:value="AIzaSyAy5-75aLbkhfiq2CyqXmoW2MRiRBhLg1Q" />
 
         <activity
             android:name=".NavigationDrawerActivity"
