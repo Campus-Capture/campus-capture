@@ -8,7 +8,7 @@ public enum Fragments {
     MAIN_FRAGMENT,
     GREETING_FRAGMENT,
     TEST_FRAGMENT,
-
     PROFILE_FRAGMENT
+    MAPS_FRAGMENT
 
 }
