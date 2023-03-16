@@ -11,6 +11,7 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +22,7 @@ public class MainActivityRuleFragmentTest {
     @Rule
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
 
+    @Ignore("We can only test it once we have a proper mock DB we can inject")
     @Test
     public void RulesFragmentShowTheRightContent() {
         Intents.init();
