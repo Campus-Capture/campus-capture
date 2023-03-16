@@ -1,5 +1,6 @@
 env:
   CC_TEST_REPORTER_ID: ENCRYPTED[!0f645db5296da5f9df5391329da33feacafcda008fc03b66a851dcea7d350994733ca486fc381159fdee966eecbd46e7!]
+  MAPS_API_KEY: ENCRYPTED[AIzaSyAy5-75aLbkhfiq2CyqXmoW2MRiRBhLg1Q].
 
 container:
   image: cirrusci/android-sdk:30
@@ -25,6 +26,7 @@ check_android_task:
     -no-window
     -camera-back none
   assemble_instrumented_tests_script: |
+    echo MAPS_API_KEY=$MAPS_API_KEY >> local.properties
     chmod +x gradlew
     ./gradlew assembleDebugAndroidTest
   wait_for_avd_script:
