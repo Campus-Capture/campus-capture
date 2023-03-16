@@ -26,6 +26,8 @@ import com.google.firebase.database.ValueEventListener;
  * Use the {@link RulesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
+// TODO refactor to inject the DB
 public class RulesFragment extends Fragment {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
