@@ -84,6 +84,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentTransaction.replace(R.id.fragmentContainerViewMain, new TestFragment());
                 break;
 
+            case RULES_FRAGMENT:
+                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new RulesFragment());
+                break;
+                
             case SCOREBOARD_FRAGMENT:
                 fragmentTransaction.replace(R.id.fragmentContainerViewMain, new ScoreboardFragment(scoreHandler));
                 break;
@@ -142,6 +146,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_test:
                 openFragment(TEST_FRAGMENT);
+                break;
+            case R.id.nav_rules:
+                openFragment(RULES_FRAGMENT);
                 break;
             case R.id.nav_scoreboard:
                 openFragment(SCOREBOARD_FRAGMENT);

@@ -1,6 +1,10 @@
 package com.github.Jenjamin3000.bootcamp;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
+import static org.hamcrest.CoreMatchers.containsString;
 
 import android.view.View;
 
@@ -31,7 +35,7 @@ public class MainActivityTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_view))
-                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+                .check(matches(ViewMatchers.isDisplayed()));
 
         Intents.release();
     }
@@ -46,7 +50,7 @@ public class MainActivityTest {
         onView(ViewMatchers.withId(R.id.nav_main)).perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_view))
-                .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())));
+                .check(matches(Matchers.not(ViewMatchers.isDisplayed())));
 
         Intents.release();
     }
@@ -59,12 +63,12 @@ public class MainActivityTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_view))
-                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+                .check(matches(ViewMatchers.isDisplayed()));
 
         onView(ViewMatchers.withId(R.id.nav_view)).perform(ViewActions.swipeLeft());
 
         onView(ViewMatchers.withId(R.id.nav_view))
-                .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())));
+                .check(matches(Matchers.not(ViewMatchers.isDisplayed())));
 
         Intents.release();
     }
@@ -73,7 +77,7 @@ public class MainActivityTest {
     public void MainActivityFragmentContainerIsUpdatedWhenActionIsExecuted() {
         Intents.init();
         onView(ViewMatchers.withId(R.id.textMain))
-                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+                .check(matches(ViewMatchers.isDisplayed()));
 
         onView(ViewMatchers.withContentDescription("Navigate up"))
                 .perform(ViewActions.click());
@@ -81,7 +85,7 @@ public class MainActivityTest {
         onView(ViewMatchers.withId(R.id.nav_greeting)).perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.textGreeting))
-                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+                .check(matches(ViewMatchers.isDisplayed()));
 
         onView(ViewMatchers.withContentDescription("Navigate up"))
                 .perform(ViewActions.click());
@@ -89,7 +93,7 @@ public class MainActivityTest {
         onView(ViewMatchers.withId(R.id.nav_main)).perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.textMain))
-                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+                .check(matches(ViewMatchers.isDisplayed()));
 
         Intents.release();
     }

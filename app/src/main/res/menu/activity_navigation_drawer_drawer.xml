@@ -22,6 +22,10 @@
             android:icon="@drawable/test_icon"
             android:title="@string/menu_test" />
         <item
+            android:id="@+id/nav_rules"
+            android:icon="@drawable/rules_icon"
+            android:title="@string/menu_rules" />
+        <item
             android:id="@+id/nav_scoreboard"
             android:icon="@drawable/scoreboard_icon"
             android:title="@string/menu_scoreboard" />
