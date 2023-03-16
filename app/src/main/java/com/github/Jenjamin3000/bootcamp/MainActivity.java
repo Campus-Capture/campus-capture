@@ -2,6 +2,7 @@ package com.github.Jenjamin3000.bootcamp;
 
 import static com.github.Jenjamin3000.bootcamp.Fragments.GREETING_FRAGMENT;
 import static com.github.Jenjamin3000.bootcamp.Fragments.MAIN_FRAGMENT;
+import static com.github.Jenjamin3000.bootcamp.Fragments.PROFILE_FRAGMENT;
 import static com.github.Jenjamin3000.bootcamp.Fragments.TEST_FRAGMENT;
 
 import android.annotation.SuppressLint;
@@ -73,6 +74,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case TEST_FRAGMENT:
                 fragmentTransaction.replace(R.id.fragmentContainerViewMain, new TestFragment());
                 break;
+
+            case PROFILE_FRAGMENT:
+                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new ProfileFragment());
+                break;
             default:
                 return;
         }
@@ -123,6 +128,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_test:
                 openFragment(TEST_FRAGMENT);
+                break;
+            case R.id.nav_profile:
+                openFragment(PROFILE_FRAGMENT);
+                break;
             default:
                 break;
         }

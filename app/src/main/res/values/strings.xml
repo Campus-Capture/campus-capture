@@ -18,4 +18,16 @@
     <string name="main_fragment_text">Main fragment</string>
     <string name="greeting_fragment_text">Greeting fragment</string>
     <string name="menu_test">Test fragment</string>
+    <string name="menu_profile">Profile</string>
+
+    <!-- for the section spinner-->
+    <string-array name="profile_sections">
+        <item>IC</item>
+        <item>SV</item>
+        <item>MATH</item>
+        <item>ARCHI</item>
+        <item>MX</item>
+        <item>MT</item>
+        <item>AUTRE</item>
+    </string-array>
 </resources>

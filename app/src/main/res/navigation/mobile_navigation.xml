@@ -22,5 +22,10 @@
         android:name="com.github.Jenjamin3000.bootcamp.ui.test.NavTestFragment"
         android:label="@string/menu_test"
         tools:layout="@layout/fragment_test" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.github.Jenjamin3000.bootcamp.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 
 </navigation>
