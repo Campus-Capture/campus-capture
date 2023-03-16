@@ -20,6 +20,10 @@
             android:value="AIzaSyAy5-75aLbkhfiq2CyqXmoW2MRiRBhLg1Q" />
 
         <activity
+            android:name=".LoginActivity"
+            android:exported="false">
+        </activity>
+        <activity
             android:name=".NavigationDrawerActivity"
             android:exported="false"
             android:label="@string/title_activity_navigation_drawer"
@@ -27,8 +31,7 @@
         <activity
             android:name=".AuthenticationActivity"
             android:exported="true"
-            android:label="@string/title_activity_navigation_drawer"
-            android:theme="@style/NoActionBar" >
+            android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

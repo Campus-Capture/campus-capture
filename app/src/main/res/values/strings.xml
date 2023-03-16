@@ -28,4 +28,16 @@
     <string name="permission_required_toast">Precise location is required</string>
     <string name="permission_rationale_location">This app needs to be able to locate players in order to be playable. Please click OK to give access to your location. If you refuse, Campus Capture won\'t be playable and will close.</string>
     <string name="location_permission_denied">Campus Capture will not work without having access to precise location</string>
+    <string name="menu_profile">Profile</string>
+
+    <!-- for the section spinner-->
+    <string-array name="profile_sections">
+        <item>IC</item>
+        <item>SV</item>
+        <item>MATH</item>
+        <item>ARCHI</item>
+        <item>MX</item>
+        <item>MT</item>
+        <item>AUTRE</item>
+    </string-array>
 </resources>
