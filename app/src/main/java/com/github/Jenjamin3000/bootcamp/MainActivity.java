@@ -1,9 +1,6 @@
 package com.github.Jenjamin3000.bootcamp;
 
-import static com.github.Jenjamin3000.bootcamp.Fragments.GREETING_FRAGMENT;
-import static com.github.Jenjamin3000.bootcamp.Fragments.MAIN_FRAGMENT;
-import static com.github.Jenjamin3000.bootcamp.Fragments.SCOREBOARD_FRAGMENT;
-import static com.github.Jenjamin3000.bootcamp.Fragments.TEST_FRAGMENT;
+import static com.github.Jenjamin3000.bootcamp.Fragments.*;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -78,6 +75,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentTransaction.replace(R.id.fragmentContainerViewMain, new GreetingFragment());
                 break;
 
+            case MAPS_FRAGMENT:
+                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new MapsFragment());
+                break;
+
             case TEST_FRAGMENT:
                 fragmentTransaction.replace(R.id.fragmentContainerViewMain, new TestFragment());
                 break;
@@ -133,6 +134,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_greeting:
                 openFragment(GREETING_FRAGMENT);
+                break;
+            case R.id.nav_maps:
+                openFragment(MAPS_FRAGMENT);
                 break;
             case R.id.nav_test:
                 openFragment(TEST_FRAGMENT);
