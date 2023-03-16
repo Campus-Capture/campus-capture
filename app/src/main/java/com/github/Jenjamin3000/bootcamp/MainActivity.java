@@ -129,8 +129,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_test:
                 openFragment(TEST_FRAGMENT);
+                break;
             case R.id.nav_rules:
                 openFragment(RULES_FRAGMENT);
+                break;
             default:
                 break;
         }
