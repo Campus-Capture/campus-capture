@@ -63,10 +63,10 @@ public class MapsFragment extends Fragment{
         LatLng satellite = new LatLng(46.520544, 6.567825);
         map.addMarker(new MarkerOptions().position(satellite).title("Satellite").snippet("5 ⭐"));
 
-        LatLngBounds epflBounds = new LatLngBounds(
+        /*LatLngBounds epflBounds = new LatLngBounds(
                 new LatLng(46, 6), // SW bounds
                 new LatLng(47, 7)  // NE bounds
-        );
+        );*/
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(epfl, 15));
 
         map.setOnMarkerClickListener(marker -> {
