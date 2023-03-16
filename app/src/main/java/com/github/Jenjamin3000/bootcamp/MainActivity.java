@@ -1,11 +1,9 @@
 package com.github.Jenjamin3000.bootcamp;
 
-import static com.github.Jenjamin3000.bootcamp.Fragments.GREETING_FRAGMENT;
-import static com.github.Jenjamin3000.bootcamp.Fragments.MAIN_FRAGMENT;
-import static com.github.Jenjamin3000.bootcamp.Fragments.RULES_FRAGMENT;
-import static com.github.Jenjamin3000.bootcamp.Fragments.TEST_FRAGMENT;
+import static com.github.Jenjamin3000.bootcamp.Fragments.*;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,10 +16,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.github.Jenjamin3000.bootcamp.scoreboard.ScoreHandler;
+import com.github.Jenjamin3000.bootcamp.scoreboard.placeholder.PlaceholderScoreHandler;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
+
+    private ScoreHandler scoreHandler;
 
 
     @Override
@@ -33,6 +35,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.menu_icon);
         setSupportActionBar(toolbar);
+
+        // TODO replace once a real score handler has been implemented
+        scoreHandler = new PlaceholderScoreHandler();
 
         // Set the behavior of the navigation icon
         drawer = findViewById(R.id.drawer_layout);
@@ -71,12 +76,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentTransaction.replace(R.id.fragmentContainerViewMain, new GreetingFragment());
                 break;
 
+            case MAPS_FRAGMENT:
+                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new MapsFragment());
+                break;
+
             case TEST_FRAGMENT:
                 fragmentTransaction.replace(R.id.fragmentContainerViewMain, new TestFragment());
                 break;
 
             case RULES_FRAGMENT:
                 fragmentTransaction.replace(R.id.fragmentContainerViewMain, new RulesFragment());
+                break;
+                
+            case SCOREBOARD_FRAGMENT:
+                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new ScoreboardFragment(scoreHandler));
                 break;
 
             default:
@@ -116,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param item The selected item
      * @return success
      */
+
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -127,16 +141,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_greeting:
                 openFragment(GREETING_FRAGMENT);
                 break;
+            case R.id.nav_maps:
+                openFragment(MAPS_FRAGMENT);
+                break;
             case R.id.nav_test:
                 openFragment(TEST_FRAGMENT);
                 break;
             case R.id.nav_rules:
                 openFragment(RULES_FRAGMENT);
                 break;
+            case R.id.nav_scoreboard:
+                openFragment(SCOREBOARD_FRAGMENT);
+                break;
             default:
                 break;
         }
         closeDrawer();
+        return true;
+    }
+
+    /**
+     * Method to catch when an item in the options is selected
+     * @param item The menu item that was selected.
+     *
+     * @return success
+     */
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch(item.getItemId())
+        {
+            case R.id.action_logout:
+
+                Intent log_in_intent = new Intent(this, AuthenticationActivity.class);
+
+                // Use this to pass the name of the origin activity
+                //log_in_intent.putExtra("message", "From: " + FirstActivity.class.getSimpleName());
+
+                startActivity(log_in_intent);
+
+            default:
+                break;
+        }
         return true;
     }
 }

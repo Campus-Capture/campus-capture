@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
@@ -13,6 +14,10 @@
             android:icon="@drawable/greeting_icon"
             android:title="@string/menu_greeting" />
         <item
+            android:id="@+id/nav_maps"
+            android:icon="@drawable/map_icon"
+            android:title="@string/menu_maps" />
+        <item
             android:id="@+id/nav_test"
             android:icon="@drawable/test_icon"
             android:title="@string/menu_test" />
@@ -20,5 +25,9 @@
             android:id="@+id/nav_rules"
             android:icon="@drawable/rules_icon"
             android:title="@string/menu_rules" />
+        <item
+            android:id="@+id/nav_scoreboard"
+            android:icon="@drawable/scoreboard_icon"
+            android:title="@string/menu_scoreboard" />
     </group>
 </menu>

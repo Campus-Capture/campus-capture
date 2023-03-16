@@ -9,6 +9,7 @@ public enum Fragments {
     GREETING_FRAGMENT,
     TEST_FRAGMENT,
     RULES_FRAGMENT,
-
+    SCOREBOARD_FRAGMENT,
+    MAPS_FRAGMENT
 
 }
