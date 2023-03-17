@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileFragment">
+    tools:context=".fragments.ProfileFragment">
 
     <TextView
         android:id="@+id/profile_title"
         android:layout_width="191dp"
         android:layout_height="50dp"
-        android:text="Profile"
+        android:text="@string/profile_title"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,7 +23,7 @@
         android:id="@+id/profile_name"
         android:layout_width="172dp"
         android:layout_height="43dp"
-        android:text="_name_"
+        android:text="@string/profile_placeholder_name"
         android:textColor="@android:color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -47,7 +47,7 @@
         android:id="@+id/profile_section_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Section"
+        android:text="@string/profile_section"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,7 +59,7 @@
         android:id="@+id/profile_confirm_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Apply"
+        android:text="@string/profile_apply_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
