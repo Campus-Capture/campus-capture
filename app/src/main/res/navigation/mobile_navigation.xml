@@ -7,36 +7,36 @@
 
     <fragment
         android:id="@+id/nav_main"
-        android:name="com.github.Jenjamin3000.bootcamp.ui.main.NavMainFragment"
+        android:name="com.github.campus_capture.bootcamp.ui.main.NavMainFragment"
         android:label="@string/menu_main"
         tools:layout="@layout/fragment_main" />
 
     <fragment
         android:id="@+id/nav_greeting"
-        android:name="com.github.Jenjamin3000.bootcamp.ui.greeting.NavGreetingFragment"
+        android:name="com.github.campus_capture.bootcamp.ui.greeting.NavGreetingFragment"
         android:label="@string/menu_greeting"
         tools:layout="@layout/fragment_greeting" />
 
     <fragment
         android:id="@+id/nav_test"
-        android:name="com.github.Jenjamin3000.bootcamp.ui.test.NavTestFragment"
+        android:name="com.github.campus_capture.bootcamp.ui.test.NavTestFragment"
         android:label="@string/menu_test"
         tools:layout="@layout/fragment_test" />
     <fragment
         android:id="@+id/nav_profile"
-        android:name="com.github.Jenjamin3000.bootcamp.ProfileFragment"
+        android:name="com.github.campus_capture.bootcamp.fragments.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/nav_rules"
-        android:name="com.github.Jenjamin3000.bootcamp.ui.rules.NavRulesFragment"
+        android:name="com.github.campus_capture.bootcamp.ui.rules.NavRulesFragment"
         android:label="@string/menu_rules"
         tools:layout="@layout/fragment_rules" />
         
     <fragment
         android:id="@+id/nav_scoreboard"
-        android:name="com.github.Jenjamin3000.bootcamp.ui.scoreboard.NavScoreboardFragment"
+        android:name="com.github.campus_capture.bootcamp.ui.scoreboard.NavScoreboardFragment"
         android:label="@string/menu_scoreboard"
         tools:layout="@layout/fragment_scoreboard" />
 

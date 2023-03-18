@@ -20,16 +20,16 @@
             android:value="AIzaSyAy5-75aLbkhfiq2CyqXmoW2MRiRBhLg1Q" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="false">
         </activity>
         <activity
-            android:name=".NavigationDrawerActivity"
+            android:name=".activities.NavigationDrawerActivity"
             android:exported="false"
             android:label="@string/title_activity_navigation_drawer"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".AuthenticationActivity"
+            android:name=".activities.AuthenticationActivity"
             android:exported="true"
             android:theme="@style/NoActionBar">
             <intent-filter>
@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="true"/>
     </application>
 

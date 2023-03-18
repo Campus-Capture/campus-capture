@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list"
-    android:name="com.github.Jenjamin3000.bootcamp.scoreboard.ScoreListFragment"
+    android:name="com.github.campus_capture.bootcamp.scoreboard.ScoreListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"

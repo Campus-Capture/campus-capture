@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:213185384651:android:79f4fc37ebc4ce96f3cb4e",
         "android_client_info": {
-          "package_name": "com.github.Jenjamin3000.bootcamp"
+          "package_name": "com.github.campus_capture.bootcamp"
         }
       },
       "oauth_client": [
@@ -39,7 +39,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:213185384651:android:7d519dc202f8de90f3cb4e",
         "android_client_info": {
-          "package_name": "com.github.jenjamin3000.sdpfirebase"
+          "package_name": "com.github.campus_capture.sdpfirebase"
         }
       },
       "oauth_client": [

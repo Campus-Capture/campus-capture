@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace 'com.github.Jenjamin3000.bootcamp'
+    namespace 'com.github.campus_capture.bootcamp'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.github.Jenjamin3000.bootcamp"
+        applicationId "com.github.campus_capture.bootcamp"
         minSdk 24
         targetSdk 33
         versionCode 1
