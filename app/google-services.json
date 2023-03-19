@@ -8,14 +8,22 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:213185384651:android:79f4fc37ebc4ce96f3cb4e",
+        "mobilesdk_app_id": "1:213185384651:android:7249988f6600a106f3cb4e",
         "android_client_info": {
           "package_name": "com.github.campus_capture.bootcamp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "213185384651-1etbs75gll6ge3lufsodk85trl4q92vg.apps.googleusercontent.com",
+          "client_id": "213185384651-hn3qnmo0ovbbseqp1un44pqk2c2cn492.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.github.campus_capture.bootcamp",
+            "certificate_hash": "aabb7c923f44c2429c63849c8a60e520ab9d1ef9"
+          }
+        },
+        {
+          "client_id": "213185384651-6pk6fojj0bflapmiht90i805qopmcbju.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -28,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "213185384651-1etbs75gll6ge3lufsodk85trl4q92vg.apps.googleusercontent.com",
+              "client_id": "213185384651-6pk6fojj0bflapmiht90i805qopmcbju.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -39,12 +47,12 @@
       "client_info": {
         "mobilesdk_app_id": "1:213185384651:android:7d519dc202f8de90f3cb4e",
         "android_client_info": {
-          "package_name": "com.github.campus_capture.sdpfirebase"
+          "package_name": "com.github.jenjamin3000.sdpfirebase"
         }
       },
       "oauth_client": [
         {
-          "client_id": "213185384651-1etbs75gll6ge3lufsodk85trl4q92vg.apps.googleusercontent.com",
+          "client_id": "213185384651-6pk6fojj0bflapmiht90i805qopmcbju.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -57,7 +65,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "213185384651-1etbs75gll6ge3lufsodk85trl4q92vg.apps.googleusercontent.com",
+              "client_id": "213185384651-6pk6fojj0bflapmiht90i805qopmcbju.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
