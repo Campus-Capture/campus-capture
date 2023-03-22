@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.room.Room;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -15,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
+import com.github.campus_capture.bootcamp.storage.dao.ZoneDAO;
 import com.github.campus_capture.bootcamp.utils.PermissionUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,6 +37,16 @@ public class MapsFragment extends Fragment{
      */
     private boolean permissionDenied = false;
     private final OnMapReadyCallback callback = googleMap -> {
+
+        //Build and initialize the DB
+        //The DB contains the Zone around the campus
+        ZoneDatabase zoneDB = Room.databaseBuilder(getActivity(),
+                ZoneDatabase.class, "zones-db")
+                .createFromAsset("databases/zones-db.db")
+                .allowMainThreadQueries().build();
+
+        ZoneDAO zoneDAO = zoneDB.zoneDAO();
+
         map = googleMap;
 
         enableMyLocation();
@@ -71,16 +84,7 @@ public class MapsFragment extends Fragment{
 
         Polygon campus = map.addPolygon(new PolygonOptions()
                 .clickable(true)
-                .add(
-                        new LatLng(46.5223, 6.5633),
-                        new LatLng(46.5183, 6.5610),
-                        new LatLng(46.5181, 6.5655),
-                        new LatLng(46.5173, 6.5656),
-                        new LatLng(46.5176, 6.5698),
-                        new LatLng(46.5183, 6.5722),
-                        new LatLng(46.5217, 6.5718),
-                        new LatLng(46.5219, 6.5684),
-                        new LatLng(46.5223, 6.5633)));
+                .addAll(zoneDAO.findByName("campus").getVertices()));
 
         campus.setTag("EPFL");
         campus.setFillColor(Color.argb(25, 255, 0, 0));
@@ -94,6 +98,9 @@ public class MapsFragment extends Fragment{
                     Toast.LENGTH_SHORT).show();
                     */
         });
+
+        //Don't forget to close when finished to be used
+        zoneDB.close();
     };
 
     private void enableMyLocation() {
