@@ -1,5 +1,8 @@
 package com.github.campus_capture.bootcamp.fragments;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -12,6 +15,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.github.campus_capture.bootcamp.R;
@@ -151,6 +155,25 @@ public class MapsFragment extends Fragment{
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+
+        Button attackButton = view.findViewById(R.id.attackButton);
+        Button defendButton = view.findViewById(R.id.defendButton);
+        Button timerButton = view.findViewById(R.id.timerButton);
+
+        attackButton.setOnClickListener(v -> {
+            attackButton.setVisibility(GONE);
+            defendButton.setVisibility(VISIBLE);
+        });
+
+        defendButton.setOnClickListener(v -> {
+            defendButton.setVisibility(GONE);
+            timerButton.setVisibility(VISIBLE);
+        });
+
+        timerButton.setOnClickListener(v -> {
+            timerButton.setVisibility(GONE);
+            attackButton.setVisibility(VISIBLE);
+        });
     }
 
 }
