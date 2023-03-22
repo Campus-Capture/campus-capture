@@ -7,7 +7,13 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VertexConverter {
+/**
+ * Object that can serialize a List of LatLng objects to text and back.
+ * It is used as a TypeConverter to store in a Room Persistent Storage Database
+ * 
+ * The LatLng objects are store as string in the following format : <lat>|<lon>#
+ */
+public class LatLngListConverter {
     @TypeConverter
     public List<LatLng> storedStringToLatLng(String value) {
         List<LatLng> vertices = new ArrayList<>();

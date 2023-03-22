@@ -8,6 +8,10 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
+/***
+ * Class defining a Zone on a map.
+ * It is an Entity that can be stored in a database
+ */
 @Entity
 public class Zone {
     @PrimaryKey

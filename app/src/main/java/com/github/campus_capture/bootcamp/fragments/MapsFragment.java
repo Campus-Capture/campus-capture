@@ -38,28 +38,14 @@ public class MapsFragment extends Fragment{
     private boolean permissionDenied = false;
     private final OnMapReadyCallback callback = googleMap -> {
 
+        //Build and initialize the DB
+        //The DB contains the Zone around the campus
         ZoneDatabase zoneDB = Room.databaseBuilder(getActivity(),
                 ZoneDatabase.class, "zones-db")
                 .createFromAsset("databases/zones-db.db")
                 .allowMainThreadQueries().build();
 
         ZoneDAO zoneDAO = zoneDB.zoneDAO();
-
-        /*ArrayList<LatLng> vertices = new ArrayList<LatLng>();
-        vertices.add(new LatLng(46.5223, 6.5633));
-        vertices.add(new LatLng(46.5183, 6.5610));
-        vertices.add(new LatLng(46.5181, 6.5655));
-        vertices.add(new LatLng(46.5173, 6.5656));
-        vertices.add(new LatLng(46.5176, 6.5698));
-        vertices.add(new LatLng(46.5183, 6.5722));
-        vertices.add(new LatLng(46.5217, 6.5718));
-        vertices.add(new LatLng(46.5219, 6.5684));
-        vertices.add(new LatLng(46.5223, 6.5633));
-
-        Zone zone1 = new Zone("campus", vertices);
-        zoneDAO.insertAll(zone1);
-
-        Log.d("DAO", zoneDAO.getAll().toString());*/
 
         map = googleMap;
 
@@ -113,6 +99,7 @@ public class MapsFragment extends Fragment{
                     */
         });
 
+        //Don't forget to close when finished to be used
         zoneDB.close();
     };
 

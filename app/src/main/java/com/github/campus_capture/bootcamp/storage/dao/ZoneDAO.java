@@ -9,6 +9,10 @@ import com.github.campus_capture.bootcamp.storage.entities.Zone;
 
 import java.util.List;
 
+/***
+ * Data Access Object that carries the queries possible on a Zone object representation in
+ * database
+ */
 @Dao
 public interface ZoneDAO {
     @Query("SELECT * FROM zone")
