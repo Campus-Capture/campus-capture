@@ -81,8 +81,6 @@ public class MainActivityRuleFragmentTest {
     @Ignore //TODO comment out once firebase emulator is setup on CI
     @Test
     public void RulesFragmentShowTheRightContent() {
-        AppContext context = (AppContext)ApplicationProvider.getApplicationContext();
-
         database.getReference().child("rules").setValue("The rules stocked in firebase emulator...");
 
         Intents.init();
