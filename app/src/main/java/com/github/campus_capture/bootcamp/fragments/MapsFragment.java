@@ -3,12 +3,6 @@ package com.github.campus_capture.bootcamp.fragments;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.room.Room;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
@@ -20,6 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.room.Room;
 
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
@@ -35,13 +35,13 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
 public class MapsFragment extends Fragment{
 
     private GoogleMap map;
+    private CountDownTimer buttonTimer;
     private static final long HOUR_MILLIS = 36000000;
     private static final long MILLIS_PER_MIN = 60000;
     private static final long MILLIS_PER_SEC = 1000; // Yes, this is obvious as ship
@@ -193,15 +193,27 @@ public class MapsFragment extends Fragment{
         });
 
         Calendar now = Calendar.getInstance();
-        createTimer(timerButton,
+        buttonTimer = createTimer(timerButton,
                 now.get(Calendar.MINUTE) * MILLIS_PER_MIN
                 + now.get(Calendar.SECOND) * MILLIS_PER_SEC
                 + now.get(Calendar.MILLISECOND));
+        buttonTimer.start();
     }
 
-    private void createTimer(Button button, long hourDelta)
+    @Override
+    public void onDestroyView() {
+        buttonTimer.cancel();
+        super.onDestroyView();
+    }
+
+    /**
+     * Method to create the timer on the wait button
+     * @param button the button instance
+     * @param hourDelta the time aready gone by since the last hour, in milliseconds
+     */
+    private CountDownTimer createTimer(Button button, long hourDelta)
     {
-        new CountDownTimer(HOUR_MILLIS - hourDelta, 1000) {
+        return new CountDownTimer(HOUR_MILLIS - hourDelta, 1000) {
             @SuppressLint("SetTextI18n")
             @Override
             public void onTick(long millisUntilFinished) {
@@ -216,9 +228,10 @@ public class MapsFragment extends Fragment{
 
             @Override
             public void onFinish() {
-                createTimer(button, 0);
+                buttonTimer = createTimer(button, 0);
+                buttonTimer.start();
             }
-        }.start();
+        };
     }
 
 }
