@@ -16,7 +16,7 @@ import java.util.List;
  * Class defining a Zone on a map.
  * It is an Entity that can be stored in a database
  */
-@Entity(indices = {@Index(value = {"name"}, unique = true)})
+@Entity
 public class Zone {
     @PrimaryKey
     private int uid;
