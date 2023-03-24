@@ -23,6 +23,8 @@ public class Zone {
 
     private String name;
 
+    // TODO add the current owner, of type Section
+
     private List<LatLng> vertices;
 
     public Zone(String name, List<LatLng> vertices){

@@ -35,30 +35,33 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.PolyUtil;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MapsFragment extends Fragment{
 
     private GoogleMap map;
-    private CountDownTimer buttonTimer;
-    private static final long HOUR_MILLIS = 36000000;
+    private CountDownTimer buttonTimer; // The countdown on the next takeover
+    private static final long MILLIS_PER_HOUR = 36000000;
     private static final long MILLIS_PER_MIN = 60000;
     private static final long MILLIS_PER_SEC = 1000; // Yes, this is obvious as ship
     private ZoneDatabase zoneDB;
-    private Handler zoneUpdateHandler;
-    private TextView zoneText;
+    private Handler scheduledTaskHandler; // The handler with all the timed tasks (except for countdown)
+    private TextView zoneText; // The textview containing the zone information
+    private Button attackButton;
+    private Button defendButton;
+    private Button timerButton;
+
+    /**
+     * The task to refresh the current zone every ZONE_REFRESH_RATE
+     */
     private final Runnable zoneRefreshTask = new Runnable() {
         @Override
         public void run() {
@@ -67,6 +70,7 @@ public class MapsFragment extends Fragment{
             if(position == null)
             {
                 label += "Unknown";
+                isZoneOwned = false;
             }
             else
             {
@@ -74,18 +78,23 @@ public class MapsFragment extends Fragment{
                 if(currentZone == null)
                 {
                     label += "None";
+                    isZoneOwned = false;
                 }
                 else
                 {
                     label += currentZone.getName();
+                    // TODO Update the zone ownership here
+                    // isZoneOwned = (currentZone.getSection() == player.getSection())
                 }
             }
             zoneText.setText(label);
-            zoneUpdateHandler.postDelayed(zoneRefreshTask, ZONE_REFRESH_RATE);
+            scheduledTaskHandler.postDelayed(zoneRefreshTask, ZONE_REFRESH_RATE);
             Log.i("MapsFragment", "Refreshing current zone");
         }
     };
+
     private static final long ZONE_REFRESH_RATE = 10 * MILLIS_PER_SEC; // The refresh rate of the current zone
+    private boolean isZoneOwned;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     /**
      * Flag indicating whether a requested permission has been denied
@@ -206,15 +215,17 @@ public class MapsFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        isZoneOwned = true;
+
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
 
-        Button attackButton = view.findViewById(R.id.attackButton);
-        Button defendButton = view.findViewById(R.id.defendButton);
-        Button timerButton = view.findViewById(R.id.timerButton);
+        attackButton = view.findViewById(R.id.attackButton);
+        defendButton = view.findViewById(R.id.defendButton);
+        timerButton = view.findViewById(R.id.timerButton);
 
         attackButton.setOnClickListener(v -> {
             attackButton.setVisibility(GONE);
@@ -245,7 +256,7 @@ public class MapsFragment extends Fragment{
     @Override
     public void onDestroyView() {
         buttonTimer.cancel();
-        zoneUpdateHandler.removeCallbacks(zoneRefreshTask);
+        scheduledTaskHandler.removeCallbacks(zoneRefreshTask);
         zoneDB.close();
         super.onDestroyView();
     }
@@ -264,7 +275,7 @@ public class MapsFragment extends Fragment{
      */
     private CountDownTimer createTimer(Button button, long hourDelta)
     {
-        return new CountDownTimer(HOUR_MILLIS - hourDelta, 1000) {
+        return new CountDownTimer(MILLIS_PER_HOUR - hourDelta, 1000) {
             @SuppressLint("SetTextI18n")
             @Override
             public void onTick(long millisUntilFinished) {
@@ -279,6 +290,7 @@ public class MapsFragment extends Fragment{
 
             @Override
             public void onFinish() {
+                updateButtons();
                 buttonTimer = createTimer(button, 0);
                 buttonTimer.start();
             }
@@ -333,8 +345,13 @@ public class MapsFragment extends Fragment{
     private void startZoneTracking(TextView text)
     {
         zoneText = text;
-        zoneUpdateHandler = new Handler();
+        scheduledTaskHandler = new Handler();
         zoneRefreshTask.run();
+    }
+
+    private void updateButtons()
+    {
+
     }
 
 }
