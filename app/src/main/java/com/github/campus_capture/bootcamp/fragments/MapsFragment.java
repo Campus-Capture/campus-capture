@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +57,34 @@ public class MapsFragment extends Fragment{
     private static final long MILLIS_PER_MIN = 60000;
     private static final long MILLIS_PER_SEC = 1000; // Yes, this is obvious as ship
     private ZoneDatabase zoneDB;
-    private Timer currentZoneUpdate;
+    private Handler zoneUpdateHandler;
+    private TextView zoneText;
+    private final Runnable zoneRefreshTask = new Runnable() {
+        @Override
+        public void run() {
+            String label = getString(R.string.current_zone_text);
+            LatLng position = getCurrentPosition();
+            if(position == null)
+            {
+                label += "Unknown";
+            }
+            else
+            {
+                Zone currentZone = findCurrentZone(position);
+                if(currentZone == null)
+                {
+                    label += "None";
+                }
+                else
+                {
+                    label += currentZone.getName();
+                }
+            }
+            zoneText.setText(label);
+            zoneUpdateHandler.postDelayed(zoneRefreshTask, ZONE_REFRESH_RATE);
+            Log.i("MapsFragment", "Refreshing current zone");
+        }
+    };
     private static final long ZONE_REFRESH_RATE = 10 * MILLIS_PER_SEC; // The refresh rate of the current zone
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     /**
@@ -67,6 +95,7 @@ public class MapsFragment extends Fragment{
 
         //Build and initialize the DB
         //The DB contains the Zone around the campus
+
         zoneDB = Room.databaseBuilder(getActivity(),
                 ZoneDatabase.class, "zones-db")
                 .createFromAsset("databases/zones-db.db")
@@ -108,14 +137,6 @@ public class MapsFragment extends Fragment{
             return false;
         });
 
-        if(zoneDAO.findByName("campus") == null)
-        {
-            List<LatLng> epflBounds = new ArrayList<>();
-            epflBounds.add(new LatLng(46, 6)); // SW bounds
-            epflBounds.add(new LatLng(47, 7)); // NE bounds
-            Zone campusZone = new Zone("campus", epflBounds);
-            zoneDAO.insertAll(campusZone);
-        }
 
         Polygon campus = map.addPolygon(new PolygonOptions()
                 .clickable(true)
@@ -224,7 +245,7 @@ public class MapsFragment extends Fragment{
     @Override
     public void onDestroyView() {
         buttonTimer.cancel();
-        currentZoneUpdate.cancel();
+        zoneUpdateHandler.removeCallbacks(zoneRefreshTask);
         zoneDB.close();
         super.onDestroyView();
     }
@@ -300,7 +321,7 @@ public class MapsFragment extends Fragment{
         }
         catch (Exception e)
         {
-            Log.e("Exception: %s", e.getMessage(), e);
+            Log.i("MapsFragment", "Failed retrieving location");
         }
         return null;
     }
@@ -311,32 +332,9 @@ public class MapsFragment extends Fragment{
      */
     private void startZoneTracking(TextView text)
     {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                String label = getString(R.string.current_zone_text);
-                LatLng position = getCurrentPosition();
-                if(position == null)
-                {
-                    label += "Unknown";
-                }
-                else
-                {
-                    Zone currentZone = findCurrentZone(position);
-                    if(currentZone == null)
-                    {
-                        label += "None";
-                    }
-                    else
-                    {
-                        label += currentZone.getName();
-                    }
-                }
-                text.setText(label);
-            }
-        };
-        currentZoneUpdate = new Timer();
-        currentZoneUpdate.scheduleAtFixedRate(task, 0, ZONE_REFRESH_RATE);
+        zoneText = text;
+        zoneUpdateHandler = new Handler();
+        zoneRefreshTask.run();
     }
 
 }
