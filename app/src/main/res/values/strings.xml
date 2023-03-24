@@ -39,7 +39,7 @@
     <string name="current_zone_text">Current zone:\nNONE</string>
     <string name="attack_button_text">ATTACK</string>
     <string name="defend_button_text">DEFEND</string>
-    <string name="wait_button_text">Next takeover in</string>
+    <string name="wait_button_text">Next takeover in </string>
 
     <!-- for the section spinner-->
     <string-array name="profile_sections">

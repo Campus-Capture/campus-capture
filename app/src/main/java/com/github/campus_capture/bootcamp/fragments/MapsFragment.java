@@ -9,9 +9,11 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +31,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
+
 public class MapsFragment extends Fragment{
 
     private GoogleMap map;
+    private static final long HOUR_MILLIS = 36000000;
+    private static final long MILLIS_PER_MIN = 60000;
+    private static final long MILLIS_PER_SEC = 1000; // Yes, this is obvious as ship
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     /**
      * Flag indicating whether a requested permission has been denied
@@ -174,6 +184,34 @@ public class MapsFragment extends Fragment{
             timerButton.setVisibility(GONE);
             attackButton.setVisibility(VISIBLE);
         });
+
+        Calendar now = Calendar.getInstance();
+        createTimer(timerButton,
+                now.get(Calendar.MINUTE) * MILLIS_PER_MIN
+                + now.get(Calendar.SECOND) * MILLIS_PER_SEC
+                + now.get(Calendar.MILLISECOND));
+    }
+
+    private void createTimer(Button button, long hourDelta)
+    {
+        new CountDownTimer(HOUR_MILLIS - hourDelta, 1000) {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onTick(long millisUntilFinished) {
+                @SuppressLint("SimpleDateFormat")
+                String timestamp = new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished));
+                button.setText(
+                    getString(R.string.wait_button_text) +
+                    " " +
+                    timestamp
+                );
+            }
+
+            @Override
+            public void onFinish() {
+                createTimer(button, 0);
+            }
+        }.start();
     }
 
 }
