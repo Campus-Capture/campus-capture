@@ -289,6 +289,7 @@ public class MapsFragment extends Fragment{
         }
 
         long timeUntilClosure = ((15 * MILLIS_PER_MIN - millisSinceHour) % MILLIS_PER_HOUR);
+        scheduledTaskHandler = new Handler();
         scheduledTaskHandler.postDelayed(closeAttacksTask, timeUntilClosure);
         TextView zoneText = view.findViewById(R.id.currentZoneText);
         startZoneTracking(zoneText);
@@ -387,7 +388,6 @@ public class MapsFragment extends Fragment{
     private void startZoneTracking(TextView text)
     {
         zoneText = text;
-        scheduledTaskHandler = new Handler();
         zoneRefreshTask.run();
     }
 

@@ -40,6 +40,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FirebaseInterface firebaseInterface;
 
     /**
+     * Required empty constructor, which will set the placeholder as the back-end
+     */
+    public MainActivity()
+    {
+        firebaseInterface = new PlaceholderFirebaseInterface();
+    }
+
+    /**
      * Constructor to force-inject a firebase instance
      * @param backend the back-end to be used
      */
@@ -100,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case MAPS_FRAGMENT:
-                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new MapsFragment());
+                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new MapsFragment(firebaseInterface));
                 break;
 
             case TEST_FRAGMENT:
