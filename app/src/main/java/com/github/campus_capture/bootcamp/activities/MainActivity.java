@@ -1,6 +1,12 @@
 package com.github.campus_capture.bootcamp.activities;
 
-import static com.github.campus_capture.bootcamp.fragments.Fragments.*;
+import static com.github.campus_capture.bootcamp.fragments.Fragments.GREETING_FRAGMENT;
+import static com.github.campus_capture.bootcamp.fragments.Fragments.MAIN_FRAGMENT;
+import static com.github.campus_capture.bootcamp.fragments.Fragments.MAPS_FRAGMENT;
+import static com.github.campus_capture.bootcamp.fragments.Fragments.PROFILE_FRAGMENT;
+import static com.github.campus_capture.bootcamp.fragments.Fragments.RULES_FRAGMENT;
+import static com.github.campus_capture.bootcamp.fragments.Fragments.SCOREBOARD_FRAGMENT;
+import static com.github.campus_capture.bootcamp.fragments.Fragments.TEST_FRAGMENT;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -16,23 +22,31 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
+import com.github.campus_capture.bootcamp.firebase.PlaceholderFirebaseInterface;
 import com.github.campus_capture.bootcamp.fragments.Fragments;
 import com.github.campus_capture.bootcamp.fragments.GreetingFragment;
 import com.github.campus_capture.bootcamp.fragments.MainFragment;
 import com.github.campus_capture.bootcamp.fragments.MapsFragment;
 import com.github.campus_capture.bootcamp.fragments.ProfileFragment;
-import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.fragments.RulesFragment;
 import com.github.campus_capture.bootcamp.fragments.ScoreboardFragment;
 import com.github.campus_capture.bootcamp.fragments.TestFragment;
-import com.github.campus_capture.bootcamp.scoreboard.ScoreHandler;
-import com.github.campus_capture.bootcamp.scoreboard.placeholder.PlaceholderScoreHandler;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
+    private FirebaseInterface firebaseInterface;
 
-    private ScoreHandler scoreHandler;
+    /**
+     * Constructor to force-inject a firebase instance
+     * @param backend the back-end to be used
+     */
+    public MainActivity(FirebaseInterface backend)
+    {
+        firebaseInterface = backend;
+    }
 
 
     @Override
@@ -45,8 +59,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setNavigationIcon(R.drawable.menu_icon);
         setSupportActionBar(toolbar);
 
-        // TODO replace once a real score handler has been implemented
-        scoreHandler = new PlaceholderScoreHandler();
+        // TODO replace once the firebase access has actually been implemented
+        firebaseInterface = new PlaceholderFirebaseInterface();
 
         // Set the behavior of the navigation icon
         drawer = findViewById(R.id.drawer_layout);
@@ -102,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case SCOREBOARD_FRAGMENT:
-                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new ScoreboardFragment(scoreHandler));
+                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new ScoreboardFragment(firebaseInterface));
                 break;
 
             default:

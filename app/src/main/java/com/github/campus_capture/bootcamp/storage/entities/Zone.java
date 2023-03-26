@@ -34,6 +34,11 @@ public class Zone {
 
     @Override
     public boolean equals(@Nullable Object otherZone) {
+        if(!(otherZone instanceof  Zone))
+        {
+            return false;
+        }
+
         if (!name.equals(((Zone) otherZone).getName())) {
             return false;
         }

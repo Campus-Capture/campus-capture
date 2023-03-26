@@ -26,6 +26,9 @@ import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
 import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.authentication.Section;
+import com.github.campus_capture.bootcamp.authentication.User;
+import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
 import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
 import com.github.campus_capture.bootcamp.storage.dao.ZoneDAO;
 import com.github.campus_capture.bootcamp.storage.entities.Zone;
@@ -44,6 +47,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class MapsFragment extends Fragment{
 
@@ -58,6 +63,11 @@ public class MapsFragment extends Fragment{
     private Button attackButton;
     private Button defendButton;
     private Button timerButton;
+    private FirebaseInterface backendInterface;
+    private boolean isZoneOwned;
+    private boolean isTakeover;
+    private boolean hasAttacked;
+    private Map<String, Section> zoneState;
 
     /**
      * The task to refresh the current zone every ZONE_REFRESH_RATE
@@ -70,7 +80,7 @@ public class MapsFragment extends Fragment{
             if(position == null)
             {
                 label += "Unknown";
-                isZoneOwned = false;
+                hideButtons();
             }
             else
             {
@@ -78,13 +88,14 @@ public class MapsFragment extends Fragment{
                 if(currentZone == null)
                 {
                     label += "None";
-                    isZoneOwned = false;
+                    hideButtons();
                 }
                 else
                 {
-                    label += currentZone.getName();
-                    // TODO Update the zone ownership here
-                    // isZoneOwned = (currentZone.getSection() == player.getSection())
+                    String zoneName = currentZone.getName();
+                    label += zoneName;
+                    isZoneOwned = zoneState.get(zoneName) == User.getSection();
+                    showButtons();
                 }
             }
             zoneText.setText(label);
@@ -93,8 +104,33 @@ public class MapsFragment extends Fragment{
         }
     };
 
-    private static final long ZONE_REFRESH_RATE = 10 * MILLIS_PER_SEC; // The refresh rate of the current zone
-    private boolean isZoneOwned;
+    /**
+     * The task to deactivate the attack buttons once the take over is over
+     */
+    private final Runnable closeAttacksTask = new Runnable() {
+        @Override
+        public void run() {
+            isTakeover = false;
+            hasAttacked = false;
+            showButtons();
+            scheduledTaskHandler.postDelayed(closeAttacksTask, MILLIS_PER_HOUR);
+            scheduledTaskHandler.postDelayed(refreshZoneOwners,OWNER_REFRESH_DELAY);
+        }
+    };
+
+    /**
+     * A task to refresh the zone ownerships, to give some time to the back-end to calculate the
+     * new zone owners
+     */
+    private final Runnable refreshZoneOwners = new Runnable() {
+        @Override
+        public void run() {
+            zoneState = backendInterface.getCurrentZoneOwners();
+        }
+    };
+    private static final long OWNER_REFRESH_DELAY = 5 * MILLIS_PER_SEC;
+
+    private static final long ZONE_REFRESH_RATE = 5 * MILLIS_PER_SEC; // The refresh rate of the current zone
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     /**
      * Flag indicating whether a requested permission has been denied
@@ -109,7 +145,6 @@ public class MapsFragment extends Fragment{
                 ZoneDatabase.class, "zones-db")
                 .createFromAsset("databases/zones-db.db")
                 .allowMainThreadQueries().build();
-        // zoneDB = Room.databaseBuilder(getActivity(), ZoneDatabase.class, "zones-db").build();
 
         ZoneDAO zoneDAO = zoneDB.zoneDAO();
 
@@ -130,9 +165,6 @@ public class MapsFragment extends Fragment{
         LatLng epfl = new LatLng(46.520536, 6.568318);
         LatLng satellite = new LatLng(46.520544, 6.567825);
         map.addMarker(new MarkerOptions().position(satellite).title("Satellite").snippet("5 ⭐"));
-
-        /*
-        );*/
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(epfl, 15));
 
         map.setOnMarkerClickListener(marker -> {
@@ -164,6 +196,18 @@ public class MapsFragment extends Fragment{
                     */
         });
     };
+
+    // Mandatory empty constructor
+    public MapsFragment(){}
+
+    /**
+     * Overloaded constructor to allow the fragment to use a specific back-end
+     * @param backend the backend to be injected
+     */
+    public MapsFragment(FirebaseInterface backend)
+    {
+        backendInterface = backend;
+    }
 
     private void enableMyLocation() {
         // 1. Check if permissions are granted, if so, enable the my location layer
@@ -215,8 +259,6 @@ public class MapsFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        isZoneOwned = true;
-
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
@@ -227,28 +269,27 @@ public class MapsFragment extends Fragment{
         defendButton = view.findViewById(R.id.defendButton);
         timerButton = view.findViewById(R.id.timerButton);
 
-        attackButton.setOnClickListener(v -> {
-            attackButton.setVisibility(GONE);
-            defendButton.setVisibility(VISIBLE);
-        });
-
-        defendButton.setOnClickListener(v -> {
-            defendButton.setVisibility(GONE);
-            timerButton.setVisibility(VISIBLE);
-        });
-
-        timerButton.setOnClickListener(v -> {
-            timerButton.setVisibility(GONE);
-            attackButton.setVisibility(VISIBLE);
-        });
+        setButtonBehavior();
 
         Calendar now = Calendar.getInstance();
-        buttonTimer = createTimer(timerButton,
+        long millisSinceHour =
                 now.get(Calendar.MINUTE) * MILLIS_PER_MIN
                 + now.get(Calendar.SECOND) * MILLIS_PER_SEC
-                + now.get(Calendar.MILLISECOND));
+                + now.get(Calendar.MILLISECOND);
+        buttonTimer = createTimer(timerButton, millisSinceHour);
         buttonTimer.start();
 
+        isTakeover = (now.get(Calendar.MINUTE) <= 15);
+        if(isTakeover)
+        {
+            // TODO fix this some other way
+            // this means that everytime the fragment is reloaded, the player is treated as if they
+            // hadn't attacked yet
+            hasAttacked = false;
+        }
+
+        long timeUntilClosure = ((15 * MILLIS_PER_MIN - millisSinceHour) % MILLIS_PER_HOUR);
+        scheduledTaskHandler.postDelayed(closeAttacksTask, timeUntilClosure);
         TextView zoneText = view.findViewById(R.id.currentZoneText);
         startZoneTracking(zoneText);
     }
@@ -257,6 +298,8 @@ public class MapsFragment extends Fragment{
     public void onDestroyView() {
         buttonTimer.cancel();
         scheduledTaskHandler.removeCallbacks(zoneRefreshTask);
+        scheduledTaskHandler.removeCallbacks(closeAttacksTask);
+        scheduledTaskHandler.removeCallbacks(refreshZoneOwners);
         zoneDB.close();
         super.onDestroyView();
     }
@@ -290,7 +333,6 @@ public class MapsFragment extends Fragment{
 
             @Override
             public void onFinish() {
-                updateButtons();
                 buttonTimer = createTimer(button, 0);
                 buttonTimer.start();
             }
@@ -298,7 +340,7 @@ public class MapsFragment extends Fragment{
     }
 
     /**
-     * Method whic finds in which zone a given point is
+     * Method which finds in which zone a given point is
      * @param position the position
      * @return the (first) zone which matches the position in the DB, or null if none
      */
@@ -349,9 +391,81 @@ public class MapsFragment extends Fragment{
         zoneRefreshTask.run();
     }
 
-    private void updateButtons()
+    /**
+     * Method to show the buttons in the UI
+     */
+    private void showButtons()
     {
+        if(isTakeover && !hasAttacked)
+        {
+            attackButton.setVisibility((isZoneOwned) ? GONE : VISIBLE);
+            defendButton.setVisibility((isZoneOwned) ? VISIBLE : GONE);
+            timerButton.setVisibility(GONE);
+        }
+        else
+        {
+            attackButton.setVisibility(GONE);
+            defendButton.setVisibility(GONE);
+            timerButton.setVisibility(VISIBLE);
+        }
+    }
 
+    /**
+     * Method to hide all buttons in the UI
+     */
+    private void hideButtons()
+    {
+        attackButton.setVisibility(GONE);
+        defendButton.setVisibility(GONE);
+        timerButton.setVisibility(GONE);
+    }
+
+    /**
+     * Method to set the buttons' behaviors (they are the same for both the attack and defend button)
+     */
+    private void setButtonBehavior()
+    {
+        View.OnClickListener attackListener = v ->
+        {
+            LatLng currentPosition = getCurrentPosition();
+            if(currentPosition == null)
+            {
+                Toast.makeText(v.getContext(), "Failed to retrieve position", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Zone currentZone = findCurrentZone(currentPosition);
+                if(currentZone != null)
+                {
+                    // Yes, this uses Futures. Shame on you if you didn't pay attention during ParaConc
+                    CompletableFuture<Boolean> voteFuture = CompletableFuture.supplyAsync(() -> backendInterface.voteZone(User.getUid(), User.getSection(), currentZone.getName()));
+                    boolean result = false;
+                    try
+                    {
+                        result = voteFuture.get();
+                    }
+                    catch(Exception e)
+                    {
+                        Log.e("MapsFragment", "Error occurred when voting for a zone", e);
+                    }
+                    if(result)
+                    {
+                        String toastText = (isZoneOwned) ? "Defending zone " : "Attacking zone ";
+                        Toast.makeText(v.getContext(), toastText + currentZone.getName(), Toast.LENGTH_SHORT).show();
+                        attackButton.setVisibility(GONE);
+                        defendButton.setVisibility(GONE);
+                        timerButton.setVisibility(VISIBLE);
+                        hasAttacked = true;
+                    }
+                    else
+                    {
+                        Toast.makeText(v.getContext(), "Operation failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        };
+        attackButton.setOnClickListener(attackListener);
+        defendButton.setOnClickListener(attackListener);
     }
 
 }
