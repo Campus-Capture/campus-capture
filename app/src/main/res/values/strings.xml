@@ -40,6 +40,12 @@
     <string name="attack_button_text">ATTACK</string>
     <string name="defend_button_text">DEFEND</string>
     <string name="wait_button_text">Next takeover in </string>
+    <string name="defend_toast_text">Defending zone </string>
+    <string name="attack_toast_text">Attacking zone </string>
+    <string name="op_failed_toast_text">Operation failed</string>
+    <string name="no_zone_toast_text">No zone to attack found</string>
+    <string name="position_not_found_text">Failed to retrieve position</string>
+    <string name="vote_zone_toast">Attack registered</string>
 
     <!-- for the section spinner-->
     <string-array name="profile_sections">

@@ -33,7 +33,7 @@
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:visibility="visible" />
+            android:visibility="gone" />
         <Button
             android:id="@+id/defendButton"
             android:layout_width="100dp"

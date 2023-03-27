@@ -1,0 +1,233 @@
+package com.github.campus_capture.bootcamp.map;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static com.github.campus_capture.bootcamp.map.ScheduleConstants.MILLIS_PER_HOUR;
+import static com.github.campus_capture.bootcamp.map.ScheduleConstants.MILLIS_PER_MIN;
+import static com.github.campus_capture.bootcamp.map.ScheduleConstants.MILLIS_PER_SEC;
+import static com.github.campus_capture.bootcamp.map.ScheduleConstants.OWNER_REFRESH_DELAY;
+import static com.github.campus_capture.bootcamp.map.ScheduleConstants.TAKEOVER_DURATION;
+import static com.github.campus_capture.bootcamp.map.ScheduleConstants.ZONE_REFRESH_RATE;
+
+import android.annotation.SuppressLint;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.authentication.Section;
+import com.github.campus_capture.bootcamp.authentication.User;
+import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
+import com.github.campus_capture.bootcamp.fragments.MapsFragment;
+import com.github.campus_capture.bootcamp.storage.entities.Zone;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+
+public class MapScheduler {
+
+    private final TextView zoneText;
+    private final Button attackButton;
+    private final Button defendButton;
+    private final Button timerButton;
+    private final FirebaseInterface firebaseInterface;
+    private final MapsFragment upper;
+    private final Handler scheduledTaskHandler;
+    private boolean isZoneOwned;
+    private boolean isTakeover;
+    private boolean hasAttacked;
+    private Map<String, Section> zoneState;
+    private CountDownTimer buttonTimer;
+
+    // Task to refresh the zone display at the top of the map
+    private final Runnable zoneRefreshTask = new Runnable() {
+        @Override
+        public void run() {
+            String label = upper.getString(R.string.current_zone_text);
+            LatLng position = upper.getCurrentPosition();
+            if(position == null)
+            {
+                label += "Unknown";
+                hideButtons();
+            }
+            else
+            {
+                Zone currentZone = upper.findCurrentZone(position);
+                if(currentZone == null)
+                {
+                    label += "None";
+                    isZoneOwned = false;
+                    hideButtons();
+                }
+                else
+                {
+                    String zoneName = currentZone.getName();
+                    label += zoneName;
+                    isZoneOwned = zoneState.get(zoneName) == User.getSection();
+                    showButtons();
+                }
+            }
+            zoneText.setText(label);
+            scheduledTaskHandler.postDelayed(zoneRefreshTask, ZONE_REFRESH_RATE);
+            Log.i("MapsFragment", "Refreshing current zone");
+        }
+    };
+
+    // Task to refresh the zone owners
+    private final Runnable refreshZoneState = new Runnable() {
+        @Override
+        public void run()
+        {
+            // TODO add a future here or move up to Fragment
+            zoneState = firebaseInterface.getCurrentZoneOwners();
+        }
+    };
+
+    // Task to open the attack buttons at the start of the takeover
+    private final Runnable openAttacksTask = new Runnable() {
+        @Override
+        public void run() {
+            isTakeover = true;
+            hasAttacked = false;
+            showButtons();
+            scheduledTaskHandler.postDelayed(closeAttacksTask, TAKEOVER_DURATION);
+        }
+    };
+
+    // Task to close the attack buttons once the takeover is over
+    private final Runnable closeAttacksTask = new Runnable() {
+
+        @Override
+        public void run() {
+            isTakeover = false;
+            hasAttacked = false;
+            showButtons();
+            scheduledTaskHandler.postDelayed(openAttacksTask, MILLIS_PER_HOUR - TAKEOVER_DURATION);
+            scheduledTaskHandler.postDelayed(refreshZoneState, OWNER_REFRESH_DELAY);
+        }
+    };
+
+    /**
+     * Constructor
+     * @param view the view of the fragment
+     * @param backend the back-end to be used
+     * @param upper the fragment above
+     */
+    public MapScheduler(View view, FirebaseInterface backend, MapsFragment upper)
+    {
+        firebaseInterface = backend;
+        this.upper = upper;
+
+        scheduledTaskHandler = new Handler();
+        zoneText = view.findViewById(R.id.currentZoneText);
+        attackButton = view.findViewById(R.id.attackButton);
+        defendButton = view.findViewById(R.id.defendButton);
+        timerButton = view.findViewById(R.id.timerButton);
+        hideButtons();
+
+        Calendar now = Calendar.getInstance();
+        long millisSinceHour = now.get(Calendar.MINUTE) * MILLIS_PER_MIN
+                + now.get(Calendar.SECOND) * MILLIS_PER_SEC
+                + now.get(Calendar.MILLISECOND);
+
+        buttonTimer = createTimer(timerButton, millisSinceHour);
+        buttonTimer.start();
+
+        if(millisSinceHour < TAKEOVER_DURATION)
+        {
+            isTakeover = true;
+            scheduledTaskHandler.postDelayed(closeAttacksTask, TAKEOVER_DURATION - millisSinceHour);
+        }
+        else
+        {
+            isTakeover = false;
+
+            scheduledTaskHandler.postDelayed(openAttacksTask, (TAKEOVER_DURATION - millisSinceHour) % MILLIS_PER_HOUR);
+        }
+        hasAttacked = false; // TODO need some way to keep track of this
+        zoneRefreshTask.run();
+    }
+
+    /**
+     * Method to confirm that an attack has been launched
+     */
+    public void confirmAttack()
+    {
+        hasAttacked = true;
+        showButtons();
+    }
+
+    /**
+     * Method to stop all the running tasks
+     */
+    public void stopAll()
+    {
+        scheduledTaskHandler.removeCallbacksAndMessages(null);
+        buttonTimer.cancel();
+    }
+
+    /**
+     * Private method to hide all the buttons (when no zone is found for ex.)
+     */
+    private void hideButtons()
+    {
+        attackButton.setVisibility(GONE);
+        defendButton.setVisibility(GONE);
+        timerButton.setVisibility(GONE);
+    }
+
+    /**
+     * Private method to update which buttons are displayed depending on time and if the player
+     * already attacked
+     */
+    private void showButtons()
+    {
+        if(isTakeover && !hasAttacked)
+        {
+            attackButton.setVisibility((isZoneOwned) ? GONE : VISIBLE);
+            defendButton.setVisibility((isZoneOwned) ? VISIBLE : GONE);
+            timerButton.setVisibility(GONE);
+        }
+        else
+        {
+            attackButton.setVisibility(GONE);
+            defendButton.setVisibility(GONE);
+            timerButton.setVisibility(VISIBLE);
+        }
+    }
+
+    /**
+     * Private method to create the timer for the timer button
+     * @param button the button instance
+     * @param hourDelta the amount of time which has gone by since the last hour
+     * @return the timer
+     */
+    private CountDownTimer createTimer(Button button, long hourDelta)
+    {
+        return new CountDownTimer(MILLIS_PER_HOUR - hourDelta, 1000) {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onTick(long millisUntilFinished) {
+                @SuppressLint("SimpleDateFormat")
+                String timestamp = new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished));
+                button.setText(
+                        upper.getString(R.string.wait_button_text) +
+                                " " +
+                                timestamp
+                );
+            }
+
+            @Override
+            public void onFinish() {
+                buttonTimer = createTimer(button, 0);
+                buttonTimer.start();
+            }
+        };
+    }
+}

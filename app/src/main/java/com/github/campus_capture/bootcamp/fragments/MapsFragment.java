@@ -1,22 +1,14 @@
 package com.github.campus_capture.bootcamp.fragments;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,9 +18,9 @@ import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
 import com.github.campus_capture.bootcamp.R;
-import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
+import com.github.campus_capture.bootcamp.map.MapScheduler;
 import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
 import com.github.campus_capture.bootcamp.storage.dao.ZoneDAO;
 import com.github.campus_capture.bootcamp.storage.entities.Zone;
@@ -43,94 +35,53 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.PolyUtil;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class MapsFragment extends Fragment{
 
     private GoogleMap map;
-    private CountDownTimer buttonTimer; // The countdown on the next takeover
-    private static final long MILLIS_PER_HOUR = 36000000;
-    private static final long MILLIS_PER_MIN = 60000;
-    private static final long MILLIS_PER_SEC = 1000; // Yes, this is obvious as ship
     private ZoneDatabase zoneDB;
-    private Handler scheduledTaskHandler; // The handler with all the timed tasks (except for countdown)
-    private TextView zoneText; // The textview containing the zone information
-    private Button attackButton;
-    private Button defendButton;
-    private Button timerButton;
     private FirebaseInterface backendInterface;
-    private boolean isZoneOwned;
-    private boolean isTakeover;
-    private boolean hasAttacked;
-    private Map<String, Section> zoneState;
-
-    /**
-     * The task to refresh the current zone every ZONE_REFRESH_RATE
-     */
-    private final Runnable zoneRefreshTask = new Runnable() {
-        @Override
-        public void run() {
-            String label = getString(R.string.current_zone_text);
-            LatLng position = getCurrentPosition();
-            if(position == null)
+    private MapScheduler scheduler;
+    private final View.OnClickListener attackListener = v ->
+    {
+        LatLng currentPosition = getCurrentPosition();
+        if(currentPosition == null)
+        {
+            Toast.makeText(v.getContext(), getText(R.string.position_not_found_text), Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Zone currentZone = findCurrentZone(currentPosition);
+            if(currentZone != null)
             {
-                label += "Unknown";
-                hideButtons();
-            }
-            else
-            {
-                Zone currentZone = findCurrentZone(position);
-                if(currentZone == null)
+                CompletableFuture<Boolean> voteFuture = CompletableFuture.supplyAsync(() -> backendInterface.voteZone(User.getUid(), User.getSection(), currentZone.getName()));
+                boolean result = false;
+                try
                 {
-                    label += "None";
-                    hideButtons();
+                    result = voteFuture.get();
+                }
+                catch(Exception e)
+                {
+                    Log.e("MapsFragment", "Error occurred when voting for a zone", e);
+                }
+                if(result)
+                {
+                    Toast.makeText(v.getContext(), getString(R.string.vote_zone_toast), Toast.LENGTH_SHORT).show();
+                    scheduler.confirmAttack();
                 }
                 else
                 {
-                    String zoneName = currentZone.getName();
-                    label += zoneName;
-                    isZoneOwned = zoneState.get(zoneName) == User.getSection();
-                    showButtons();
+                    Toast.makeText(v.getContext(), getString(R.string.op_failed_toast_text), Toast.LENGTH_SHORT).show();
                 }
             }
-            zoneText.setText(label);
-            scheduledTaskHandler.postDelayed(zoneRefreshTask, ZONE_REFRESH_RATE);
-            Log.i("MapsFragment", "Refreshing current zone");
+            else
+            {
+                Toast.makeText(v.getContext(), getString(R.string.no_zone_toast_text), Toast.LENGTH_SHORT).show();
+            }
         }
     };
-
-    /**
-     * The task to deactivate the attack buttons once the take over is over
-     */
-    private final Runnable closeAttacksTask = new Runnable() {
-        @Override
-        public void run() {
-            isTakeover = false;
-            hasAttacked = false;
-            showButtons();
-            scheduledTaskHandler.postDelayed(closeAttacksTask, MILLIS_PER_HOUR);
-            scheduledTaskHandler.postDelayed(refreshZoneOwners,OWNER_REFRESH_DELAY);
-        }
-    };
-
-    /**
-     * A task to refresh the zone ownerships, to give some time to the back-end to calculate the
-     * new zone owners
-     */
-    private final Runnable refreshZoneOwners = new Runnable() {
-        @Override
-        public void run() {
-            zoneState = backendInterface.getCurrentZoneOwners();
-        }
-    };
-    private static final long OWNER_REFRESH_DELAY = 5 * MILLIS_PER_SEC;
-
-    private static final long ZONE_REFRESH_RATE = 5 * MILLIS_PER_SEC; // The refresh rate of the current zone
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     /**
      * Flag indicating whether a requested permission has been denied
@@ -178,7 +129,6 @@ public class MapsFragment extends Fragment{
             return false;
         });
 
-
         Polygon campus = map.addPolygon(new PolygonOptions()
                 .clickable(true)
                 .addAll(zoneDAO.findByName("campus").getVertices()));
@@ -196,9 +146,6 @@ public class MapsFragment extends Fragment{
                     */
         });
     };
-
-    // Mandatory empty constructor
-    public MapsFragment(){}
 
     /**
      * Overloaded constructor to allow the fragment to use a specific back-end
@@ -220,7 +167,6 @@ public class MapsFragment extends Fragment{
         // 2. Otherwise, request location permissions from the user.
         //PermissionUtils.requestPermission((MainActivity) getActivity(), LOCATION_PERMISSION_REQUEST_CODE, true);
         requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-
     }
 
     @Override
@@ -265,42 +211,15 @@ public class MapsFragment extends Fragment{
             mapFragment.getMapAsync(callback);
         }
 
-        attackButton = view.findViewById(R.id.attackButton);
-        defendButton = view.findViewById(R.id.defendButton);
-        timerButton = view.findViewById(R.id.timerButton);
+        scheduler = new MapScheduler(view, backendInterface, this);
 
-        setButtonBehavior();
-
-        Calendar now = Calendar.getInstance();
-        long millisSinceHour =
-                now.get(Calendar.MINUTE) * MILLIS_PER_MIN
-                + now.get(Calendar.SECOND) * MILLIS_PER_SEC
-                + now.get(Calendar.MILLISECOND);
-        buttonTimer = createTimer(timerButton, millisSinceHour);
-        buttonTimer.start();
-
-        isTakeover = (now.get(Calendar.MINUTE) <= 15);
-        if(isTakeover)
-        {
-            // TODO fix this some other way
-            // this means that everytime the fragment is reloaded, the player is treated as if they
-            // hadn't attacked yet
-            hasAttacked = false;
-        }
-
-        long timeUntilClosure = ((15 * MILLIS_PER_MIN - millisSinceHour) % MILLIS_PER_HOUR);
-        scheduledTaskHandler = new Handler();
-        scheduledTaskHandler.postDelayed(closeAttacksTask, timeUntilClosure);
-        TextView zoneText = view.findViewById(R.id.currentZoneText);
-        startZoneTracking(zoneText);
+        view.findViewById(R.id.attackButton).setOnClickListener(attackListener);
+        view.findViewById(R.id.defendButton).setOnClickListener(attackListener);
     }
 
     @Override
     public void onDestroyView() {
-        buttonTimer.cancel();
-        scheduledTaskHandler.removeCallbacks(zoneRefreshTask);
-        scheduledTaskHandler.removeCallbacks(closeAttacksTask);
-        scheduledTaskHandler.removeCallbacks(refreshZoneOwners);
+        scheduler.stopAll();
         zoneDB.close();
         super.onDestroyView();
     }
@@ -313,39 +232,11 @@ public class MapsFragment extends Fragment{
     }
 
     /**
-     * Method to create the timer on the wait button. Refreshes the timer every hour
-     * @param button the button instance
-     * @param hourDelta the time aready gone by since the last hour, in milliseconds
-     */
-    private CountDownTimer createTimer(Button button, long hourDelta)
-    {
-        return new CountDownTimer(MILLIS_PER_HOUR - hourDelta, 1000) {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onTick(long millisUntilFinished) {
-                @SuppressLint("SimpleDateFormat")
-                String timestamp = new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished));
-                button.setText(
-                    getString(R.string.wait_button_text) +
-                    " " +
-                    timestamp
-                );
-            }
-
-            @Override
-            public void onFinish() {
-                buttonTimer = createTimer(button, 0);
-                buttonTimer.start();
-            }
-        };
-    }
-
-    /**
      * Method which finds in which zone a given point is
      * @param position the position
      * @return the (first) zone which matches the position in the DB, or null if none
      */
-    private Zone findCurrentZone(LatLng position)
+    public Zone findCurrentZone(LatLng position)
     {
         ZoneDAO zoneDAO = zoneDB.zoneDAO();
         List<Zone> zones = zoneDAO.getAll();
@@ -364,7 +255,7 @@ public class MapsFragment extends Fragment{
      * of map, and should use a FusedLocationProviderClient instead
      * @return LatLng or null
      */
-    private LatLng getCurrentPosition()
+    public LatLng getCurrentPosition()
     {
         try
         {
@@ -379,93 +270,6 @@ public class MapsFragment extends Fragment{
             Log.i("MapsFragment", "Failed retrieving location");
         }
         return null;
-    }
-
-    /**
-     * Method to start the zone tracking, and will update the current zone name in the text view
-     * @param text The textview where the zone name should be displayed
-     */
-    private void startZoneTracking(TextView text)
-    {
-        zoneText = text;
-        zoneRefreshTask.run();
-    }
-
-    /**
-     * Method to show the buttons in the UI
-     */
-    private void showButtons()
-    {
-        if(isTakeover && !hasAttacked)
-        {
-            attackButton.setVisibility((isZoneOwned) ? GONE : VISIBLE);
-            defendButton.setVisibility((isZoneOwned) ? VISIBLE : GONE);
-            timerButton.setVisibility(GONE);
-        }
-        else
-        {
-            attackButton.setVisibility(GONE);
-            defendButton.setVisibility(GONE);
-            timerButton.setVisibility(VISIBLE);
-        }
-    }
-
-    /**
-     * Method to hide all buttons in the UI
-     */
-    private void hideButtons()
-    {
-        attackButton.setVisibility(GONE);
-        defendButton.setVisibility(GONE);
-        timerButton.setVisibility(GONE);
-    }
-
-    /**
-     * Method to set the buttons' behaviors (they are the same for both the attack and defend button)
-     */
-    private void setButtonBehavior()
-    {
-        View.OnClickListener attackListener = v ->
-        {
-            LatLng currentPosition = getCurrentPosition();
-            if(currentPosition == null)
-            {
-                Toast.makeText(v.getContext(), "Failed to retrieve position", Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                Zone currentZone = findCurrentZone(currentPosition);
-                if(currentZone != null)
-                {
-                    // Yes, this uses Futures. Shame on you if you didn't pay attention during ParaConc
-                    CompletableFuture<Boolean> voteFuture = CompletableFuture.supplyAsync(() -> backendInterface.voteZone(User.getUid(), User.getSection(), currentZone.getName()));
-                    boolean result = false;
-                    try
-                    {
-                        result = voteFuture.get();
-                    }
-                    catch(Exception e)
-                    {
-                        Log.e("MapsFragment", "Error occurred when voting for a zone", e);
-                    }
-                    if(result)
-                    {
-                        String toastText = (isZoneOwned) ? "Defending zone " : "Attacking zone ";
-                        Toast.makeText(v.getContext(), toastText + currentZone.getName(), Toast.LENGTH_SHORT).show();
-                        attackButton.setVisibility(GONE);
-                        defendButton.setVisibility(GONE);
-                        timerButton.setVisibility(VISIBLE);
-                        hasAttacked = true;
-                    }
-                    else
-                    {
-                        Toast.makeText(v.getContext(), "Operation failed", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        };
-        attackButton.setOnClickListener(attackListener);
-        defendButton.setOnClickListener(attackListener);
     }
 
 }
