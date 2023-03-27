@@ -213,7 +213,10 @@ public class MapsFragment extends Fragment{
     @Override
     public void onDestroyView() {
         scheduler.stopAll();
-        zoneDB.close();
+        if(zoneDB != null)
+        {
+            zoneDB.close();
+        }
         super.onDestroyView();
     }
 
