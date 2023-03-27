@@ -72,8 +72,7 @@ public class MapVoteTest {
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
 
     @Test
-    public void correctDisplayWhenPositionIsUnknown()
-    {
+    public void correctDisplayWhenPositionIsUnknown() throws InterruptedException {
         MainActivity.firebaseInterface = mock;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = null;
@@ -85,14 +84,15 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Thread.sleep(1000);
+
         onView(ViewMatchers.withId(R.id.currentZoneText)).check(matches(withText(containsString("Current zone:\nUnknown"))));
 
         Intents.release();
     }
 
     @Test
-    public void correctDisplayWhenOutsideOfZones()
-    {
+    public void correctDisplayWhenOutsideOfZones() throws InterruptedException {
         MainActivity.firebaseInterface = mock;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = new LatLng(0, 0);
@@ -104,14 +104,15 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Thread.sleep(1000);
+
         onView(ViewMatchers.withId(R.id.currentZoneText)).check(matches(withText(containsString("Current zone:\nNone"))));
 
         Intents.release();
     }
 
     @Test
-    public void zoneIsDisplayedWhenInsideZone()
-    {
+    public void zoneIsDisplayedWhenInsideZone() throws InterruptedException {
         MainActivity.firebaseInterface = mock;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
@@ -123,14 +124,15 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Thread.sleep(1000);
+
         onView(ViewMatchers.withId(R.id.currentZoneText)).check(matches(withText(containsString("Current zone:\ncampus"))));
 
         Intents.release();
     }
 
     @Test
-    public void timerbuttonIsDisplayedWhenOutsideOfTakeover()
-    {
+    public void timerbuttonIsDisplayedWhenOutsideOfTakeover() throws InterruptedException {
         MainActivity.firebaseInterface = mock;
         Calendar time = Calendar.getInstance();
         time.set(Calendar.MINUTE, 30);
@@ -146,6 +148,8 @@ public class MapVoteTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.timerButton)).check(matches(withText(containsString("Next takeover in"))));
 
@@ -170,6 +174,8 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Thread.sleep(1000);
+
         String comp1 = getText(ViewMatchers.withId(R.id.timerButton));
         Date date1 = new SimpleDateFormat("mm:ss").parse(comp1.substring(17));
         assert date1 != null;
@@ -183,8 +189,7 @@ public class MapVoteTest {
     }
 
     @Test
-    public void attackButtonIsDisplayedDuringTakeover()
-    {
+    public void attackButtonIsDisplayedDuringTakeover() throws InterruptedException {
         MainActivity.firebaseInterface = mock;
         User.setSection(Section.SC);
         Calendar time = Calendar.getInstance();
@@ -201,6 +206,8 @@ public class MapVoteTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(isDisplayed()));
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(isClickable()));
@@ -209,8 +216,7 @@ public class MapVoteTest {
     }
 
     @Test
-    public void attackButtonIsDisabledOnAttack()
-    {
+    public void attackButtonIsDisabledOnAttack() throws InterruptedException {
         MainActivity.firebaseInterface = mock;
         User.setSection(Section.SC);
         Calendar time = Calendar.getInstance();
@@ -227,6 +233,8 @@ public class MapVoteTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).perform(ViewActions.click());
 
@@ -240,8 +248,7 @@ public class MapVoteTest {
     }
 
     @Test
-    public void defendButtonIsDisplayedDuringTakeover()
-    {
+    public void defendButtonIsDisplayedDuringTakeover() throws InterruptedException {
         MainActivity.firebaseInterface = mock;
         User.setSection(Section.IN);
         Calendar time = Calendar.getInstance();
@@ -258,6 +265,8 @@ public class MapVoteTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(isDisplayed()));
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(isClickable()));
@@ -266,8 +275,7 @@ public class MapVoteTest {
     }
 
     @Test
-    public void defendButtonIsDisabledOnAttack()
-    {
+    public void defendButtonIsDisabledOnAttack() throws InterruptedException {
         MainActivity.firebaseInterface = mock;
         User.setSection(Section.IN);
         Calendar time = Calendar.getInstance();
@@ -284,6 +292,8 @@ public class MapVoteTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.defendButton)).perform(ViewActions.click());
 
