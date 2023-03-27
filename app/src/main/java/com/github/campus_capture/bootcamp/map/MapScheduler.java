@@ -131,6 +131,7 @@ public class MapScheduler {
         attackButton = view.findViewById(R.id.attackButton);
         defendButton = view.findViewById(R.id.defendButton);
         timerButton = view.findViewById(R.id.timerButton);
+        zoneState = firebaseInterface.getCurrentZoneOwners();
     }
 
     /**
