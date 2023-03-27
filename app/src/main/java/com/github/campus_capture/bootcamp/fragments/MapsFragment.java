@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.PolyUtil;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -44,6 +45,9 @@ public class MapsFragment extends Fragment{
     private ZoneDatabase zoneDB;
     private FirebaseInterface backendInterface;
     private MapScheduler scheduler;
+    public static Calendar time = null;
+    public static boolean locationOverride = false;
+    public static LatLng fixedLocation = null;
     private final View.OnClickListener attackListener = v ->
     {
         LatLng currentPosition = getCurrentPosition();
@@ -119,13 +123,6 @@ public class MapsFragment extends Fragment{
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(epfl, 15));
 
         map.setOnMarkerClickListener(marker -> {
-            // Triggered when user click any marker on the map
-            // See example below:
-           /* Toast.makeText(getActivity(),
-                    marker.getTitle(),
-                    Toast.LENGTH_SHORT).show();
-
-            */
             return false;
         });
 
@@ -138,13 +135,9 @@ public class MapsFragment extends Fragment{
         campus.setStrokeWidth(0);
 
         map.setOnPolygonClickListener(polygon ->{
-            // Triggered when user click any polygon on the map
-            // See example below:
-            /*Toast.makeText(getActivity(),
-                    polygon.getTag().toString(),
-                    Toast.LENGTH_SHORT).show();
-                    */
         });
+
+        scheduler.startAll();
     };
 
     /**
@@ -257,19 +250,34 @@ public class MapsFragment extends Fragment{
      */
     public LatLng getCurrentPosition()
     {
-        try
+        if(!locationOverride)
         {
-            if(!permissionDenied)
+            Location loc = null;
+            try
             {
-                Location loc = map.getMyLocation();
+                if (!permissionDenied)
+                {
+                    loc = map.getMyLocation();
+                }
+            }
+            catch (Exception e)
+            {
+                Log.e("MapsFragment", "Failed retrieving location");
+            }
+
+            if(loc == null)
+            {
+                return null;
+            }
+            else
+            {
                 return new LatLng(loc.getLatitude(), loc.getLongitude());
             }
         }
-        catch (Exception e)
+        else
         {
-            Log.i("MapsFragment", "Failed retrieving location");
+            return fixedLocation;
         }
-        return null;
     }
 
 }

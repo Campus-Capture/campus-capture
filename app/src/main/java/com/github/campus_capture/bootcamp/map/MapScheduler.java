@@ -5,6 +5,7 @@ import static android.view.View.VISIBLE;
 import static com.github.campus_capture.bootcamp.map.ScheduleConstants.MILLIS_PER_HOUR;
 import static com.github.campus_capture.bootcamp.map.ScheduleConstants.MILLIS_PER_MIN;
 import static com.github.campus_capture.bootcamp.map.ScheduleConstants.MILLIS_PER_SEC;
+import static com.github.campus_capture.bootcamp.map.ScheduleConstants.NO_POSITION_RETRY_DELAY;
 import static com.github.campus_capture.bootcamp.map.ScheduleConstants.OWNER_REFRESH_DELAY;
 import static com.github.campus_capture.bootcamp.map.ScheduleConstants.TAKEOVER_DURATION;
 import static com.github.campus_capture.bootcamp.map.ScheduleConstants.ZONE_REFRESH_RATE;
@@ -44,6 +45,7 @@ public class MapScheduler {
     private boolean hasAttacked;
     private Map<String, Section> zoneState;
     private CountDownTimer buttonTimer;
+    public static Calendar time = Calendar.getInstance();
 
     // Task to refresh the zone display at the top of the map
     private final Runnable zoneRefreshTask = new Runnable() {
@@ -55,6 +57,7 @@ public class MapScheduler {
             {
                 label += "Unknown";
                 hideButtons();
+                scheduledTaskHandler.postDelayed(zoneRefreshTask, NO_POSITION_RETRY_DELAY);
             }
             else
             {
@@ -63,7 +66,7 @@ public class MapScheduler {
                 {
                     label += "None";
                     isZoneOwned = false;
-                    hideButtons();
+                    showButtons();
                 }
                 else
                 {
@@ -72,9 +75,9 @@ public class MapScheduler {
                     isZoneOwned = zoneState.get(zoneName) == User.getSection();
                     showButtons();
                 }
+                scheduledTaskHandler.postDelayed(zoneRefreshTask, ZONE_REFRESH_RATE);
             }
             zoneText.setText(label);
-            scheduledTaskHandler.postDelayed(zoneRefreshTask, ZONE_REFRESH_RATE);
             Log.i("MapsFragment", "Refreshing current zone");
         }
     };
@@ -123,35 +126,11 @@ public class MapScheduler {
     {
         firebaseInterface = backend;
         this.upper = upper;
-
         scheduledTaskHandler = new Handler();
         zoneText = view.findViewById(R.id.currentZoneText);
         attackButton = view.findViewById(R.id.attackButton);
         defendButton = view.findViewById(R.id.defendButton);
         timerButton = view.findViewById(R.id.timerButton);
-        hideButtons();
-
-        Calendar now = Calendar.getInstance();
-        long millisSinceHour = now.get(Calendar.MINUTE) * MILLIS_PER_MIN
-                + now.get(Calendar.SECOND) * MILLIS_PER_SEC
-                + now.get(Calendar.MILLISECOND);
-
-        buttonTimer = createTimer(timerButton, millisSinceHour);
-        buttonTimer.start();
-
-        if(millisSinceHour < TAKEOVER_DURATION)
-        {
-            isTakeover = true;
-            scheduledTaskHandler.postDelayed(closeAttacksTask, TAKEOVER_DURATION - millisSinceHour);
-        }
-        else
-        {
-            isTakeover = false;
-
-            scheduledTaskHandler.postDelayed(openAttacksTask, (TAKEOVER_DURATION - millisSinceHour) % MILLIS_PER_HOUR);
-        }
-        hasAttacked = false; // TODO need some way to keep track of this
-        zoneRefreshTask.run();
     }
 
     /**
@@ -161,6 +140,35 @@ public class MapScheduler {
     {
         hasAttacked = true;
         showButtons();
+    }
+
+    /**
+     * Method to start the processes
+     */
+    public void startAll() {
+        long millisSinceHour = time.get(Calendar.MINUTE) * MILLIS_PER_MIN
+                + time.get(Calendar.SECOND) * MILLIS_PER_SEC
+                + time.get(Calendar.MILLISECOND);
+
+        Log.i("MapsFragment", "Millis since hour: " + millisSinceHour);
+
+        buttonTimer = createTimer(timerButton, millisSinceHour);
+        buttonTimer.start();
+
+        if(millisSinceHour < TAKEOVER_DURATION)
+        {
+            Log.i("MapsFragment", "Started in takeover");
+            isTakeover = true;
+            scheduledTaskHandler.postDelayed(closeAttacksTask, TAKEOVER_DURATION - millisSinceHour);
+        }
+        else
+        {
+            Log.i("MapsFragment", "Started outside of takeover");
+            isTakeover = false;
+            scheduledTaskHandler.postDelayed(openAttacksTask, (MILLIS_PER_HOUR - millisSinceHour));
+        }
+        hasAttacked = false; // TODO need some way to keep track of this
+        zoneRefreshTask.run();
     }
 
     /**

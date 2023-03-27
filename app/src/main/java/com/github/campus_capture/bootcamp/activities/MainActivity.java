@@ -33,29 +33,19 @@ import com.github.campus_capture.bootcamp.fragments.ProfileFragment;
 import com.github.campus_capture.bootcamp.fragments.RulesFragment;
 import com.github.campus_capture.bootcamp.fragments.ScoreboardFragment;
 import com.github.campus_capture.bootcamp.fragments.TestFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
-    private FirebaseInterface firebaseInterface;
+    public static FirebaseInterface firebaseInterface;
 
     /**
      * Required empty constructor, which will set the placeholder as the back-end
      */
-    public MainActivity()
-    {
-        firebaseInterface = new PlaceholderFirebaseInterface();
-    }
-
-    /**
-     * Constructor to force-inject a firebase instance
-     * @param backend the back-end to be used
-     */
-    public MainActivity(FirebaseInterface backend)
-    {
-        firebaseInterface = backend;
-    }
-
+    public MainActivity(){}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +58,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         // TODO replace once the firebase access has actually been implemented
-        firebaseInterface = new PlaceholderFirebaseInterface();
+        if(firebaseInterface == null)
+        {
+            firebaseInterface = new PlaceholderFirebaseInterface();
+        }
 
         // Set the behavior of the navigation icon
         drawer = findViewById(R.id.drawer_layout);
