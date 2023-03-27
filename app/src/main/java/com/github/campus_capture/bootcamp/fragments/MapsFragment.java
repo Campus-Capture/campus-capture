@@ -42,7 +42,7 @@ import java.util.concurrent.CompletableFuture;
 public class MapsFragment extends Fragment{
 
     private GoogleMap map;
-    private ZoneDatabase zoneDB;
+    public static ZoneDatabase zoneDB;
     private FirebaseInterface backendInterface;
     private MapScheduler scheduler;
     public static Calendar time = null;
@@ -137,7 +137,7 @@ public class MapsFragment extends Fragment{
         map.setOnPolygonClickListener(polygon ->{
         });
 
-        scheduler.startAll();
+        // scheduler.startAll();
     };
 
     /**
@@ -208,6 +208,8 @@ public class MapsFragment extends Fragment{
 
         view.findViewById(R.id.attackButton).setOnClickListener(attackListener);
         view.findViewById(R.id.defendButton).setOnClickListener(attackListener);
+
+        scheduler.startAll();
     }
 
     @Override
@@ -237,6 +239,10 @@ public class MapsFragment extends Fragment{
      */
     public Zone findCurrentZone(LatLng position)
     {
+        if(zoneDB == null)
+        {
+            return null;
+        }
         ZoneDAO zoneDAO = zoneDB.zoneDAO();
         List<Zone> zones = zoneDAO.getAll();
         for(Zone z : zones)
