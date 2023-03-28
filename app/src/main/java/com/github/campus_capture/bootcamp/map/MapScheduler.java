@@ -66,7 +66,7 @@ public class MapScheduler {
                 {
                     label += "None";
                     isZoneOwned = false;
-                    showButtons();
+                    hideButtons();
                 }
                 else
                 {
