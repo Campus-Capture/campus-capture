@@ -18,11 +18,11 @@ public class LatLngListConverter {
     public List<LatLng> storedStringToLatLng(String value) {
         List<LatLng> vertices = new ArrayList<>();
 
-        String[] coordsPairs = value.split("#");
+        String[] coordsPairs = value.split(" ");
 
         for (String coords : coordsPairs){
-            String lat = coords.split("\\|")[0];
-            String lon = coords.split("\\|")[1];
+            String lat = coords.split(",")[0];
+            String lon = coords.split(",")[1];
             vertices.add(new LatLng(Double.parseDouble(lat), Double.parseDouble(lon)));
         }
 
@@ -31,11 +31,11 @@ public class LatLngListConverter {
 
     @TypeConverter
     public String latLngToStoredString(List<LatLng> vertices) {
-        String value = "";
+        StringBuilder value = new StringBuilder();
 
         for (LatLng vertex : vertices)
-            value += vertex.latitude +  "|" + vertex.longitude + "#";
+            value.append(vertex.latitude).append(",").append(vertex.longitude).append(" ");
 
-        return value;
+        return value.toString();
     }
 }
