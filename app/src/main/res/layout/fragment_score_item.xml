@@ -10,7 +10,6 @@
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/item_number"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
@@ -18,7 +17,6 @@
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <View
-        android:id="@+id/myRectangleView"
         android:layout_width="1dp"
         android:layout_height="54dp"
         android:background="@drawable/rectangle_white" />

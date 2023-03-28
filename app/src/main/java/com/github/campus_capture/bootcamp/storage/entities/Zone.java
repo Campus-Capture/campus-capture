@@ -1,11 +1,8 @@
 package com.github.campus_capture.bootcamp.storage.entities;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -22,8 +19,6 @@ public class Zone {
     private int uid;
 
     private String name;
-
-    // TODO add the current owner, of type Section
 
     private List<LatLng> vertices;
 

@@ -9,7 +9,6 @@
     tools:openDrawer="start">
 
     <include
-        android:id="@+id/app_bar_navigation_drawer"
         layout="@layout/activity_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
