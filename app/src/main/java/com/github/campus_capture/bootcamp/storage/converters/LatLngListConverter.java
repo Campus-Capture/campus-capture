@@ -11,7 +11,7 @@ import java.util.List;
  * Object that can serialize a List of LatLng objects to text and back.
  * It is used as a TypeConverter to store in a Room Persistent Storage Database
  * 
- * The LatLng objects are store as string in the following format : <lat>|<lon>#
+ * The LatLng objects are stored as string in the following format : <lon>|<lat>#
  */
 public class LatLngListConverter {
     @TypeConverter
@@ -21,8 +21,8 @@ public class LatLngListConverter {
         String[] coordsPairs = value.split(" ");
 
         for (String coords : coordsPairs){
-            String lat = coords.split(",")[0];
-            String lon = coords.split(",")[1];
+            String lon = coords.split(",")[0];
+            String lat = coords.split(",")[1];
             vertices.add(new LatLng(Double.parseDouble(lat), Double.parseDouble(lon)));
         }
 
@@ -34,7 +34,7 @@ public class LatLngListConverter {
         StringBuilder value = new StringBuilder();
 
         for (LatLng vertex : vertices)
-            value.append(vertex.latitude).append(",").append(vertex.longitude).append(" ");
+            value.append(vertex.longitude).append(",").append(vertex.latitude).append(" ");
 
         return value.toString();
     }

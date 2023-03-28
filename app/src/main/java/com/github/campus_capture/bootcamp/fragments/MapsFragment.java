@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
 import com.github.campus_capture.bootcamp.storage.dao.ZoneDAO;
+import com.github.campus_capture.bootcamp.storage.entities.Zone;
 import com.github.campus_capture.bootcamp.utils.PermissionUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -82,13 +83,11 @@ public class MapsFragment extends Fragment{
             return false;
         });
 
-        Polygon campus = map.addPolygon(new PolygonOptions()
-                .clickable(true)
-                .addAll(zoneDAO.findByName("campus").getVertices()));
-
-        campus.setTag("EPFL");
-        campus.setFillColor(Color.argb(25, 255, 0, 0));
-        campus.setStrokeWidth(0);
+        for (Zone zone : zoneDAO.getAll()){
+            Polygon poly = map.addPolygon(new PolygonOptions().addAll(zone.getVertices()));
+            poly.setStrokeWidth(0);
+            poly.setFillColor(Color.argb(25, 255, 0, 0));
+        }
 
         map.setOnPolygonClickListener(polygon ->{
             // Triggered when user click any polygon on the map
