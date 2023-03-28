@@ -20,6 +20,7 @@
         app:layout_constraintVertical_bias="0.05" />
 
     <TextView
+        android:id="@+id/profile_name"
         android:layout_width="172dp"
         android:layout_height="43dp"
         android:text="@string/profile_placeholder_name"
@@ -55,6 +56,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/profile_confirm_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/profile_apply_button"

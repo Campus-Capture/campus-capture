@@ -33,7 +33,10 @@ import com.github.campus_capture.bootcamp.fragments.ProfileFragment;
 import com.github.campus_capture.bootcamp.fragments.RulesFragment;
 import com.github.campus_capture.bootcamp.fragments.ScoreboardFragment;
 import com.github.campus_capture.bootcamp.fragments.TestFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
