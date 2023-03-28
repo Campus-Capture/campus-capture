@@ -1,34 +1,42 @@
 package com.github.campus_capture.bootcamp.activities;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.test.core.app.ApplicationProvider;
 
-import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
+import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class AuthenticationActivity extends AppCompatActivity {
 
-    //Create an ActivityResultLauncher which registers a callback for the FirebaseUI Activity result contract
-    private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
-            new FirebaseAuthUIActivityResultContract(),
-            this::onSignInResult
-    );
-
     private final boolean authOK = false;
+
+    private Button login_button;
+    private Button spectate_button;
+    private EditText email;
+    private String emailText;
+    private EditText password;
+    private String passwordText;
+    private FirebaseAuth mAuth;
+
 
 
     @Override
@@ -37,76 +45,127 @@ public class AuthenticationActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_login);
 
-        // Authentication providers
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build());
-
-        // Create and launch sign-in intent
-        Intent signInIntent = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .build();
 
         // Init buttons
-        Button login_button = findViewById(R.id.login_confirm_button);
+        login_button = findViewById(R.id.login_confirm_button);
+
+        // Init texts
+        email = findViewById(R.id.editTextTextEmailAddress2);
+        password = findViewById(R.id.editTextTextPassword2);
+
+
+
+        // Init Auth
+        AppContext context = (AppContext) ApplicationProvider.getApplicationContext();
+        mAuth = context.getFirebaseAuth();
 
         //TODO : Add spectator mode
-        Button spectate_button = findViewById(R.id.login_spectator_button);
+        spectate_button = findViewById(R.id.login_spectator_button);
 
-        setLoginButtonListener(login_button, signInIntent);
+        setLoginButtonListener();
+        setRegisterButtonListener();
     }
 
-    private void setLoginButtonListener(Button submitButton, Intent intent){
-        submitButton.setOnClickListener(view -> signInLauncher.launch(intent));
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            //goToMainActivity();
+        }
+    }
+
+    private void setRegisterButtonListener(){
+        spectate_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                registerClicked();
+            }
+        });
+    }
+
+    private void registerClicked(){
+        emailText = email.getText().toString();
+        passwordText = password.getText().toString();
+
+        if(emailText.endsWith("@epfl.ch")){
+            register();
+        } else {
+            Toast.makeText(this, "You must enter a epfl address", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void register(){
+        mAuth.createUserWithEmailAndPassword(emailText, passwordText)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            assert user != null;
+                            User.setUid(user.getUid());
+                            goToMainActivity();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(AuthenticationActivity.this, "Register failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void setLoginButtonListener(){
+        login_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginClicked();
+            }
+        });
+    }
+
+    private void loginClicked(){
+        emailText = email.getText().toString();
+        passwordText = password.getText().toString();
+
+        if(emailText.endsWith("@epfl.ch")){
+            authenticate();
+        } else {
+            Toast.makeText(this, "You must enter a epfl address", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void authenticate(){
+        mAuth.signInWithEmailAndPassword(emailText, passwordText)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            assert user != null;
+                            if(user.getDisplayName()!=null) {
+                                User.setName(user.getDisplayName());
+                            }
+                            User.setUid(user.getUid());
+
+                            goToMainActivity();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            Toast.makeText(AuthenticationActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     private void goToMainActivity(){
         Intent mainIntent = new Intent(AuthenticationActivity.this, MainActivity.class);
         startActivity(mainIntent);
     }
-
-
-    private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
-        if (result.getResultCode() == RESULT_OK) {
-            // Successfully signed in
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            assert user != null;
-            Toast.makeText(this, "Sign in succeeded, User: "+user.getUid(), Toast.LENGTH_SHORT).show();
-
-            //Set the User
-            User.setUid(user.getUid());
-            User.setName(user.getDisplayName());
-
-            goToMainActivity();
-
-            //verifyIfSectionKnown();
-        } else {
-            // Sign in failed.
-            Toast.makeText(this, "Sign in failed", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /*
-    private void verifyIfSectionKnown(){
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users/"+User.getUid()+"/section");
-        // Read from the database
-        dbRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                if(value!=null) {
-                    goToMainActivity();
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
-    }
-    */
 }
