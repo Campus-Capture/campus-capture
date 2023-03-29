@@ -53,6 +53,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
         //TODO : Add spectator mode
         Button spectate_button = findViewById(R.id.login_spectator_button);
+        spectate_button.setOnClickListener(view -> goToMainActivity());
 
         setLoginButtonListener(login_button, signInIntent);
     }

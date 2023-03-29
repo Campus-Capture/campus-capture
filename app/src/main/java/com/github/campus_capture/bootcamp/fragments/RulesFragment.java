@@ -67,7 +67,7 @@ public class RulesFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        this.rulesText = (TextView) getView().findViewById(R.id.rules_text);
+        this.rulesText = getView().findViewById(R.id.rules_text);
 
         DatabaseReference myRef = database.getReference("rules");
 

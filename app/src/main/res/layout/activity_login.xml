@@ -22,8 +22,8 @@
 
     <Button
         android:id="@+id/login_spectator_button"
-        android:layout_width="255dp"
-        android:layout_height="50dp"
+        android:layout_width="187dp"
+        android:layout_height="49dp"
         android:text="@string/login_spectator_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

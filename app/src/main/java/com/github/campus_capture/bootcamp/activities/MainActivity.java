@@ -1,6 +1,12 @@
 package com.github.campus_capture.bootcamp.activities;
 
-import static com.github.campus_capture.bootcamp.fragments.Fragments.*;
+import static com.github.campus_capture.bootcamp.fragments.Fragments.GREETING_FRAGMENT;
+import static com.github.campus_capture.bootcamp.fragments.Fragments.MAIN_FRAGMENT;
+import static com.github.campus_capture.bootcamp.fragments.Fragments.MAPS_FRAGMENT;
+import static com.github.campus_capture.bootcamp.fragments.Fragments.PROFILE_FRAGMENT;
+import static com.github.campus_capture.bootcamp.fragments.Fragments.RULES_FRAGMENT;
+import static com.github.campus_capture.bootcamp.fragments.Fragments.SCOREBOARD_FRAGMENT;
+import static com.github.campus_capture.bootcamp.fragments.Fragments.TEST_FRAGMENT;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -16,24 +22,28 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.authentication.User;
+import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
+import com.github.campus_capture.bootcamp.firebase.PlaceholderFirebaseInterface;
 import com.github.campus_capture.bootcamp.fragments.Fragments;
 import com.github.campus_capture.bootcamp.fragments.GreetingFragment;
 import com.github.campus_capture.bootcamp.fragments.MainFragment;
 import com.github.campus_capture.bootcamp.fragments.MapsFragment;
 import com.github.campus_capture.bootcamp.fragments.ProfileFragment;
-import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.fragments.RulesFragment;
 import com.github.campus_capture.bootcamp.fragments.ScoreboardFragment;
 import com.github.campus_capture.bootcamp.fragments.TestFragment;
-import com.github.campus_capture.bootcamp.scoreboard.ScoreHandler;
-import com.github.campus_capture.bootcamp.scoreboard.placeholder.PlaceholderScoreHandler;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
+    public static FirebaseInterface firebaseInterface;
 
-    private ScoreHandler scoreHandler;
-
+    /**
+     * Required empty constructor, which will set the placeholder as the back-end
+     */
+    public MainActivity(){}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +55,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setNavigationIcon(R.drawable.menu_icon);
         setSupportActionBar(toolbar);
 
-        // TODO replace once a real score handler has been implemented
-        scoreHandler = new PlaceholderScoreHandler();
+        // TODO replace once the firebase access has actually been implemented
+        if(firebaseInterface == null)
+        {
+            firebaseInterface = new PlaceholderFirebaseInterface();
+        }
 
         // Set the behavior of the navigation icon
         drawer = findViewById(R.id.drawer_layout);
@@ -86,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case MAPS_FRAGMENT:
-                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new MapsFragment());
+                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new MapsFragment(firebaseInterface));
                 break;
 
             case TEST_FRAGMENT:
@@ -102,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case SCOREBOARD_FRAGMENT:
-                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new ScoreboardFragment(scoreHandler));
+                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new ScoreboardFragment(firebaseInterface));
                 break;
 
             default:
@@ -191,12 +204,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.action_logout:
 
                 Intent log_in_intent = new Intent(this, AuthenticationActivity.class);
+                User.setName(null);
+                User.setUid(null);
+                User.setSection(null);
 
                 // Use this to pass the name of the origin activity
                 //log_in_intent.putExtra("message", "From: " + FirstActivity.class.getSimpleName());
 
                 startActivity(log_in_intent);
-
             default:
                 break;
         }

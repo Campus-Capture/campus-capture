@@ -1,13 +1,6 @@
 <resources>
     <string name="app_name">Bootcamp</string>
-    <string name="textview">TextView</string>
-    <string name="your_name">Your Name</string>
-    <string name="submit">Submit</string>
-    <string name="name">Name</string>
-    <string name="action_navigate">Menu</string>
     <string name="title_activity_navigation_drawer">NavigationDrawerActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
@@ -36,6 +29,15 @@
     <string name="profile_section">Section</string>
     <string name="profile_apply_button">Apply</string>
     <string name="placeholder_description">Add description here</string>
+    <string name="current_zone_text">Current zone:\n</string>
+    <string name="attack_button_text">ATTACK</string>
+    <string name="defend_button_text">DEFEND</string>
+    <string name="wait_button_text">Next takeover in </string>
+    <string name="attack_toast_text">Attacking zone </string>
+    <string name="op_failed_toast_text">Operation failed</string>
+    <string name="no_zone_toast_text">No zone to attack found</string>
+    <string name="position_not_found_text">Failed to retrieve position</string>
+    <string name="vote_zone_toast">Attack registered</string>
 
     <!-- for the section spinner-->
     <string-array name="profile_sections">

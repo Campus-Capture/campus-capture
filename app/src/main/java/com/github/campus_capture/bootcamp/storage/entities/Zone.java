@@ -16,13 +16,11 @@ import java.util.List;
  * Class defining a Zone on a map.
  * It is an Entity that can be stored in a database
  */
-@Entity(indices = {@Index(value = {"name"}, unique = true)})
+@Entity
 public class Zone {
     @PrimaryKey
     private int uid;
-
     private String name;
-
     private List<LatLng> vertices;
 
     public Zone(String name, List<LatLng> vertices){
@@ -32,6 +30,11 @@ public class Zone {
 
     @Override
     public boolean equals(@Nullable Object otherZone) {
+        if(!(otherZone instanceof  Zone))
+        {
+            return false;
+        }
+
         if (!name.equals(((Zone) otherZone).getName())) {
             return false;
         }
