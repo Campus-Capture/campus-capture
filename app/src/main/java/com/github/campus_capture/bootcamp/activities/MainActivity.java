@@ -212,7 +212,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //log_in_intent.putExtra("message", "From: " + FirstActivity.class.getSimpleName());
 
                 startActivity(log_in_intent);
-
             default:
                 break;
         }
