@@ -40,13 +40,18 @@ public class AuthenticationActivityTest {
 
     @Rule
     public ActivityScenarioRule<AuthenticationActivity> testRule = new ActivityScenarioRule<>(AuthenticationActivity.class);
+    //@Rule
+    //public ActivityTestRule<AuthenticationActivity> myActivityTestRule = new ActivityTestRule<>(AuthenticationActivity.class, true, false);
 
     @BeforeClass
     public static void setup() {
         //Set emulators
-        AppContext context = (AppContext)ApplicationProvider.getApplicationContext();
+        AppContext context = ApplicationProvider.getApplicationContext();
         context.getFirebaseDB().useEmulator("127.0.0.1", 9000);
         context.getFirebaseAuth().useEmulator("10.0.2.2", 9099);
+        context.getFirebaseAuth().signOut();
+
+
     }
 
     @Before
@@ -57,6 +62,8 @@ public class AuthenticationActivityTest {
     @After
     public void SingleCleanup(){
         Intents.release();
+        AppContext context = ApplicationProvider.getApplicationContext();
+        context.getFirebaseAuth().signOut();
     }
 
     @Test
@@ -110,7 +117,7 @@ public class AuthenticationActivityTest {
         Espresso.closeSoftKeyboard();
 
         //Click the register button
-        onView(ViewMatchers.withId(R.id.login_spectator_button)).perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.login_register_button)).perform(ViewActions.click());
 
         //Wait 3 seconds
         Thread.sleep(SECONDS.toMillis(3));
@@ -130,7 +137,7 @@ public class AuthenticationActivityTest {
         Espresso.closeSoftKeyboard();
 
         //Click the register button
-        onView(ViewMatchers.withId(R.id.login_spectator_button)).perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.login_register_button)).perform(ViewActions.click());
 
         //Wait 3 seconds
         Thread.sleep(SECONDS.toMillis(3));
@@ -153,7 +160,7 @@ public class AuthenticationActivityTest {
         Espresso.closeSoftKeyboard();
 
         //Click the sign in button
-        onView(ViewMatchers.withId(R.id.login_spectator_button)).perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.login_register_button)).perform(ViewActions.click());
 
         //Wait 3 seconds
         Thread.sleep(SECONDS.toMillis(3));
@@ -180,6 +187,28 @@ public class AuthenticationActivityTest {
         Intents.intended(IntentMatchers.hasComponent(MainActivity.class.getName()));
 
     }
+
+    /*@Test
+    public void worksIfAlreadyRegistered() throws InterruptedException {
+        onView(ViewMatchers.withId(R.id.editTextTextEmailAddress2)).perform(ViewActions.typeText(ALREADY_IN_EMAIL));
+        onView(ViewMatchers.withId(R.id.editTextTextPassword2)).perform(ViewActions.typeText(ALREADY_IN_PASSWORD));
+
+        //Close keyboard
+        Espresso.closeSoftKeyboard();
+
+        //Click the sign in button
+        onView(ViewMatchers.withId(R.id.login_confirm_button)).perform(ViewActions.click());
+
+        Espresso.pressBack();
+
+        Thread.sleep(SECONDS.toMillis(3));
+
+        myActivityTestRule.launchActivity(null);
+
+        Thread.sleep(SECONDS.toMillis(3));
+
+        Intents.intended(IntentMatchers.hasComponent(MainActivity.class.getName()));
+    }*/
 
 
 }

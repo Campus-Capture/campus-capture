@@ -5,29 +5,20 @@ import static android.content.ContentValues.TAG;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.test.core.app.ApplicationProvider;
 
-import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class AuthenticationActivity extends AppCompatActivity {
-
-    private final boolean authOK = false;
 
     private Button login_button;
     private Button spectate_button;
@@ -56,11 +47,11 @@ public class AuthenticationActivity extends AppCompatActivity {
 
 
         // Init Auth
-        AppContext context = (AppContext) ApplicationProvider.getApplicationContext();
+        AppContext context = (AppContext) getApplicationContext();
         mAuth = context.getFirebaseAuth();
 
         //TODO : Add spectator mode
-        spectate_button = findViewById(R.id.login_spectator_button);
+        spectate_button = findViewById(R.id.login_register_button);
 
         setLoginButtonListener();
         setRegisterButtonListener();
@@ -72,17 +63,12 @@ public class AuthenticationActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
-            //goToMainActivity();
+            goToMainActivity();
         }
     }
 
     private void setRegisterButtonListener(){
-        spectate_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                registerClicked();
-            }
-        });
+        spectate_button.setOnClickListener(view -> registerClicked());
     }
 
     private void registerClicked(){
@@ -98,33 +84,25 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private void register(){
         mAuth.createUserWithEmailAndPassword(emailText, passwordText)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            assert user != null;
-                            User.setUid(user.getUid());
-                            goToMainActivity();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(AuthenticationActivity.this, "Register failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "createUserWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        assert user != null;
+                        User.setUid(user.getUid());
+                        goToMainActivity();
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                        Toast.makeText(AuthenticationActivity.this, "Register failed.",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private void setLoginButtonListener(){
-        login_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loginClicked();
-            }
-        });
+        login_button.setOnClickListener(view -> loginClicked());
     }
 
     private void loginClicked(){
@@ -140,26 +118,23 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private void authenticate(){
         mAuth.signInWithEmailAndPassword(emailText, passwordText)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            assert user != null;
-                            if(user.getDisplayName()!=null) {
-                                User.setName(user.getDisplayName());
-                            }
-                            User.setUid(user.getUid());
-
-                            goToMainActivity();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(AuthenticationActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        assert user != null;
+                        if(user.getDisplayName()!=null) {
+                            User.setName(user.getDisplayName());
                         }
+                        User.setUid(user.getUid());
+
+                        goToMainActivity();
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                        Toast.makeText(AuthenticationActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
