@@ -81,6 +81,9 @@ dependencies {
     // Also add the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:20.4.1'
 
+    //Add Room library for SQLite compatibility
+    implementation("androidx.room:room-runtime:2.5.0")
+    annotationProcessor("androidx.room:room-compiler:2.5.0")
 
     //Firebase authentication
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
