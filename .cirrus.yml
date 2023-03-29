@@ -29,8 +29,7 @@ check_android_task:
     -no-window
     -camera-back none
   emulator_script: |
-    firebase emulators:start
-    curl 'http://localhost:9099/identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBOJwSYjN-2BJDGUcSVwQnoW5uV72Ohj-w' -H 'Content-Type: application/json' --data-binary '{"email":"andy.murray@epfl.ch","password":"ScotlandBelongsToItself","returnSecureToken":true}'
+    firebase emulators:exec --project sdp-firebase-bootcamp-72e24 './auth_emulator_setup.sh'
   assemble_instrumented_tests_script: |
     chmod +x gradlew
     ./gradlew assembleDebugAndroidTest
