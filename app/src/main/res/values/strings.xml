@@ -36,6 +36,9 @@
     <string name="profile_section">Section</string>
     <string name="profile_apply_button">Apply</string>
     <string name="placeholder_description">Add description here</string>
+    <string name="login_register_string">Register</string>
+    <string name="login_email_string">Email</string>
+    <string name="login_password_string">Password</string>
 
     <!-- for the section spinner-->
     <string-array name="profile_sections">
