@@ -30,6 +30,7 @@ check_android_task:
     -camera-back none
   start_firebase_background_script: |
     firebase emulators:start
+  setup_firebase_background_script: |
     curl 'http://localhost:9099/identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBOJwSYjN-2BJDGUcSVwQnoW5uV72Ohj-w' -H 'Content-Type: application/json' --data-binary '{"email":"andy.murray@epfl.ch","password":"ScotlandBelongsToItself","returnSecureToken":true}'
   assemble_instrumented_tests_script: |
     chmod +x gradlew
