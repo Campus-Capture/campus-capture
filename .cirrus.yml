@@ -9,7 +9,7 @@ container:
 
 check_android_task:
   name: Run Android tests
-  before_script:
+  before_script: |
     touch local.properties
     curl -sL https://firebase.tools | bash
   install_emulator_script:
