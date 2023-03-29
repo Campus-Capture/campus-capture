@@ -261,15 +261,7 @@ public class MapsFragment extends Fragment{
             {
                 Log.e("MapsFragment", "Failed retrieving location");
             }
-
-            if(loc == null)
-            {
-                return null;
-            }
-            else
-            {
-                return new LatLng(loc.getLatitude(), loc.getLongitude());
-            }
+            return (loc == null) ? null : new LatLng(loc.getLatitude(), loc.getLongitude());
         }
         else
         {
