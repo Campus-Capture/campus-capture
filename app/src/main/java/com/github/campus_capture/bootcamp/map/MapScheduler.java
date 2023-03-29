@@ -46,7 +46,8 @@ public class MapScheduler {
     private boolean hasAttacked;
     private Map<String, Section> zoneState;
     private CountDownTimer buttonTimer;
-    public static Calendar time = Calendar.getInstance();
+    public static boolean overrideTime = false;
+    public static Calendar time;
 
     // Task to refresh the zone display at the top of the map
     private final Runnable zoneRefreshTask = new Runnable() {
@@ -139,6 +140,10 @@ public class MapScheduler {
         defendButton = view.findViewById(R.id.defendButton);
         timerButton = view.findViewById(R.id.timerButton);
         zoneState = firebaseInterface.getCurrentZoneOwners();
+        if(!overrideTime)
+        {
+            time = Calendar.getInstance();
+        }
     }
 
     /**

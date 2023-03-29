@@ -145,6 +145,7 @@ public class MapVoteTest {
         time.set(Calendar.MINUTE, 30);
         time.set(Calendar.SECOND, 0);
         time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
@@ -174,6 +175,7 @@ public class MapVoteTest {
         time.set(Calendar.MINUTE, 30);
         time.set(Calendar.SECOND, 0);
         time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
@@ -211,6 +213,7 @@ public class MapVoteTest {
         time.set(Calendar.MINUTE, 5);
         time.set(Calendar.SECOND, 0);
         time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
@@ -242,6 +245,7 @@ public class MapVoteTest {
         time.set(Calendar.MINUTE, 5);
         time.set(Calendar.SECOND, 0);
         time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
@@ -278,6 +282,7 @@ public class MapVoteTest {
         time.set(Calendar.MINUTE, 5);
         time.set(Calendar.SECOND, 0);
         time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
@@ -309,6 +314,7 @@ public class MapVoteTest {
         time.set(Calendar.MINUTE, 5);
         time.set(Calendar.SECOND, 0);
         time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
