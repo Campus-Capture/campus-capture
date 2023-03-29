@@ -107,7 +107,7 @@ public class AuthenticationActivityTest {
         assertThat(Intents.getIntents().isEmpty(), is(true));
 
     }
-    @Ignore("Cirrus à la con bordel!")
+
     @Test
     public void cannotRegisterIfAlready() throws InterruptedException {
         //Fill email and password
@@ -169,7 +169,7 @@ public class AuthenticationActivityTest {
         //Assert that an intent was launched
         Intents.intended(IntentMatchers.hasComponent(MainActivity.class.getName()));
     }
-    @Ignore("Cirrus not happy")
+
     @Test
     public void AuthenticateWorks() throws InterruptedException {
         onView(ViewMatchers.withId(R.id.editTextTextEmailAddress2)).perform(ViewActions.typeText(ALREADY_IN_EMAIL));
