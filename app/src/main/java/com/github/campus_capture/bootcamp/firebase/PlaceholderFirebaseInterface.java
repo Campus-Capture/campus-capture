@@ -5,18 +5,21 @@ import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class PlaceholderFirebaseInterface implements FirebaseInterface {
     @Override
     public boolean voteZone(String uid, Section s, String zonename) {
-        return false;
+        return true;
     }
 
     @Override
     public Map<String, Section> getCurrentZoneOwners() {
-        return null;
+        Map<String, Section> out = new HashMap<>();
+        out.put("campus", Section.IN);
+        return out;
     }
 
     @Override

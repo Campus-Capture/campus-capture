@@ -11,7 +11,6 @@ import java.util.Map;
  */
 public interface FirebaseInterface {
 
-    // TODO should this be the zone name or the uid?
     /**
      * Method to signal to Firebase that the user has voted for a zone
      * @param uid the player's UID

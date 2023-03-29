@@ -51,7 +51,7 @@ public class MapVoteTest {
 
     String recordedZoneName;
 
-    FirebaseInterface mock = new FirebaseInterface() {
+    final FirebaseInterface mock = new FirebaseInterface() {
         @Override
         public boolean voteZone(String uid, Section s, String zonename) {
             recordedZoneName = zonename;

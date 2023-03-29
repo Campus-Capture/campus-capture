@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class MapScheduler {
 
@@ -87,8 +88,15 @@ public class MapScheduler {
         @Override
         public void run()
         {
-            // TODO add a future here or move up to Fragment
-            zoneState = firebaseInterface.getCurrentZoneOwners();
+            CompletableFuture<Map<String, Section>> val = CompletableFuture.supplyAsync(firebaseInterface::getCurrentZoneOwners);
+            try
+            {
+                zoneState = val.get();
+            }
+            catch(Exception e)
+            {
+                Log.e("MapScheduler", "Error ocurred when retrieving the zone owners");
+            }
         }
     };
 
@@ -105,7 +113,6 @@ public class MapScheduler {
 
     // Task to close the attack buttons once the takeover is over
     private final Runnable closeAttacksTask = new Runnable() {
-
         @Override
         public void run() {
             isTakeover = false;
@@ -234,7 +241,6 @@ public class MapScheduler {
                                 timestamp
                 );
             }
-
             @Override
             public void onFinish() {
                 buttonTimer = createTimer(button, 0);

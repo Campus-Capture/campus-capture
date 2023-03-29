@@ -20,11 +20,7 @@ import java.util.List;
 public class Zone {
     @PrimaryKey
     private int uid;
-
     private String name;
-
-    // TODO add the current owner, of type Section
-
     private List<LatLng> vertices;
 
     public Zone(String name, List<LatLng> vertices){

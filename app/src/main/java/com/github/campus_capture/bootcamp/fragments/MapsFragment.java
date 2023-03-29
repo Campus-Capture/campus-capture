@@ -45,7 +45,6 @@ public class MapsFragment extends Fragment{
     public static ZoneDatabase zoneDB;
     private FirebaseInterface backendInterface;
     private MapScheduler scheduler;
-    public static Calendar time = null;
     public static boolean locationOverride = false;
     public static LatLng fixedLocation = null;
     private final View.OnClickListener attackListener = v ->

@@ -1,7 +1,6 @@
 package com.github.campus_capture.bootcamp;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.github.campus_capture.bootcamp.authentication.Section;
@@ -11,6 +10,7 @@ import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 public class PlaceholderFirebaseInterfaceTest {
 
@@ -18,14 +18,15 @@ public class PlaceholderFirebaseInterfaceTest {
     public void testVoteZoneReturnsCorrect()
     {
         PlaceholderFirebaseInterface t = new PlaceholderFirebaseInterface();
-        assertFalse(t.voteZone("", Section.IN, ""));
+        assertTrue(t.voteZone("", Section.IN, ""));
     }
 
     @Test
     public void testCurrentZoneOwners()
     {
         PlaceholderFirebaseInterface t = new PlaceholderFirebaseInterface();
-        assertNull(t.getCurrentZoneOwners());
+        Map<String, Section> owners = t.getCurrentZoneOwners();
+        assertEquals(owners.get("campus"), Section.IN);
     }
 
     @Test
