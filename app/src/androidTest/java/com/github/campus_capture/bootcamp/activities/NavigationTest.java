@@ -3,17 +3,11 @@ package com.github.campus_capture.bootcamp.activities;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.replaceText;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.adevinta.android.barista.interaction.BaristaSleepInteractions.sleep;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.is;
 
 import android.view.View;
 import android.view.ViewGroup;
