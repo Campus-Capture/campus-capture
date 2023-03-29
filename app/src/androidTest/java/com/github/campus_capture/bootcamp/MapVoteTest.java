@@ -51,11 +51,19 @@ public class MapVoteTest {
 
     String recordedZoneName;
 
+    private static boolean hasAttacked;
+
     final FirebaseInterface mock = new FirebaseInterface() {
+
         @Override
         public boolean voteZone(String uid, Section s, String zonename) {
             recordedZoneName = zonename;
             return true;
+        }
+
+        @Override
+        public boolean hasAttacked(String uid) {
+            return hasAttacked;
         }
 
         @Override
@@ -79,6 +87,8 @@ public class MapVoteTest {
         MainActivity.firebaseInterface = mock;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = null;
+        User.setUid("");
+        hasAttacked = false;
 
         Intents.init();
 
@@ -99,6 +109,8 @@ public class MapVoteTest {
         MainActivity.firebaseInterface = mock;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = new LatLng(0, 0);
+        User.setUid("");
+        hasAttacked = false;
 
         Intents.init();
 
@@ -119,10 +131,8 @@ public class MapVoteTest {
         MainActivity.firebaseInterface = mock;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
-        MapsFragment.zoneDB = Room.databaseBuilder(InstrumentationRegistry.getInstrumentation().getTargetContext(),
-                        ZoneDatabase.class, "zones-db")
-                .createFromAsset("databases/zones-db.db")
-                .allowMainThreadQueries().build();
+        User.setUid("");
+        hasAttacked = false;
 
         Intents.init();
 
@@ -149,10 +159,8 @@ public class MapVoteTest {
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
-        MapsFragment.zoneDB = Room.databaseBuilder(InstrumentationRegistry.getInstrumentation().getTargetContext(),
-                        ZoneDatabase.class, "zones-db")
-                .createFromAsset("databases/zones-db.db")
-                .allowMainThreadQueries().build();
+        User.setUid("");
+        hasAttacked = false;
 
         Intents.init();
 
@@ -179,10 +187,8 @@ public class MapVoteTest {
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
-        MapsFragment.zoneDB = Room.databaseBuilder(InstrumentationRegistry.getInstrumentation().getTargetContext(),
-                        ZoneDatabase.class, "zones-db")
-                .createFromAsset("databases/zones-db.db")
-                .allowMainThreadQueries().build();
+        User.setUid("");
+        hasAttacked = false;
 
         Intents.init();
 
@@ -217,10 +223,8 @@ public class MapVoteTest {
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
-        MapsFragment.zoneDB = Room.databaseBuilder(InstrumentationRegistry.getInstrumentation().getTargetContext(),
-                        ZoneDatabase.class, "zones-db")
-                .createFromAsset("databases/zones-db.db")
-                .allowMainThreadQueries().build();
+        User.setUid("");
+        hasAttacked = false;
 
         Intents.init();
 
@@ -249,10 +253,8 @@ public class MapVoteTest {
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
-        MapsFragment.zoneDB = Room.databaseBuilder(InstrumentationRegistry.getInstrumentation().getTargetContext(),
-                        ZoneDatabase.class, "zones-db")
-                .createFromAsset("databases/zones-db.db")
-                .allowMainThreadQueries().build();
+        User.setUid("");
+        hasAttacked = false;
 
         Intents.init();
 
@@ -286,10 +288,8 @@ public class MapVoteTest {
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
-        MapsFragment.zoneDB = Room.databaseBuilder(InstrumentationRegistry.getInstrumentation().getTargetContext(),
-                        ZoneDatabase.class, "zones-db")
-                .createFromAsset("databases/zones-db.db")
-                .allowMainThreadQueries().build();
+        User.setUid("");
+        hasAttacked = false;
 
         Intents.init();
 
@@ -318,10 +318,8 @@ public class MapVoteTest {
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
-        MapsFragment.zoneDB = Room.databaseBuilder(InstrumentationRegistry.getInstrumentation().getTargetContext(),
-                        ZoneDatabase.class, "zones-db")
-                .createFromAsset("databases/zones-db.db")
-                .allowMainThreadQueries().build();
+        User.setUid("");
+        hasAttacked = false;
 
         Intents.init();
 
@@ -338,6 +336,209 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
 
+        onView(ViewMatchers.withId(R.id.timerButton)).check(matches(isDisplayed()));
+
+        Intents.release();
+    }
+
+    @Test
+    public void testIfButtonsAreHiddenWhenInSpectatorMode() throws InterruptedException {
+        MainActivity.firebaseInterface = mock;
+        User.setUid(null);
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        hasAttacked = false;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.timerButton)).check(matches(not(isDisplayed())));
+
+        Intents.release();
+    }
+
+    @Test
+    public void testIfAttackButtonIsShownAtStartOfTakeover() throws InterruptedException {
+        MainActivity.firebaseInterface = mock;
+        User.setSection(Section.SC);
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 59);
+        time.set(Calendar.SECOND, 55);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        User.setUid("");
+        hasAttacked = false;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.timerButton)).check(matches(isDisplayed()));
+
+        Thread.sleep(5000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.timerButton)).check(matches(not(isDisplayed())));
+
+        Intents.release();
+    }
+
+    @Test
+    public void testIfDefendButtonIsShownAtStartOfTakeover() throws InterruptedException {
+        MainActivity.firebaseInterface = mock;
+        User.setSection(Section.IN);
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 59);
+        time.set(Calendar.SECOND, 55);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        User.setUid("");
+        hasAttacked = false;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.timerButton)).check(matches(isDisplayed()));
+
+        Thread.sleep(5000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.timerButton)).check(matches(not(isDisplayed())));
+
+        Intents.release();
+    }
+
+    @Test
+    public void testIfAttackButtonIsCorrectlyClosedAtEndOfTakeover() throws InterruptedException {
+        MainActivity.firebaseInterface = mock;
+        User.setSection(Section.SC);
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 14);
+        time.set(Calendar.SECOND, 55);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        User.setUid("");
+        hasAttacked = false;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.timerButton)).check(matches(not(isDisplayed())));
+
+        Thread.sleep(5000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.timerButton)).check(matches(isDisplayed()));
+
+        Intents.release();
+    }
+
+    @Test
+    public void testIfDefendButtonIsCorrectlyClosedAtEndOfTakeover() throws InterruptedException {
+        MainActivity.firebaseInterface = mock;
+        User.setSection(Section.IN);
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 14);
+        time.set(Calendar.SECOND, 55);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        User.setUid("");
+        hasAttacked = false;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.timerButton)).check(matches(not(isDisplayed())));
+
+        Thread.sleep(5000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.timerButton)).check(matches(isDisplayed()));
+
+        Intents.release();
+    }
+
+    @Test
+    public void testIfAttackButtonsAreHiddenWhenAlreadyAttacked() throws InterruptedException {
+        MainActivity.firebaseInterface = mock;
+        User.setSection(Section.SC);
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 10);
+        time.set(Calendar.SECOND, 0);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        User.setUid("");
+        hasAttacked = true;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.timerButton)).check(matches(isDisplayed()));
 
         Intents.release();

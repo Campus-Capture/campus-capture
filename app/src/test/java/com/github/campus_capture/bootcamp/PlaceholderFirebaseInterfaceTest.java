@@ -1,6 +1,7 @@
 package com.github.campus_capture.bootcamp;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.github.campus_capture.bootcamp.authentication.Section;
@@ -39,6 +40,13 @@ public class PlaceholderFirebaseInterfaceTest {
         {
             assertTrue(scores.get(i).getValue() >= scores.get(i + 1).getValue());
         }
+    }
+
+    @Test
+    public void testIfPlayerAlreadyAttacked()
+    {
+        PlaceholderFirebaseInterface t = new PlaceholderFirebaseInterface();
+        assertFalse(t.hasAttacked("kek"));
     }
 
 }

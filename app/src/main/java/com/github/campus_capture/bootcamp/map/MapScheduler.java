@@ -117,7 +117,6 @@ public class MapScheduler {
         @Override
         public void run() {
             isTakeover = false;
-            hasAttacked = false;
             showButtons();
             scheduledTaskHandler.postDelayed(openAttacksTask, MILLIS_PER_HOUR - TAKEOVER_DURATION);
             scheduledTaskHandler.postDelayed(refreshZoneState, OWNER_REFRESH_DELAY);
@@ -180,7 +179,7 @@ public class MapScheduler {
             isTakeover = false;
             scheduledTaskHandler.postDelayed(openAttacksTask, (MILLIS_PER_HOUR - millisSinceHour));
         }
-        hasAttacked = false; // TODO need some way to keep track of this
+        hasAttacked = firebaseInterface.hasAttacked(User.getUid());
         zoneRefreshTask.run();
     }
 
@@ -212,7 +211,11 @@ public class MapScheduler {
      */
     private void showButtons()
     {
-        if(isTakeover && !hasAttacked)
+        if(User.getUid() == null)
+        {
+            hideButtons();
+        }
+        else if(isTakeover && !hasAttacked)
         {
             attackButton.setVisibility((isZoneOwned) ? GONE : VISIBLE);
             defendButton.setVisibility((isZoneOwned) ? VISIBLE : GONE);

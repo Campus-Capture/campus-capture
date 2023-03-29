@@ -42,7 +42,7 @@ import java.util.concurrent.CompletableFuture;
 public class MapsFragment extends Fragment{
 
     private GoogleMap map;
-    public static ZoneDatabase zoneDB;
+    private ZoneDatabase zoneDB;
     private FirebaseInterface backendInterface;
     private MapScheduler scheduler;
     public static boolean locationOverride = false;
@@ -91,15 +91,6 @@ public class MapsFragment extends Fragment{
      */
     private boolean permissionDenied = false;
     private final OnMapReadyCallback callback = googleMap -> {
-
-        //Build and initialize the DB
-        //The DB contains the Zone around the campus
-
-        zoneDB = Room.databaseBuilder(getActivity(),
-                ZoneDatabase.class, "zones-db")
-                .createFromAsset("databases/zones-db.db")
-                .allowMainThreadQueries().build();
-
         ZoneDAO zoneDAO = zoneDB.zoneDAO();
 
         map = googleMap;
@@ -197,6 +188,11 @@ public class MapsFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        zoneDB = Room.databaseBuilder(getActivity(),
+                        ZoneDatabase.class, "zones-db")
+                .createFromAsset("databases/zones-db.db")
+                .allowMainThreadQueries().build();
+
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
@@ -214,20 +210,14 @@ public class MapsFragment extends Fragment{
     @Override
     public void onDestroyView() {
         scheduler.stopAll();
-        if(zoneDB != null)
-        {
-            zoneDB.close();
-        }
+        zoneDB.close();
         super.onDestroyView();
     }
 
     @Override
     public void onDestroy()
     {
-        if(zoneDB != null)
-        {
-            zoneDB.close();
-        }
+        zoneDB.close();
         super.onDestroy();
     }
 
@@ -238,10 +228,6 @@ public class MapsFragment extends Fragment{
      */
     public Zone findCurrentZone(LatLng position)
     {
-        if(zoneDB == null)
-        {
-            return null;
-        }
         ZoneDAO zoneDAO = zoneDB.zoneDAO();
         List<Zone> zones = zoneDAO.getAll();
         for(Zone z : zones)

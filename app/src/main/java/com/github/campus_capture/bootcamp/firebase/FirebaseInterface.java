@@ -21,6 +21,12 @@ public interface FirebaseInterface {
     boolean voteZone(String uid, Section s, String zonename);
 
     /**
+     * Method to check if a player has attacked during the current take-over or not
+     * @param uid the player's UID
+     */
+    boolean hasAttacked(String uid);
+
+    /**
      * Method to retrieve a map of the sections and their owners
      * @return Map<String, Section>: Section may be null if there is no owner
      */

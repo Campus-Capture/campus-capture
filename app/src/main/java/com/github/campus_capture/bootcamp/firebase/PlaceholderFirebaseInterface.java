@@ -16,6 +16,11 @@ public class PlaceholderFirebaseInterface implements FirebaseInterface {
     }
 
     @Override
+    public boolean hasAttacked(String uid) {
+        return false;
+    }
+
+    @Override
     public Map<String, Section> getCurrentZoneOwners() {
         Map<String, Section> out = new HashMap<>();
         out.put("campus", Section.IN);

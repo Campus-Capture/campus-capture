@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
 import com.github.campus_capture.bootcamp.firebase.PlaceholderFirebaseInterface;
 import com.github.campus_capture.bootcamp.fragments.Fragments;
@@ -203,6 +204,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.action_logout:
 
                 Intent log_in_intent = new Intent(this, AuthenticationActivity.class);
+                User.setName(null);
+                User.setUid(null);
+                User.setSection(null);
 
                 // Use this to pass the name of the origin activity
                 //log_in_intent.putExtra("message", "From: " + FirstActivity.class.getSimpleName());
