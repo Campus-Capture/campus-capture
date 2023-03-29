@@ -11,9 +11,10 @@ check_android_task:
   name: Run Android tests
   before_script: |
     touch local.properties
-    curl -sL https://firebase.tools | bash
   install_emulator_script:
     sdkmanager --install "system-images;android-30;google_apis;x86"
+  install_firebase_emulator_script: |
+    curl -sL https://firebase.tools | bash
   create_avd_script:
     echo no | avdmanager create avd --force
     --name emulator
@@ -27,8 +28,10 @@ check_android_task:
     -no-snapshot
     -no-window
     -camera-back none
-  assemble_instrumented_tests_script: |
+  emulator_script: |
+    firebase emulators:start
     curl 'http://localhost:9099/identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBOJwSYjN-2BJDGUcSVwQnoW5uV72Ohj-w' -H 'Content-Type: application/json' --data-binary '{"email":"andy.murray@epfl.ch","password":"ScotlandBelongsToItself","returnSecureToken":true}'
+  assemble_instrumented_tests_script: |
     chmod +x gradlew
     ./gradlew assembleDebugAndroidTest
   wait_for_avd_script:
@@ -41,8 +44,6 @@ check_android_task:
     curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     chmod +x ./cc-test-reporter
     ./cc-test-reporter before-build
-  emulator_script:
-    firebase emulators:exec --project sdp-firebase-bootcamp-72e24 './auth_emulator_setup.sh'
   screen_record_background_script:
     for n in $(seq 1 20); do adb exec-out screenrecord --time-limit=180 --output-format=h264 - > $n.h264; done
   check_script:
