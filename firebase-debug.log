@@ -1,0 +1,134 @@
+[debug] [2023-03-29T08:37:18.293Z] ----------------------------------------------------------------------
+[debug] [2023-03-29T08:37:18.295Z] Command:       /usr/local/bin/firebase /home/benjamin/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase emulators:start
+[debug] [2023-03-29T08:37:18.295Z] CLI Version:   11.25.1
+[debug] [2023-03-29T08:37:18.295Z] Platform:      linux
+[debug] [2023-03-29T08:37:18.295Z] Node Version:  v16.16.0
+[debug] [2023-03-29T08:37:18.297Z] Time:          Wed Mar 29 2023 10:37:18 GMT+0200 (Central European Summer Time)
+[debug] [2023-03-29T08:37:18.297Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-03-29T08:37:18.300Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2023-03-29T08:37:18.383Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-03-29T08:37:18.383Z] > authorizing via signed-in user (beuret.benjamin@gmail.com)
+[debug] [2023-03-29T08:37:18.452Z] openjdk version "17.0.6" 2023-01-17
+OpenJDK Runtime Environment (build 17.0.6+10-Ubuntu-0ubuntu122.04)
+
+[debug] [2023-03-29T08:37:18.452Z] OpenJDK 64-Bit Server VM (build 17.0.6+10-Ubuntu-0ubuntu122.04, mixed mode, sharing)
+
+[debug] [2023-03-29T08:37:18.460Z] Parsed Java major version: 17
+[info] i  emulators: Starting emulators: auth, functions, database {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, functions, database"}}
+[debug] [2023-03-29T08:37:18.466Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-03-29T08:37:18.467Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-03-29T08:37:18.467Z] [database] Database Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-03-29T08:37:18.467Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"database":[{"address":"127.0.0.1","family":"IPv4","port":9000}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2023-03-29T08:37:18.478Z] [hub] writing locator at /tmp/hub-sdp-firebase-bootcamp-72e24.json
+[debug] [2023-03-29T08:37:18.484Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-03-29T08:37:18.484Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-03-29T08:37:18.484Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"database":[{"address":"127.0.0.1","family":"IPv4","port":9000}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[warn] ⚠  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: firestore, hosting, pubsub, storage {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mfirestore, hosting, pubsub, storage\u001b[22m"}}
+[debug] [2023-03-29T08:37:18.489Z] defaultcredentials: writing to file /home/benjamin/.config/firebase/beuret_benjamin_gmail.com_application_default_credentials.json
+[debug] [2023-03-29T08:37:18.491Z] Setting GAC to /home/benjamin/.config/firebase/beuret_benjamin_gmail.com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to /home/benjamin/.config/firebase/beuret_benjamin_gmail.com_application_default_credentials.json"}}
+[debug] [2023-03-29T08:37:18.492Z] > refreshing access token with scopes: []
+[debug] [2023-03-29T08:37:18.493Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2023-03-29T08:37:18.493Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-03-29T08:37:18.584Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2023-03-29T08:37:18.584Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-03-29T08:37:18.595Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/sdp-firebase-bootcamp-72e24/adminSdkConfig [none]
+[debug] [2023-03-29T08:37:18.678Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2023-03-29T08:37:18.679Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2023-03-29T08:37:18.916Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/sdp-firebase-bootcamp-72e24/adminSdkConfig 200
+[debug] [2023-03-29T08:37:18.917Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/sdp-firebase-bootcamp-72e24/adminSdkConfig {"projectId":"sdp-firebase-bootcamp-72e24","databaseURL":"https://sdp-firebase-bootcamp-72e24-default-rtdb.europe-west1.firebasedatabase.app","storageBucket":"sdp-firebase-bootcamp-72e24.appspot.com"}
+[debug] [2023-03-29T08:37:18.965Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/sdp-firebase-bootcamp-72e24 [none]
+[debug] [2023-03-29T08:37:19.427Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/sdp-firebase-bootcamp-72e24 200
+[debug] [2023-03-29T08:37:19.428Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/sdp-firebase-bootcamp-72e24 {"projectId":"sdp-firebase-bootcamp-72e24","projectNumber":"213185384651","displayName":"sdp-firebase-bootcamp","name":"projects/sdp-firebase-bootcamp-72e24","resources":{"hostingSite":"sdp-firebase-bootcamp-72e24","realtimeDatabaseInstance":"sdp-firebase-bootcamp-72e24-default-rtdb"},"state":"ACTIVE","etag":"1_c73e7169-916a-4a7d-ae50-00158e7608f0"}
+[debug] [2023-03-29T08:37:19.429Z] database rules config:  [{"instance":"sdp-firebase-bootcamp-72e24-default-rtdb","rules":"/home/benjamin/AndroidStudioProjects/Bootcamp/database.rules.json"}]
+[debug] [2023-03-29T08:37:19.449Z] Ignoring unsupported arg: projectId {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: projectId"}}
+[debug] [2023-03-29T08:37:19.450Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-03-29T08:37:19.450Z] Ignoring unsupported arg: rules {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: rules"}}
+[debug] [2023-03-29T08:37:19.451Z] Starting Database Emulator with command {"binary":"java","args":["-Duser.language=en","-jar","/home/benjamin/.cache/firebase/emulators/firebase-database-emulator-v4.11.0.jar","--host","127.0.0.1","--port",9000,"--single_project_mode","Warning","--functions_emulator_host","127.0.0.1","--functions_emulator_port",5001],"optionalArgs":["port","host","functions_emulator_port","functions_emulator_host","single_project_mode"],"joinArgs":false} {"metadata":{"emulator":{"name":"database"},"message":"Starting Database Emulator with command {\"binary\":\"java\",\"args\":[\"-Duser.language=en\",\"-jar\",\"/home/benjamin/.cache/firebase/emulators/firebase-database-emulator-v4.11.0.jar\",\"--host\",\"127.0.0.1\",\"--port\",9000,\"--single_project_mode\",\"Warning\",\"--functions_emulator_host\",\"127.0.0.1\",\"--functions_emulator_port\",5001],\"optionalArgs\":[\"port\",\"host\",\"functions_emulator_port\",\"functions_emulator_host\",\"single_project_mode\"],\"joinArgs\":false}"}}
+[info] i  database: Database Emulator logging to database-debug.log {"metadata":{"emulator":{"name":"database"},"message":"Database Emulator logging to \u001b[1mdatabase-debug.log\u001b[22m"}}
+[debug] [2023-03-29T08:37:20.659Z] 10:37:20.658 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
+ {"metadata":{"emulator":{"name":"database"},"message":"10:37:20.658 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started\n"}}
+[debug] [2023-03-29T08:37:20.852Z] 10:37:20.852 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000
+ {"metadata":{"emulator":{"name":"database"},"message":"10:37:20.852 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000\n"}}
+[debug] [2023-03-29T08:37:27.614Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-03-29T08:37:27.614Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2023-03-29T08:37:27.615Z] Starting Emulator UI with command {"binary":"node","args":["/home/benjamin/.cache/firebase/emulators/ui-v1.11.4/server/server.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"/home/benjamin/.cache/firebase/emulators/ui-v1.11.4/server/server.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
+[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
+[debug] [2023-03-29T08:37:27.834Z] Web / API server started at 127.0.0.1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4000\n"}}
+[debug] [2023-03-29T08:37:27.835Z] Web / API server started at ::1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4000\n"}}
+[info] i  functions: Watching "/home/benjamin/AndroidStudioProjects/Bootcamp/functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"/home/benjamin/AndroidStudioProjects/Bootcamp/functions\" for Cloud Functions..."}}
+[debug] [2023-03-29T08:37:27.885Z] Validating nodejs source
+[debug] [2023-03-29T08:37:28.775Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^11.5.0",
+    "firebase-functions": "^4.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.0",
+    "firebase-functions-test": "^3.0.0"
+  },
+  "private": true
+}
+[error] ⬢  functions: Failed to load function definition from source: FirebaseError: There was an error reading functions/package.json:
+
+ functions/lib/index.js does not exist, can't deploy Cloud Functions {"metadata":{"emulator":{"name":"functions"},"message":"Failed to load function definition from source: FirebaseError: There was an error reading functions/package.json:\n\n functions/lib/index.js does not exist, can't deploy Cloud Functions"}}
+[debug] [2023-03-29T08:37:28.777Z] >>> [apiv2][query] PUT http://127.0.0.1:9000/.settings/rules.json ns=sdp-firebase-bootcamp-72e24-default-rtdb
+[debug] [2023-03-29T08:37:28.777Z] >>> [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json "{\n  \"rules\": {\n    \".read\": \"now < 1680213600000\",  // 2023-3-31\n    \".write\": \"now < 1680213600000\",  // 2023-3-31\n  }\n}"
+[debug] [2023-03-29T08:37:29.018Z] 10:37:29.017 [NamespaceSystem-akka.actor.default-dispatcher-6] INFO com.firebase.core.namespace.NamespaceActor - sdp-firebase-bootcamp-72e24-default-rtdb successfully activated FBKV (SurveyIdle(0)) wait: 128ms, init: 0ms
+ {"metadata":{"emulator":{"name":"database"},"message":"10:37:29.017 [NamespaceSystem-akka.actor.default-dispatcher-6] INFO com.firebase.core.namespace.NamespaceActor - sdp-firebase-bootcamp-72e24-default-rtdb successfully activated FBKV (SurveyIdle(0)) wait: 128ms, init: 0ms\n"}}
+[debug] [2023-03-29T08:37:29.093Z] 10:37:29.093 [NamespaceSystem-blocking-namespace-operation-dispatcher-7] INFO com.firebase.core.namespace.StateManager - Namespace sdp-firebase-bootcamp-72e24-default-rtdb status Active to Active
+ {"metadata":{"emulator":{"name":"database"},"message":"10:37:29.093 [NamespaceSystem-blocking-namespace-operation-dispatcher-7] INFO com.firebase.core.namespace.StateManager - Namespace sdp-firebase-bootcamp-72e24-default-rtdb status Active to Active\n"}}
+[debug] [2023-03-29T08:37:29.142Z] <<< [apiv2][status] PUT http://127.0.0.1:9000/.settings/rules.json 200
+[debug] [2023-03-29T08:37:29.142Z] <<< [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json {"status":"ok"}
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬────────────────┬─────────────────────────────────┐
+│ Emulator       │ Host:Port      │ View in Emulator UI             │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Authentication │ 127.0.0.1:9099 │ http://127.0.0.1:4000/auth      │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Functions      │ 127.0.0.1:5001 │ http://127.0.0.1:4000/functions │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Database       │ 127.0.0.1:9000 │ http://127.0.0.1:4000/database  │
+└────────────────┴────────────────┴─────────────────────────────────┘
+  Emulator Hub running at 127.0.0.1:4400
+  Other reserved ports: 4500
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2023-03-29T08:39:51.299Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/sdp-firebase-bootcamp-72e24/trigger_multicast [none]
+[debug] [2023-03-29T08:39:51.300Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/sdp-firebase-bootcamp-72e24/trigger_multicast {"eventId":"9ca8b0a5-7367-4aa3-9c2d-9d2d7be31257","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/sdp-firebase-bootcamp-72e24","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2023-03-29T08:39:51.299Z","data":{"uid":"Hp6gP3GyseiWfa9TXneUpoW2npSD","email":"andy.murray@epfl.ch","emailVerified":false,"displayName":"andy.murray@epfl.ch","photoURL":"","metadata":{"creationTime":"2023-03-29T08:39:51.296Z","lastSignInTime":"2023-03-29T08:39:51.296Z"},"customClaims":{},"providerData":[{"providerId":"password","email":"andy.murray@epfl.ch","federatedId":"andy.murray@epfl.ch","rawId":"andy.murray@epfl.ch","displayName":"andy.murray@epfl.ch","photoUrl":""}],"mfaInfo":[]}}
+[debug] [2023-03-29T08:39:51.307Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/sdp-firebase-bootcamp-72e24/trigger_multicast 200
+[debug] [2023-03-29T08:39:51.307Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/sdp-firebase-bootcamp-72e24/trigger_multicast {"status":"multicast_acknowledged"}
+[debug] [2023-03-29T08:53:00.457Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/sdp-firebase-bootcamp-72e24/trigger_multicast [none]
+[debug] [2023-03-29T08:53:00.458Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/sdp-firebase-bootcamp-72e24/trigger_multicast {"eventId":"a7f7c1f9-90b2-4263-aff7-3ce614c418da","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/sdp-firebase-bootcamp-72e24","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2023-03-29T08:53:00.457Z","data":{"uid":"xNRWUaZvhwxCVH9oqLg36MVgqugy","email":"rafael.nadal@epfl.ch","emailVerified":false,"metadata":{"creationTime":"2023-03-29T08:53:00.456Z","lastSignInTime":"2023-03-29T08:53:00.456Z"},"customClaims":{},"providerData":[{"providerId":"password","email":"rafael.nadal@epfl.ch","federatedId":"rafael.nadal@epfl.ch","rawId":"rafael.nadal@epfl.ch"}]}}
+[debug] [2023-03-29T08:53:00.463Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/sdp-firebase-bootcamp-72e24/trigger_multicast 200
+[debug] [2023-03-29T08:53:00.463Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/sdp-firebase-bootcamp-72e24/trigger_multicast {"status":"multicast_acknowledged"}
+[debug] [2023-03-29T09:15:06.417Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/sdp-firebase-bootcamp-72e24/trigger_multicast [none]
+[debug] [2023-03-29T09:15:06.417Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/sdp-firebase-bootcamp-72e24/trigger_multicast {"eventId":"62f0ddc2-6158-40c4-8c31-b1fb2dab9c43","eventType":"providers/firebase.auth/eventTypes/user.delete","resource":{"name":"projects/sdp-firebase-bootcamp-72e24","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2023-03-29T09:15:06.417Z","data":{"uid":"xNRWUaZvhwxCVH9oqLg36MVgqugy","email":"rafael.nadal@epfl.ch","emailVerified":false,"metadata":{"creationTime":"2023-03-29T08:53:00.456Z","lastSignInTime":"2023-03-29T08:53:00.456Z"},"customClaims":{},"providerData":[{"providerId":"password","email":"rafael.nadal@epfl.ch","federatedId":"rafael.nadal@epfl.ch","rawId":"rafael.nadal@epfl.ch"}]}}
+[debug] [2023-03-29T09:15:06.423Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/sdp-firebase-bootcamp-72e24/trigger_multicast 200
+[debug] [2023-03-29T09:15:06.424Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/sdp-firebase-bootcamp-72e24/trigger_multicast {"status":"multicast_acknowledged"}
+[debug] [2023-03-29T09:15:28.736Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/sdp-firebase-bootcamp-72e24/trigger_multicast [none]
+[debug] [2023-03-29T09:15:28.736Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/sdp-firebase-bootcamp-72e24/trigger_multicast {"eventId":"47f510b0-261f-4aab-84e0-b4a30919115b","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/sdp-firebase-bootcamp-72e24","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2023-03-29T09:15:28.736Z","data":{"uid":"FAdKuhd005bfe8zTcG5ZwYFD7niA","email":"rafael.nadal@epfl.ch","emailVerified":false,"metadata":{"creationTime":"2023-03-29T09:15:28.736Z","lastSignInTime":"2023-03-29T09:15:28.736Z"},"customClaims":{},"providerData":[{"providerId":"password","email":"rafael.nadal@epfl.ch","federatedId":"rafael.nadal@epfl.ch","rawId":"rafael.nadal@epfl.ch"}]}}
+[debug] [2023-03-29T09:15:28.740Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/sdp-firebase-bootcamp-72e24/trigger_multicast 200
+[debug] [2023-03-29T09:15:28.741Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/sdp-firebase-bootcamp-72e24/trigger_multicast {"status":"multicast_acknowledged"}
