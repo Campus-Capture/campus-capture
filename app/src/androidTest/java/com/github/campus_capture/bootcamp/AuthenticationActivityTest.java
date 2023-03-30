@@ -50,8 +50,6 @@ public class AuthenticationActivityTest {
         AppContext context = ApplicationProvider.getApplicationContext();
         context.getFirebaseAuth().useEmulator("10.0.2.2", 9099);
         context.getFirebaseAuth().signOut();
-
-
     }
 
     /**
@@ -192,6 +190,18 @@ public class AuthenticationActivityTest {
         //Assert that an intent was launched
         Intents.intended(IntentMatchers.hasComponent(MainActivity.class.getName()));
 
+    }
+
+    @Test
+    public void SpectatorWorks() throws InterruptedException {
+        //Click the sign in button
+        onView(ViewMatchers.withId(R.id.login_spectator_button)).perform(ViewActions.click());
+
+        //Wait 3 seconds
+        Thread.sleep(SECONDS.toMillis(3));
+
+        //Assert that an intent was launched
+        Intents.intended(IntentMatchers.hasComponent(MainActivity.class.getName()));
     }
 
     /*@Test

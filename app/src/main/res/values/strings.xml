@@ -23,7 +23,7 @@
     <string name="menu_profile">Profile</string>
     <string name="login_welcome_text">Campus Capture</string>
     <string name="login_spectator_text">Spectator</string>
-    <string name="login_google_text">Log in with Google</string>
+    <string name="login_google_text">Log in</string>
     <string name="profile_title">Profile</string>
     <string name="profile_placeholder_name"><![CDATA[<name>]]></string>
     <string name="profile_section">Section</string>
