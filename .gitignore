@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+/.idea/androidTestResultsUserPreferences.xml
+/database-debug.log
+/ui-debug.log

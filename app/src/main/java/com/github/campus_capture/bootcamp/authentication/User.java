@@ -3,7 +3,7 @@ package com.github.campus_capture.bootcamp.authentication;
 public class User {
 
     private static String name;
-    private static String uid;
+    private static String uid = null;
     private static Section section;
 
     public static String getName(){

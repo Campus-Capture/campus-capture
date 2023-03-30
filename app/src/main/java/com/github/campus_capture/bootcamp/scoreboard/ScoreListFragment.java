@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
 
 /**
  * A fragment representing the score board
@@ -20,7 +21,7 @@ public class ScoreListFragment extends Fragment {
 
     private static final int COLUMN_COUNT = 2;
 
-    private ScoreHandler handler;
+    private FirebaseInterface firebaseInterface;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -29,13 +30,13 @@ public class ScoreListFragment extends Fragment {
     public ScoreListFragment() {
     }
 
-    public ScoreListFragment(ScoreHandler handler)
+    public ScoreListFragment(FirebaseInterface backend)
     {
-        this.handler = handler;
+        firebaseInterface = backend;
     }
 
-    public static ScoreListFragment newInstance(ScoreHandler handler) {
-        ScoreListFragment fragment = new ScoreListFragment(handler);
+    public static ScoreListFragment newInstance(FirebaseInterface backend) {
+        ScoreListFragment fragment = new ScoreListFragment(backend);
         fragment.setArguments(new Bundle());
         return fragment;
     }
@@ -56,7 +57,7 @@ public class ScoreListFragment extends Fragment {
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new GridLayoutManager(context, COLUMN_COUNT));
 
-            recyclerView.setAdapter(new ScoreRecyclerViewAdapter(handler.getScores()));
+            recyclerView.setAdapter(new ScoreRecyclerViewAdapter(firebaseInterface.getScores()));
         }
         return view;
     }
