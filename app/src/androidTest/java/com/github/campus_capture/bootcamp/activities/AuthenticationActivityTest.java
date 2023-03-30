@@ -1,6 +1,7 @@
 package com.github.campus_capture.bootcamp.activities;
 
 import static androidx.test.espresso.Espresso.onView;
+import static com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -122,8 +123,12 @@ public class AuthenticationActivityTest {
         //Close keyboard
         Espresso.closeSoftKeyboard();
 
+
         //Click the register button
         onView(ViewMatchers.withId(R.id.login_register_button)).perform(ViewActions.click());
+
+        //Agree the TOS
+        clickOn("I agree");
 
         //Wait 3 seconds
         Thread.sleep(SECONDS.toMillis(3));
@@ -167,6 +172,8 @@ public class AuthenticationActivityTest {
 
         //Click the sign in button
         onView(ViewMatchers.withId(R.id.login_register_button)).perform(ViewActions.click());
+
+        clickOn("I agree");
 
         //Wait 3 seconds
         Thread.sleep(SECONDS.toMillis(3));
