@@ -51,8 +51,8 @@ public class AuthenticationActivity extends AppCompatActivity {
         spectator_button = findViewById(R.id.login_spectator_button);
 
         // Init texts
-        email = findViewById(R.id.editTextTextEmailAddress2);
-        password = findViewById(R.id.editTextTextPassword2);
+        email = findViewById(R.id.login_email_address);
+        password = findViewById(R.id.login_password);
 
         // Init Auth (Authenticater)
         AppContext context = (AppContext) getApplicationContext();

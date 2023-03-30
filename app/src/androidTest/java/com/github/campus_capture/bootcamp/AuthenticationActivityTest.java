@@ -73,8 +73,8 @@ public class AuthenticationActivityTest {
     @Test
     public void cannotAuthenticateWithNotEPFLEmail() throws InterruptedException {
         //Fill email and password
-        onView(ViewMatchers.withId(R.id.editTextTextEmailAddress2)).perform(ViewActions.typeText(FALSE_EMAIL));
-        onView(ViewMatchers.withId(R.id.editTextTextPassword2)).perform(ViewActions.typeText(PASSWORD));
+        onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(FALSE_EMAIL));
+        onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(PASSWORD));
 
         //Close keyboard
         Espresso.closeSoftKeyboard();
@@ -94,8 +94,8 @@ public class AuthenticationActivityTest {
     @Test
     public void cannotAuthenticateIfNotYetRegistered() throws InterruptedException {
         //Fill email and password
-        onView(ViewMatchers.withId(R.id.editTextTextEmailAddress2)).perform(ViewActions.typeText(UNREG_EMAIL));
-        onView(ViewMatchers.withId(R.id.editTextTextPassword2)).perform(ViewActions.typeText(PASSWORD));
+        onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(UNREG_EMAIL));
+        onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(PASSWORD));
 
         //Close keyboard
         Espresso.closeSoftKeyboard();
@@ -114,8 +114,8 @@ public class AuthenticationActivityTest {
     @Test
     public void cannotRegisterIfAlready() throws InterruptedException {
         //Fill email and password
-        onView(ViewMatchers.withId(R.id.editTextTextEmailAddress2)).perform(ViewActions.typeText(ALREADY_IN_EMAIL));
-        onView(ViewMatchers.withId(R.id.editTextTextPassword2)).perform(ViewActions.typeText(ALREADY_IN_PASSWORD));
+        onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(ALREADY_IN_EMAIL));
+        onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(ALREADY_IN_PASSWORD));
 
         //Close keyboard
         Espresso.closeSoftKeyboard();
@@ -134,8 +134,8 @@ public class AuthenticationActivityTest {
     @Test
     public void cannotRegisterIfNOTEPFLEmail() throws InterruptedException {
         //Fill email and password
-        onView(ViewMatchers.withId(R.id.editTextTextEmailAddress2)).perform(ViewActions.typeText(FALSE_EMAIL));
-        onView(ViewMatchers.withId(R.id.editTextTextPassword2)).perform(ViewActions.typeText(PASSWORD));
+        onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(FALSE_EMAIL));
+        onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(PASSWORD));
 
         //Close keyboard
         Espresso.closeSoftKeyboard();
@@ -157,8 +157,8 @@ public class AuthenticationActivityTest {
     public void canRegister() throws InterruptedException {
 
         //Fill email and password
-        onView(ViewMatchers.withId(R.id.editTextTextEmailAddress2)).perform(ViewActions.typeText(REG_EMAIL));
-        onView(ViewMatchers.withId(R.id.editTextTextPassword2)).perform(ViewActions.typeText(PASSWORD));
+        onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(REG_EMAIL));
+        onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(PASSWORD));
 
         //Close keyboard
         Espresso.closeSoftKeyboard();
@@ -175,8 +175,8 @@ public class AuthenticationActivityTest {
 
     @Test
     public void AuthenticateWorks() throws InterruptedException {
-        onView(ViewMatchers.withId(R.id.editTextTextEmailAddress2)).perform(ViewActions.typeText(ALREADY_IN_EMAIL));
-        onView(ViewMatchers.withId(R.id.editTextTextPassword2)).perform(ViewActions.typeText(ALREADY_IN_PASSWORD));
+        onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(ALREADY_IN_EMAIL));
+        onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(ALREADY_IN_PASSWORD));
 
         //Close keyboard
         Espresso.closeSoftKeyboard();
