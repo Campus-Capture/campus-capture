@@ -22,6 +22,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private Button login_button;
     private Button register_button;
+    private Button spectator_button;
     private EditText email;
     private String emailText;
     private EditText password;
@@ -32,8 +33,8 @@ public class AuthenticationActivity extends AppCompatActivity {
     /**
      * Init the buttons, EditTexts and the FirebaseAuth.
      * @param savedInstanceState
-     * The is the savedInstanceState   _  /. .\  _
-     *                                  \_\ _ /_/
+     * This is the savedInstanceState  __  /. .\  __
+     *                                   \_\ _ /_/
      */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         // Init buttons
         login_button = findViewById(R.id.login_confirm_button);
         register_button = findViewById(R.id.login_register_button);
+        spectator_button = findViewById(R.id.login_spectator_button);
 
         // Init texts
         email = findViewById(R.id.editTextTextEmailAddress2);
@@ -57,6 +59,8 @@ public class AuthenticationActivity extends AppCompatActivity {
         // Init listeners on the buttons
         setLoginButtonListener();
         setRegisterButtonListener();
+        setSpectatorButton_listener();
+
     }
 
     /**
@@ -70,6 +74,13 @@ public class AuthenticationActivity extends AppCompatActivity {
         if(currentUser != null){
             goToMainActivity();
         }
+    }
+
+    private void setSpectatorButton_listener(){
+        spectator_button.setOnClickListener(view -> {
+            Intent intent = new Intent(AuthenticationActivity.this, MainActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void setRegisterButtonListener(){

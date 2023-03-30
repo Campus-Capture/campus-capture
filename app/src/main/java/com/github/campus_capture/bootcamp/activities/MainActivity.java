@@ -22,6 +22,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
@@ -207,6 +208,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 User.setName(null);
                 User.setUid(null);
                 User.setSection(null);
+
+                AppContext context = (AppContext) getApplicationContext();
+                context.getFirebaseAuth().signOut();
 
                 // Use this to pass the name of the origin activity
                 //log_in_intent.putExtra("message", "From: " + FirstActivity.class.getSimpleName());
