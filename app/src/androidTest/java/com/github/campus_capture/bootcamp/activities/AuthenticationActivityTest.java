@@ -1,6 +1,8 @@
-package com.github.campus_capture.bootcamp;
+package com.github.campus_capture.bootcamp.activities;
 
 import static androidx.test.espresso.Espresso.onView;
+import static com.adevinta.android.barista.assertion.BaristaVisibilityAssertions.assertDisplayed;
+import static com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -14,6 +16,8 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.github.campus_capture.bootcamp.AppContext;
+import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.activities.AuthenticationActivity;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
 
@@ -120,8 +124,12 @@ public class AuthenticationActivityTest {
         //Close keyboard
         Espresso.closeSoftKeyboard();
 
+
         //Click the register button
         onView(ViewMatchers.withId(R.id.login_register_button)).perform(ViewActions.click());
+
+        //Agree the TOS
+        clickOn("I agree");
 
         //Wait 3 seconds
         Thread.sleep(SECONDS.toMillis(3));
@@ -166,6 +174,8 @@ public class AuthenticationActivityTest {
         //Click the sign in button
         onView(ViewMatchers.withId(R.id.login_register_button)).perform(ViewActions.click());
 
+        clickOn("I agree");
+
         //Wait 3 seconds
         Thread.sleep(SECONDS.toMillis(3));
 
@@ -202,6 +212,27 @@ public class AuthenticationActivityTest {
 
         //Assert that an intent was launched
         Intents.intended(IntentMatchers.hasComponent(MainActivity.class.getName()));
+    }
+
+    @ Test
+    public void CantConnectIfTOSNotAgreed() throws InterruptedException {
+
+        onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(REG_EMAIL));
+        onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(PASSWORD));
+
+        //Close keyboard
+        Espresso.closeSoftKeyboard();
+
+        //Click the sign in button
+        onView(ViewMatchers.withId(R.id.login_register_button)).perform(ViewActions.click());
+
+        clickOn("No");
+
+        //Wait 3 seconds
+        Thread.sleep(SECONDS.toMillis(3));
+
+        //Assert that no intent was launched
+        assertThat(Intents.getIntents().isEmpty(), is(true));
     }
 
     /*@Test
