@@ -1,4 +1,4 @@
-package com.github.campus_capture.bootcamp;
+package com.github.campus_capture.bootcamp.activities;
 
 import static android.content.ContentValues.TAG;
 import static androidx.test.espresso.Espresso.onView;
@@ -16,6 +16,8 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.github.campus_capture.bootcamp.AppContext;
+import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.firebase.FireDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;

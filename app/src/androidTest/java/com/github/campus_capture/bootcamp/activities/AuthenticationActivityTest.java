@@ -1,4 +1,4 @@
-package com.github.campus_capture.bootcamp;
+package com.github.campus_capture.bootcamp.activities;
 
 import static androidx.test.espresso.Espresso.onView;
 import static org.hamcrest.CoreMatchers.is;
@@ -14,6 +14,8 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.github.campus_capture.bootcamp.AppContext;
+import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.activities.AuthenticationActivity;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
 
