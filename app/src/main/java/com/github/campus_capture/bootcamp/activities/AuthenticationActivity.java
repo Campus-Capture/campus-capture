@@ -21,7 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class AuthenticationActivity extends AppCompatActivity {
 
     private Button login_button;
-    private Button spectate_button;
+    private Button register_button;
     private EditText email;
     private String emailText;
     private EditText password;
@@ -29,7 +29,12 @@ public class AuthenticationActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
 
-
+    /**
+     * Init the buttons, EditTexts and the FirebaseAuth.
+     * @param savedInstanceState
+     * The is the savedInstanceState   _  /. .\  _
+     *                                  \_\ _ /_/
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,28 +44,28 @@ public class AuthenticationActivity extends AppCompatActivity {
 
         // Init buttons
         login_button = findViewById(R.id.login_confirm_button);
+        register_button = findViewById(R.id.login_register_button);
 
         // Init texts
         email = findViewById(R.id.editTextTextEmailAddress2);
         password = findViewById(R.id.editTextTextPassword2);
 
-
-
-        // Init Auth
+        // Init Auth (Authenticater)
         AppContext context = (AppContext) getApplicationContext();
         mAuth = context.getFirebaseAuth();
 
-        //TODO : Add spectator mode
-        spectate_button = findViewById(R.id.login_register_button);
-
+        // Init listeners on the buttons
         setLoginButtonListener();
         setRegisterButtonListener();
     }
 
+    /**
+     * On start, verify if the user is already logged in. If yes, go to main, otherwise, continue on the AuthenticationActivity.
+     */
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // Check if user is signed in (non-null) and go to main if yes.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
             goToMainActivity();
@@ -68,7 +73,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     }
 
     private void setRegisterButtonListener(){
-        spectate_button.setOnClickListener(view -> registerClicked());
+        register_button.setOnClickListener(view -> registerClicked());
     }
 
     private void registerClicked(){
@@ -86,7 +91,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         mAuth.createUserWithEmailAndPassword(emailText, passwordText)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
+                        // Sign in success, set the signed-in user's information and go to main
                         Log.d(TAG, "createUserWithEmail:success");
                         FirebaseUser user = mAuth.getCurrentUser();
                         assert user != null;
@@ -106,9 +111,11 @@ public class AuthenticationActivity extends AppCompatActivity {
     }
 
     private void loginClicked(){
+        //Get the email and the password
         emailText = email.getText().toString();
         passwordText = password.getText().toString();
 
+        //If email ends with "@epfl.ch" accords authentication. Otherwise, show a message.
         if(emailText.endsWith("@epfl.ch")){
             authenticate();
         } else {
@@ -120,7 +127,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         mAuth.signInWithEmailAndPassword(emailText, passwordText)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
+                        // Sign in success, set the signed-in user's information and go to main
                         Log.d(TAG, "signInWithEmail:success");
                         FirebaseUser user = mAuth.getCurrentUser();
                         assert user != null;

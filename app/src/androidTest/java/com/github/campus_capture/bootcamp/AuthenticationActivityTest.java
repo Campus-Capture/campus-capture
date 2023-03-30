@@ -40,25 +40,31 @@ public class AuthenticationActivityTest {
 
     @Rule
     public ActivityScenarioRule<AuthenticationActivity> testRule = new ActivityScenarioRule<>(AuthenticationActivity.class);
-    //@Rule
-    //public ActivityTestRule<AuthenticationActivity> myActivityTestRule = new ActivityTestRule<>(AuthenticationActivity.class, true, false);
 
+    /**
+     * Setup the emulator and ensures that no user is already signed in in the app.
+     */
     @BeforeClass
     public static void setup() {
         //Set emulators
         AppContext context = ApplicationProvider.getApplicationContext();
-        context.getFirebaseDB().useEmulator("127.0.0.1", 9000);
         context.getFirebaseAuth().useEmulator("10.0.2.2", 9099);
         context.getFirebaseAuth().signOut();
 
 
     }
 
+    /**
+     * Init the Intents recorder before each test.
+     */
     @Before
     public void singleSetup(){
         Intents.init();
     }
 
+    /**
+     * Release the Intents recorder and sign out the user after each test.
+     */
     @After
     public void SingleCleanup(){
         Intents.release();
