@@ -41,7 +41,7 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
-    public static final String DRAWER_BUTTON = "Revenir en haut de la page";
+    public static final String DRAWER_BUTTON = "Navigate up";
 
     @Rule
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
@@ -49,16 +49,8 @@ public class MainActivityTest {
     @Test
     public void NavigationDrawerOpensWhenMenuButtonPressed()
     {
-        ViewInteraction appCompatImageButton = onView(
-                allOf(withContentDescription(DRAWER_BUTTON),
-                        childAtPosition(
-                                allOf(withId(R.id.toolbar),
-                                        childAtPosition(
-                                                withId(R.id.app_bar_navigation_drawer),
-                                                0)),
-                                0),
-                        isDisplayed()));
-        appCompatImageButton.perform(click());
+        onView(ViewMatchers.withContentDescription(DRAWER_BUTTON))
+                .perform(ViewActions.click());
 
         assertDisplayed(R.id.nav_view);
     }
@@ -66,16 +58,8 @@ public class MainActivityTest {
     @Test
     public void NavigationDrawerClosesWhenActionIsExecuted()
     {
-        ViewInteraction appCompatImageButton = onView(
-                allOf(withContentDescription(DRAWER_BUTTON),
-                        childAtPosition(
-                                allOf(withId(R.id.toolbar),
-                                        childAtPosition(
-                                                withId(R.id.app_bar_navigation_drawer),
-                                                0)),
-                                0),
-                        isDisplayed()));
-        appCompatImageButton.perform(click());
+        onView(ViewMatchers.withContentDescription(DRAWER_BUTTON))
+                .perform(ViewActions.click());
 
         clickOn(R.id.nav_main);
 
@@ -103,98 +87,38 @@ public class MainActivityTest {
     @Test
     public void navigationTest() {
 
-        ViewInteraction appCompatImageButton = onView(
-                allOf(withContentDescription(DRAWER_BUTTON),
-                        childAtPosition(
-                                allOf(withId(R.id.toolbar),
-                                        childAtPosition(
-                                                withId(R.id.app_bar_navigation_drawer),
-                                                0)),
-                                0),
-                        isDisplayed()));
-        appCompatImageButton.perform(click());
+        onView(ViewMatchers.withContentDescription(DRAWER_BUTTON))
+                .perform(ViewActions.click());
 
         clickOn(R.id.nav_greeting);
 
         assertDisplayed(R.id.nav_greeting);
 
-        ViewInteraction appCompatImageButton2 = onView(
-                allOf(withContentDescription(DRAWER_BUTTON),
-                        childAtPosition(
-                                allOf(withId(R.id.toolbar),
-                                        childAtPosition(
-                                                withId(R.id.app_bar_navigation_drawer),
-                                                0)),
-                                0),
-                        isDisplayed()));
-        appCompatImageButton2.perform(click());
+        onView(ViewMatchers.withContentDescription(DRAWER_BUTTON))
+                .perform(ViewActions.click());
 
         clickOn(R.id.nav_maps);
 
         assertDisplayed(R.id.nav_maps);
 
-        ViewInteraction appCompatImageButton20 = onView(
-                allOf(withContentDescription(DRAWER_BUTTON),
-                        childAtPosition(
-                                allOf(withId(R.id.toolbar),
-                                        childAtPosition(
-                                                withId(R.id.app_bar_navigation_drawer),
-                                                0)),
-                                0),
-                        isDisplayed()));
-        appCompatImageButton20.perform(click());
-
+        onView(ViewMatchers.withContentDescription(DRAWER_BUTTON))
+                .perform(ViewActions.click());
         clickOn(R.id.nav_profile);
 
         assertDisplayed(R.id.nav_profile);
 
-        ViewInteraction appCompatImageButton4 = onView(
-                allOf(withContentDescription(DRAWER_BUTTON),
-                        childAtPosition(
-                                allOf(withId(R.id.toolbar),
-                                        childAtPosition(
-                                                withId(R.id.app_bar_navigation_drawer),
-                                                0)),
-                                0),
-                        isDisplayed()));
-        appCompatImageButton4.perform(click());
+        onView(ViewMatchers.withContentDescription(DRAWER_BUTTON))
+                .perform(ViewActions.click());
 
-       clickOn(R.id.nav_scoreboard);
+        clickOn(R.id.nav_scoreboard);
 
         assertDisplayed(R.id.nav_scoreboard);
 
-        ViewInteraction appCompatImageButton5 = onView(
-                allOf(withContentDescription(DRAWER_BUTTON),
-                        childAtPosition(
-                                allOf(withId(R.id.toolbar),
-                                        childAtPosition(
-                                                withId(R.id.app_bar_navigation_drawer),
-                                                0)),
-                                0),
-                        isDisplayed()));
-        appCompatImageButton5.perform(click());
+        onView(ViewMatchers.withContentDescription(DRAWER_BUTTON))
+                .perform(ViewActions.click());
 
         clickOn(R.id.nav_rules);
 
         assertDisplayed(R.id.nav_rules);
-    }
-
-    private static Matcher<View> childAtPosition(
-            final Matcher<View> parentMatcher, final int position) {
-
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Child at position " + position + " in parent ");
-                parentMatcher.describeTo(description);
-            }
-
-            @Override
-            public boolean matchesSafely(View view) {
-                ViewParent parent = view.getParent();
-                return parent instanceof ViewGroup && parentMatcher.matches(parent)
-                        && view.equals(((ViewGroup) parent).getChildAt(position));
-            }
-        };
     }
 }
