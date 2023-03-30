@@ -95,6 +95,9 @@ public class AuthenticationActivity extends AppCompatActivity {
                         Log.d(TAG, "createUserWithEmail:success");
                         FirebaseUser user = mAuth.getCurrentUser();
                         assert user != null;
+                        if(user.getDisplayName()!=null) {
+                            User.setName(user.getDisplayName());
+                        }
                         User.setUid(user.getUid());
                         goToMainActivity();
                     } else {
