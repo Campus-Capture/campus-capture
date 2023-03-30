@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.User;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -88,8 +90,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     }
 
     private void registerClicked(){
-        emailText = email.getText().toString();
-        passwordText = password.getText().toString();
+        setEditTextToString();
 
         if(emailText.endsWith("@epfl.ch")){
             register();
@@ -100,24 +101,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private void register(){
         mAuth.createUserWithEmailAndPassword(emailText, passwordText)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // Sign in success, set the signed-in user's information and go to main
-                        Log.d(TAG, "createUserWithEmail:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        assert user != null;
-                        if(user.getDisplayName()!=null) {
-                            User.setName(user.getDisplayName());
-                        }
-                        User.setUid(user.getUid());
-                        goToMainActivity();
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                        Toast.makeText(AuthenticationActivity.this, "Register failed.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .addOnCompleteListener(this, task -> onCompleteListenerContent(task, "Register failed"));
     }
 
     private void setLoginButtonListener(){
@@ -125,9 +109,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     }
 
     private void loginClicked(){
-        //Get the email and the password
-        emailText = email.getText().toString();
-        passwordText = password.getText().toString();
+        setEditTextToString();
 
         //If email ends with "@epfl.ch" accords authentication. Otherwise, show a message.
         if(emailText.endsWith("@epfl.ch")){
@@ -139,29 +121,35 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private void authenticate(){
         mAuth.signInWithEmailAndPassword(emailText, passwordText)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // Sign in success, set the signed-in user's information and go to main
-                        Log.d(TAG, "signInWithEmail:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        assert user != null;
-                        if(user.getDisplayName()!=null) {
-                            User.setName(user.getDisplayName());
-                        }
-                        User.setUid(user.getUid());
-
-                        goToMainActivity();
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        Toast.makeText(AuthenticationActivity.this, "Authentication failed.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .addOnCompleteListener(this, task -> onCompleteListenerContent(task, "Authentication failed"));
     }
 
     private void goToMainActivity(){
         Intent mainIntent = new Intent(AuthenticationActivity.this, MainActivity.class);
         startActivity(mainIntent);
+    }
+
+    private void setEditTextToString(){
+        emailText = email.getText().toString();
+        passwordText = password.getText().toString();
+    }
+
+    private void onCompleteListenerContent(Task<AuthResult> task, String failText){
+        if (task.isSuccessful()) {
+            // Sign in success, set the signed-in user's information and go to main
+            FirebaseUser user = mAuth.getCurrentUser();
+            assert user != null;
+            if(user.getDisplayName()!=null) {
+                User.setName(user.getDisplayName());
+            }
+            User.setUid(user.getUid());
+
+            goToMainActivity();
+        } else {
+            // If sign in fails, display a message to the user.
+            Log.w(TAG, "signInWithEmail:failure", task.getException());
+            Toast.makeText(AuthenticationActivity.this, failText,
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }
