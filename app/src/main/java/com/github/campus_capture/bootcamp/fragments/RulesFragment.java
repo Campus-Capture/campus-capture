@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -69,8 +70,9 @@ public class RulesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         this.rulesText = getView().findViewById(R.id.rules_text);
 
-        DatabaseReference myRef = database.getReference("rules");
+        AppContext context = (AppContext) getContext().getApplicationContext();
 
+        DatabaseReference myRef = context.getFirebaseDB().getReference("rules");
 
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
