@@ -1,23 +1,29 @@
 package com.github.campus_capture.bootcamp.fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Location;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.authentication.User;
+import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
+import com.github.campus_capture.bootcamp.map.MapScheduler;
 import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
 import com.github.campus_capture.bootcamp.storage.dao.ZoneDAO;
+import com.github.campus_capture.bootcamp.storage.entities.Zone;
 import com.github.campus_capture.bootcamp.utils.PermissionUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,24 +33,64 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.maps.android.PolyUtil;
+
+import java.util.Calendar;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class MapsFragment extends Fragment{
 
     private GoogleMap map;
+    private ZoneDatabase zoneDB;
+    private FirebaseInterface backendInterface;
+    private MapScheduler scheduler;
+    public static boolean locationOverride = false;
+    public static LatLng fixedLocation = null;
+    private final View.OnClickListener attackListener = v ->
+    {
+        LatLng currentPosition = getCurrentPosition();
+        if(currentPosition == null)
+        {
+            Toast.makeText(v.getContext(), getText(R.string.position_not_found_text), Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Zone currentZone = findCurrentZone(currentPosition);
+            if(currentZone != null)
+            {
+                CompletableFuture<Boolean> voteFuture = CompletableFuture.supplyAsync(() -> backendInterface.voteZone(User.getUid(), User.getSection(), currentZone.getName()));
+                boolean result = false;
+                try
+                {
+                    result = voteFuture.get();
+                }
+                catch(Exception e)
+                {
+                    Log.e("MapsFragment", "Error occurred when voting for a zone", e);
+                }
+                if(result)
+                {
+                    Toast.makeText(v.getContext(), getString(R.string.vote_zone_toast), Toast.LENGTH_SHORT).show();
+                    scheduler.confirmAttack();
+                }
+                else
+                {
+                    Toast.makeText(v.getContext(), getString(R.string.op_failed_toast_text), Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(v.getContext(), getString(R.string.no_zone_toast_text), Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     /**
      * Flag indicating whether a requested permission has been denied
      */
     private boolean permissionDenied = false;
     private final OnMapReadyCallback callback = googleMap -> {
-
-        //Build and initialize the DB
-        //The DB contains the Zone around the campus
-        ZoneDatabase zoneDB = Room.databaseBuilder(getActivity(),
-                ZoneDatabase.class, "zones-db")
-                .createFromAsset("databases/zones-db.db")
-                .allowMainThreadQueries().build();
-
         ZoneDAO zoneDAO = zoneDB.zoneDAO();
 
         map = googleMap;
@@ -64,21 +110,9 @@ public class MapsFragment extends Fragment{
         LatLng epfl = new LatLng(46.520536, 6.568318);
         LatLng satellite = new LatLng(46.520544, 6.567825);
         map.addMarker(new MarkerOptions().position(satellite).title("Satellite").snippet("5 ⭐"));
-
-        /*LatLngBounds epflBounds = new LatLngBounds(
-                new LatLng(46, 6), // SW bounds
-                new LatLng(47, 7)  // NE bounds
-        );*/
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(epfl, 15));
 
         map.setOnMarkerClickListener(marker -> {
-            // Triggered when user click any marker on the map
-            // See example below:
-           /* Toast.makeText(getActivity(),
-                    marker.getTitle(),
-                    Toast.LENGTH_SHORT).show();
-
-            */
             return false;
         });
 
@@ -91,17 +125,19 @@ public class MapsFragment extends Fragment{
         campus.setStrokeWidth(0);
 
         map.setOnPolygonClickListener(polygon ->{
-            // Triggered when user click any polygon on the map
-            // See example below:
-            /*Toast.makeText(getActivity(),
-                    polygon.getTag().toString(),
-                    Toast.LENGTH_SHORT).show();
-                    */
         });
 
-        //Don't forget to close when finished to be used
-        zoneDB.close();
+        // scheduler.startAll();
     };
+
+    /**
+     * Overloaded constructor to allow the fragment to use a specific back-end
+     * @param backend the backend to be injected
+     */
+    public MapsFragment(FirebaseInterface backend)
+    {
+        backendInterface = backend;
+    }
 
     private void enableMyLocation() {
         // 1. Check if permissions are granted, if so, enable the my location layer
@@ -114,7 +150,6 @@ public class MapsFragment extends Fragment{
         // 2. Otherwise, request location permissions from the user.
         //PermissionUtils.requestPermission((MainActivity) getActivity(), LOCATION_PERMISSION_REQUEST_CODE, true);
         requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-
     }
 
     @Override
@@ -153,10 +188,84 @@ public class MapsFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        zoneDB = Room.databaseBuilder(getActivity(),
+                        ZoneDatabase.class, "zones-db")
+                .createFromAsset("databases/zones-db.db")
+                .allowMainThreadQueries().build();
+
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
+        }
+
+        scheduler = new MapScheduler(view, backendInterface, this);
+
+        view.findViewById(R.id.attackButton).setOnClickListener(attackListener);
+        view.findViewById(R.id.defendButton).setOnClickListener(attackListener);
+
+        scheduler.startAll();
+    }
+
+    @Override
+    public void onDestroyView() {
+        scheduler.stopAll();
+        zoneDB.close();
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        zoneDB.close();
+        super.onDestroy();
+    }
+
+    /**
+     * Method which finds in which zone a given point is
+     * @param position the position
+     * @return the (first) zone which matches the position in the DB, or null if none
+     */
+    public Zone findCurrentZone(LatLng position)
+    {
+        ZoneDAO zoneDAO = zoneDB.zoneDAO();
+        List<Zone> zones = zoneDAO.getAll();
+        for(Zone z : zones)
+        {
+            if(PolyUtil.containsLocation(position, z.getVertices(), false))
+            {
+                return z;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Method to get the current position of the player. Note that this uses a deprecated method
+     * of map, and should use a FusedLocationProviderClient instead
+     * @return LatLng or null
+     */
+    public LatLng getCurrentPosition()
+    {
+        if(!locationOverride)
+        {
+            Location loc = null;
+            try
+            {
+                if (!permissionDenied)
+                {
+                    loc = map.getMyLocation();
+                }
+            }
+            catch (Exception e)
+            {
+                Log.e("MapsFragment", "Failed retrieving location");
+            }
+            return (loc == null) ? null : new LatLng(loc.getLatitude(), loc.getLongitude());
+        }
+        else
+        {
+            return fixedLocation;
         }
     }
 

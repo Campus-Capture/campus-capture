@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.campus_capture.bootcamp.R;
-import com.github.campus_capture.bootcamp.scoreboard.ScoreHandler;
+import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreRecyclerViewAdapter;
 
 /**
@@ -21,15 +21,15 @@ import com.github.campus_capture.bootcamp.scoreboard.ScoreRecyclerViewAdapter;
  */
 public class ScoreboardFragment extends Fragment {
 
-    private ScoreHandler handler;
+    private FirebaseInterface firebaseInterface;
 
     public ScoreboardFragment() {
         // Required empty public constructor
     }
 
-    public ScoreboardFragment(ScoreHandler handler)
+    public ScoreboardFragment(FirebaseInterface backend)
     {
-        this.handler = handler;
+        firebaseInterface = backend;
     }
 
     /**
@@ -58,7 +58,7 @@ public class ScoreboardFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.scoreboard_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        recyclerView.setAdapter(new ScoreRecyclerViewAdapter(handler.getScores()));
+        recyclerView.setAdapter(new ScoreRecyclerViewAdapter(firebaseInterface.getScores()));
 
         return view;
     }
