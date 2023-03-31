@@ -50,7 +50,7 @@ import java.util.Map;
 public class MapVoteTest {
 
     String recordedZoneName;
-    LatLng fixed = new LatLng(46.518465755889345, 6.56190781791033);
+    LatLng fixed = new LatLng(46.518465, 6.561907);
     LatLng noLoc = new LatLng(0, 0);
 
     private static boolean hasAttacked;
