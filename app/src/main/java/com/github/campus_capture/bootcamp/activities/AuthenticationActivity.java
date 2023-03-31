@@ -2,8 +2,12 @@ package com.github.campus_capture.bootcamp.activities;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.authentication.TOS;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -71,6 +76,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+
         // Check if user is signed in (non-null) and go to main if yes.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
@@ -92,8 +98,9 @@ public class AuthenticationActivity extends AppCompatActivity {
     private void registerClicked(){
         setEditTextToString();
 
+
         if(emailText.endsWith("@epfl.ch")){
-            register();
+            displayTos();
         } else {
             Toast.makeText(this, "You must enter a epfl address", Toast.LENGTH_SHORT).show();
         }
@@ -151,5 +158,20 @@ public class AuthenticationActivity extends AppCompatActivity {
             Toast.makeText(AuthenticationActivity.this, failText,
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void displayTos() {
+        new AlertDialog.Builder(this)
+                .setTitle("License agreement")
+                .setPositiveButton("I agree", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        TOS.asAgreed = true;
+                        register();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .setMessage(TOS.TEXT)
+                .show();
     }
 }
