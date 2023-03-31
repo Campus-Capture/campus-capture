@@ -50,6 +50,8 @@ import java.util.Map;
 public class MapVoteTest {
 
     String recordedZoneName;
+    LatLng fixed = new LatLng(46.518465755889345, 6.56190781791033);
+    LatLng noLoc = new LatLng(0, 0);
 
     private static boolean hasAttacked;
 
@@ -69,7 +71,7 @@ public class MapVoteTest {
         @Override
         public Map<String, Section> getCurrentZoneOwners() {
             Map<String, Section> out = new HashMap<>();
-            out.put("campus", Section.IN);
+            out.put("BC", Section.IN);
             return out;
         }
 
@@ -108,7 +110,7 @@ public class MapVoteTest {
     public void correctDisplayWhenOutsideOfZones() throws InterruptedException {
         MainActivity.firebaseInterface = mock;
         MapsFragment.locationOverride = true;
-        MapsFragment.fixedLocation = new LatLng(0, 0);
+        MapsFragment.fixedLocation = noLoc;
         User.setUid("");
         hasAttacked = false;
 
@@ -130,7 +132,7 @@ public class MapVoteTest {
     public void zoneIsDisplayedWhenInsideZone() throws InterruptedException {
         MainActivity.firebaseInterface = mock;
         MapsFragment.locationOverride = true;
-        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
 
@@ -143,7 +145,7 @@ public class MapVoteTest {
 
         Thread.sleep(1000);
 
-        onView(ViewMatchers.withId(R.id.currentZoneText)).check(matches(withText(containsString("Current zone:\ncampus"))));
+        onView(ViewMatchers.withId(R.id.currentZoneText)).check(matches(withText(containsString("Current zone:\nBC"))));
 
         Intents.release();
     }
@@ -158,7 +160,7 @@ public class MapVoteTest {
         MapScheduler.overrideTime = true;
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
-        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
 
@@ -186,7 +188,7 @@ public class MapVoteTest {
         MapScheduler.overrideTime = true;
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
-        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
 
@@ -222,7 +224,7 @@ public class MapVoteTest {
         MapScheduler.overrideTime = true;
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
-        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
 
@@ -252,7 +254,7 @@ public class MapVoteTest {
         MapScheduler.overrideTime = true;
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
-        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
 
@@ -267,7 +269,7 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.attackButton)).perform(ViewActions.click());
 
-        assertEquals("campus", recordedZoneName);
+        assertEquals("BC", recordedZoneName);
 
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
 
@@ -287,7 +289,7 @@ public class MapVoteTest {
         MapScheduler.overrideTime = true;
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
-        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
 
@@ -317,7 +319,7 @@ public class MapVoteTest {
         MapScheduler.overrideTime = true;
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
-        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
 
@@ -332,7 +334,7 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.defendButton)).perform(ViewActions.click());
 
-        assertEquals("campus", recordedZoneName);
+        assertEquals("BC", recordedZoneName);
 
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
 
@@ -346,7 +348,7 @@ public class MapVoteTest {
         MainActivity.firebaseInterface = mock;
         User.setUid(null);
         MapsFragment.locationOverride = true;
-        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        MapsFragment.fixedLocation = fixed;
         hasAttacked = false;
 
         Intents.init();
@@ -376,7 +378,7 @@ public class MapVoteTest {
         MapScheduler.overrideTime = true;
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
-        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
 
@@ -413,7 +415,7 @@ public class MapVoteTest {
         MapScheduler.overrideTime = true;
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
-        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
 
@@ -450,7 +452,7 @@ public class MapVoteTest {
         MapScheduler.overrideTime = true;
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
-        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
 
@@ -487,7 +489,7 @@ public class MapVoteTest {
         MapScheduler.overrideTime = true;
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
-        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
 
@@ -524,7 +526,7 @@ public class MapVoteTest {
         MapScheduler.overrideTime = true;
         MapScheduler.time = time;
         MapsFragment.locationOverride = true;
-        MapsFragment.fixedLocation = new LatLng(46.520544, 6.567825);
+        MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = true;
 
