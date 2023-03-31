@@ -26,6 +26,7 @@ public class Zone {
     public Zone(String name, List<LatLng> vertices){
         this.name = name;
         this.vertices = vertices;
+
     }
 
     @Override

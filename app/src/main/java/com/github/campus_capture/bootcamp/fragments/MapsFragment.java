@@ -116,13 +116,11 @@ public class MapsFragment extends Fragment{
             return false;
         });
 
-        Polygon campus = map.addPolygon(new PolygonOptions()
-                .clickable(true)
-                .addAll(zoneDAO.findByName("campus").getVertices()));
-
-        campus.setTag("EPFL");
-        campus.setFillColor(Color.argb(25, 255, 0, 0));
-        campus.setStrokeWidth(0);
+        for (Zone zone : zoneDAO.getAll()){
+            Polygon poly = map.addPolygon(new PolygonOptions().addAll(zone.getVertices()));
+            poly.setStrokeWidth(0);
+            poly.setFillColor(Color.argb(25, 255, 0, 0));
+        }
 
         map.setOnPolygonClickListener(polygon ->{
         });
