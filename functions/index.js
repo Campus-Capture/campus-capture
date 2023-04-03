@@ -18,7 +18,7 @@ admin.initializeApp();
 
 
 
-const NUMBER_OF_ZONES = 2
+const sections = ["AR", "CGC", "GC", "GM", "EL", "IN", "SV", "MA", "MT", "PH", "MX", "SIE", "SC"]
 
 
 exports.testScheduledFunction = functions.region('europe-west1').pubsub.schedule("* * * * *").onRun((context) => {
@@ -28,43 +28,46 @@ exports.testScheduledFunction = functions.region('europe-west1').pubsub.schedule
     const db = getDatabase();
     const ref = db.ref('Zones');
 
-    //snap.numChildren()
 
+    ref.once('value').then( (snapshot) => {
 
-    ref.once('value', (snapshot) => {
+        console.log("snapshot key " + snapshot.key)
+        snapshot.forEach((childSnapshot) => {
 
-        for( let i = 1; i <= NUMBER_OF_ZONES; i++){
+            var zone_name = childSnapshot.key;
+            console.log("childSnapshot key " + zone_name.key)
 
             var owner = "no owner"
             var max = 0
 
-            let val_IN = snapshot.child(i).child("IN").val()
-            console.log("IN : " + val_IN)
-            if(val_IN > max){
-                console.log("val > max")
-                max = val_IN
-                owner = "IN"
+            for(var i = 0, size = sections.length; i < size ; i++){
+
+                var section = sections[i]
+
+                if(childSnapshot.hasChild(section)){
+
+                    let val_section = childSnapshot.child(section).val()
+
+                    console.log(section + " " + val_section)
+                    if(val_section > max){
+                        console.log("val > max")
+                        max = val_section
+                        owner = section
+                    }
+                }
+
             }
 
-            let val_SC = snapshot.child(i).child("SC").val()
-            console.log("SC : " + val_SC)
-            if(val_SC > max){
-                console.log("val > max")
-                max = val_SC
-                owner = "SC"
-            }
+            console.log("new owner is of zone " + zone_name + " is " + owner)
 
-            console.log("new owner is " + owner)
-
-            ref.child(i).child("owner").set(owner, (error) => {
+            ref.child(zone_name).child("owner").set(owner, (error) => {
                 if (error) {
                   console.log('Data could not be saved.' + error);
                 } else {
                   console.log('Data saved successfully.');
                 }
             });
-        }
-
+        })
     });
 
     return null;
