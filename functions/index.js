@@ -21,7 +21,7 @@ admin.initializeApp();
 const sections = ["AR", "CGC", "GC", "GM", "EL", "IN", "SV", "MA", "MT", "PH", "MX", "SIE", "SC"]
 
 
-exports.testScheduledFunction = functions.region('europe-west1').pubsub.schedule("* * * * *").onRun((context) => {
+exports.testScheduledFunction = functions.region('europe-west1').pubsub.schedule("15 * * * *").onRun((context) => {
 
     console.log("It's minute 15!");
   
