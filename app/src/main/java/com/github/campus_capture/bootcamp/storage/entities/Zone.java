@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Entity
 public class Zone {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int uid;
     private String name;
     private List<LatLng> vertices;
@@ -51,13 +51,13 @@ public class Zone {
     @NonNull
     @Override
     public String toString() {
-        String text = "Zone named " + name + " with the following vertices:\n";
+        StringBuilder text = new StringBuilder("Zone named " + name + " with the following vertices:\n");
         for(LatLng vertex : vertices){
-            text += "Lat: " + vertex.latitude + "\n";
-            text += "Lon: " + vertex.longitude + "\n";
+            text.append("Lat: ").append(vertex.latitude).append("\n");
+            text.append("Lon: ").append(vertex.longitude).append("\n");
         }
 
-        return text;
+        return text.toString();
     }
 
     public List<LatLng> getVertices() {
