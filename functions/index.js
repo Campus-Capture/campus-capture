@@ -32,6 +32,8 @@ exports.testScheduledFunction = functions.region('europe-west1').pubsub.schedule
     ref.once('value').then( (snapshot) => {
 
         console.log("snapshot key " + snapshot.key)
+
+        // update for each zone
         snapshot.forEach((childSnapshot) => {
 
             var zone_name = childSnapshot.key;
@@ -39,7 +41,9 @@ exports.testScheduledFunction = functions.region('europe-west1').pubsub.schedule
 
             var owner = "no owner"
             var max = 0
+            var second_max = 0
 
+            // for each section
             for(var i = 0, size = sections.length; i < size ; i++){
 
                 var section = sections[i]
@@ -53,20 +57,39 @@ exports.testScheduledFunction = functions.region('europe-west1').pubsub.schedule
                         console.log("val > max")
                         max = val_section
                         owner = section
+                    } else if(val_section > second_max){
+                        console.log("val > second_max")
+                        second_max = val_section
                     }
+
+                    // reset count to 0
+                    ref.child(zone_name).child(section).set(0, (error) => {
+                        if (error) {
+                          console.log('Data could not be saved.' + error);
+                        } else {
+                          console.log('Data saved successfully.');
+                        }
+                    });
                 }
 
             }
 
-            console.log("new owner is of zone " + zone_name + " is " + owner)
+            // no capture if equality
+            if(max != second_max){
+                console.log("new owner is of zone " + zone_name + " is " + owner)
+    
+                ref.child(zone_name).child("owner").set(owner, (error) => {
+                    if (error) {
+                      console.log('Data could not be saved.' + error);
+                    } else {
+                      console.log('Data saved successfully.');
+                    }
+                });
+            } else {
+                console.log("equality, no new owner for zone " + zone_name)
 
-            ref.child(zone_name).child("owner").set(owner, (error) => {
-                if (error) {
-                  console.log('Data could not be saved.' + error);
-                } else {
-                  console.log('Data saved successfully.');
-                }
-            });
+            }
+
         })
     });
 
