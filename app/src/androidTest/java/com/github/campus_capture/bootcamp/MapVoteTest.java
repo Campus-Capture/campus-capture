@@ -42,6 +42,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @RunWith(AndroidJUnit4.class)
 public class MapVoteTest {
@@ -55,25 +56,25 @@ public class MapVoteTest {
     final BackendInterface mock = new BackendInterface() {
 
         @Override
-        public boolean voteZone(String uid, Section s, String zonename) {
+        public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
             recordedZoneName = zonename;
-            return true;
+            return CompletableFuture.completedFuture(true);
         }
 
         @Override
-        public boolean hasAttacked(String uid) {
-            return hasAttacked;
+        public CompletableFuture<Boolean> hasAttacked(String uid) {
+            return CompletableFuture.completedFuture(hasAttacked);
         }
 
         @Override
-        public Map<String, Section> getCurrentZoneOwners() {
+        public CompletableFuture<Map<String, Section>> getCurrentZoneOwners() {
             Map<String, Section> out = new HashMap<>();
             out.put("BC", Section.IN);
-            return out;
+            return CompletableFuture.completedFuture(out);
         }
 
         @Override
-        public List<ScoreItem> getScores() {
+        public CompletableFuture<List<ScoreItem>> getScores() {
             return null;
         }
     };

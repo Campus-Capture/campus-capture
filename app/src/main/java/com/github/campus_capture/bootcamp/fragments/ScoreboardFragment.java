@@ -58,7 +58,10 @@ public class ScoreboardFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.scoreboard_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        recyclerView.setAdapter(new ScoreRecyclerViewAdapter(backendInterface.getScores()));
+        // TODO not sure how to refactor this correctly using the new future interface
+        try {
+            recyclerView.setAdapter(new ScoreRecyclerViewAdapter(backendInterface.getScores().get()));
+        }catch(Exception e){}
 
         return view;
     }

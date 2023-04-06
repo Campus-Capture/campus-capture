@@ -89,15 +89,12 @@ public class MapScheduler {
         @Override
         public void run()
         {
-            CompletableFuture<Map<String, Section>> val = CompletableFuture.supplyAsync(backendInterface::getCurrentZoneOwners);
-            try
-            {
-                zoneState = val.get();
-            }
-            catch(Exception e)
-            {
-                Log.e("MapScheduler", "Error ocurred when retrieving the zone owners");
-            }
+            backendInterface.getCurrentZoneOwners()
+                    .thenApply( (result) -> (zoneState = result) )
+                    .exceptionally( e -> {
+                        Log.e("MapScheduler", "Error ocurred when retrieving the zone owners");
+                        return null;
+                    });
         }
     };
 
@@ -138,7 +135,14 @@ public class MapScheduler {
         attackButton = view.findViewById(R.id.attackButton);
         defendButton = view.findViewById(R.id.defendButton);
         timerButton = view.findViewById(R.id.timerButton);
-        zoneState = backendInterface.getCurrentZoneOwners();
+
+        // TODO not sure how to correctly refactor this using the new future interface
+        try{
+            zoneState = backendInterface.getCurrentZoneOwners().get();
+
+        } catch(Exception e){}
+        // ----------------
+
         if(!overrideTime)
         {
             time = Calendar.getInstance();
@@ -179,8 +183,12 @@ public class MapScheduler {
             isTakeover = false;
             scheduledTaskHandler.postDelayed(openAttacksTask, (MILLIS_PER_HOUR - millisSinceHour));
         }
-        hasAttacked = backendInterface.hasAttacked(User.getUid());
-        zoneRefreshTask.run();
+        backendInterface.hasAttacked(User.getUid()).thenApply( (result) -> {
+            hasAttacked = result;
+            zoneRefreshTask.run();
+            return null;
+        });
+
     }
 
     /**

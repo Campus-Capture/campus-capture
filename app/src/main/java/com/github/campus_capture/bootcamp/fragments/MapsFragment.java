@@ -56,27 +56,22 @@ public class MapsFragment extends Fragment{
         else
         {
             Zone currentZone = findCurrentZone(currentPosition);
-            if(currentZone != null)
-            {
-                CompletableFuture<Boolean> voteFuture = CompletableFuture.supplyAsync(() -> backendInterface.voteZone(User.getUid(), User.getSection(), currentZone.getName()));
-                boolean result = false;
-                try
-                {
-                    result = voteFuture.get();
-                }
-                catch(Exception e)
-                {
-                    Log.e("MapsFragment", "Error occurred when voting for a zone", e);
-                }
-                if(result)
-                {
-                    Toast.makeText(v.getContext(), getString(R.string.vote_zone_toast), Toast.LENGTH_SHORT).show();
-                    scheduler.confirmAttack();
-                }
-                else
-                {
-                    Toast.makeText(v.getContext(), getString(R.string.op_failed_toast_text), Toast.LENGTH_SHORT).show();
-                }
+
+            if(currentZone != null) {
+
+                backendInterface.voteZone(User.getUid(), User.getSection(), currentZone.getName())
+                        .thenApply(result -> {
+                            if (result) {
+                                Toast.makeText(v.getContext(), getString(R.string.vote_zone_toast), Toast.LENGTH_SHORT).show();
+                                scheduler.confirmAttack();
+                            } else {
+                                Toast.makeText(v.getContext(), getString(R.string.op_failed_toast_text), Toast.LENGTH_SHORT).show();
+                            }
+                            return null;
+                        }).exceptionally(e -> {
+                            System.out.println(e.getCause()); // returns a throwable back
+                            return null;
+                        });
             }
             else
             {
