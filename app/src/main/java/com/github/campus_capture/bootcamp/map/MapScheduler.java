@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
-import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
+import com.github.campus_capture.bootcamp.firebase.BackendInterface;
 import com.github.campus_capture.bootcamp.fragments.MapsFragment;
 import com.github.campus_capture.bootcamp.storage.entities.Zone;
 import com.google.android.gms.maps.model.LatLng;
@@ -38,7 +38,7 @@ public class MapScheduler {
     private final Button attackButton;
     private final Button defendButton;
     private final Button timerButton;
-    private final FirebaseInterface firebaseInterface;
+    private final BackendInterface backendInterface;
     private final MapsFragment upper;
     private final Handler scheduledTaskHandler;
     private boolean isZoneOwned;
@@ -89,7 +89,7 @@ public class MapScheduler {
         @Override
         public void run()
         {
-            CompletableFuture<Map<String, Section>> val = CompletableFuture.supplyAsync(firebaseInterface::getCurrentZoneOwners);
+            CompletableFuture<Map<String, Section>> val = CompletableFuture.supplyAsync(backendInterface::getCurrentZoneOwners);
             try
             {
                 zoneState = val.get();
@@ -129,16 +129,16 @@ public class MapScheduler {
      * @param backend the back-end to be used
      * @param upper the fragment above
      */
-    public MapScheduler(View view, FirebaseInterface backend, MapsFragment upper)
+    public MapScheduler(View view, BackendInterface backend, MapsFragment upper)
     {
-        firebaseInterface = backend;
+        backendInterface = backend;
         this.upper = upper;
         scheduledTaskHandler = new Handler();
         zoneText = view.findViewById(R.id.currentZoneText);
         attackButton = view.findViewById(R.id.attackButton);
         defendButton = view.findViewById(R.id.defendButton);
         timerButton = view.findViewById(R.id.timerButton);
-        zoneState = firebaseInterface.getCurrentZoneOwners();
+        zoneState = backendInterface.getCurrentZoneOwners();
         if(!overrideTime)
         {
             time = Calendar.getInstance();
@@ -179,7 +179,7 @@ public class MapScheduler {
             isTakeover = false;
             scheduledTaskHandler.postDelayed(openAttacksTask, (MILLIS_PER_HOUR - millisSinceHour));
         }
-        hasAttacked = firebaseInterface.hasAttacked(User.getUid());
+        hasAttacked = backendInterface.hasAttacked(User.getUid());
         zoneRefreshTask.run();
     }
 

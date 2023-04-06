@@ -13,7 +13,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
-public class PlaceholderFirebaseInterfaceTest {
+public class PlaceholderBackendInterfaceTest {
 
     @Test
     public void testVoteZoneReturnsCorrect()

@@ -19,7 +19,7 @@ import androidx.room.Room;
 
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.User;
-import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
+import com.github.campus_capture.bootcamp.firebase.BackendInterface;
 import com.github.campus_capture.bootcamp.map.MapScheduler;
 import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
 import com.github.campus_capture.bootcamp.storage.dao.ZoneDAO;
@@ -35,7 +35,6 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.PolyUtil;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -43,7 +42,7 @@ public class MapsFragment extends Fragment{
 
     private GoogleMap map;
     private ZoneDatabase zoneDB;
-    private FirebaseInterface backendInterface;
+    private BackendInterface backendInterface;
     private MapScheduler scheduler;
     public static boolean locationOverride = false;
     public static LatLng fixedLocation = null;
@@ -132,7 +131,7 @@ public class MapsFragment extends Fragment{
      * Overloaded constructor to allow the fragment to use a specific back-end
      * @param backend the backend to be injected
      */
-    public MapsFragment(FirebaseInterface backend)
+    public MapsFragment(BackendInterface backend)
     {
         backendInterface = backend;
     }
