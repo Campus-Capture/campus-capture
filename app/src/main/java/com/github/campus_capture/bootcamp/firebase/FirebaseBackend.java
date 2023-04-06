@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -140,14 +141,15 @@ public class FirebaseBackend implements BackendInterface{
                     futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
                 }
                 else {
-                    List<ScoreItem> result = new LinkedList<>();
+                    List<ScoreItem> scores = new LinkedList<>();
                     task.getResult().getChildren().forEach((section) -> {
                         String sectionName = section.getKey();
                         Integer score = (Integer)section.child("score").getValue();
                         ScoreItem item = new ScoreItem(sectionName, score);
-                        result.add(item);
+                        scores.add(item);
                     });
-                    futureResult.complete(result);
+                    Collections.sort(scores);
+                    futureResult.complete(scores);
                 }
             }
         });

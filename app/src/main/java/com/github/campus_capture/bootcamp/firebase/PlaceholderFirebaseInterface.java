@@ -8,27 +8,28 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class PlaceholderFirebaseInterface implements BackendInterface {
     @Override
-    public boolean voteZone(String uid, Section s, String zonename) {
-        return true;
+    public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
+        return CompletableFuture.completedFuture(true);
     }
 
     @Override
-    public boolean hasAttacked(String uid) {
-        return false;
+    public CompletableFuture<Boolean> hasAttacked(String uid) {
+        return CompletableFuture.completedFuture(false);
     }
 
     @Override
-    public Map<String, Section> getCurrentZoneOwners() {
+    public CompletableFuture<Map<String, Section>> getCurrentZoneOwners() {
         Map<String, Section> out = new HashMap<>();
         out.put("campus", Section.IN);
-        return out;
+        return CompletableFuture.completedFuture(out);
     }
 
     @Override
-    public List<ScoreItem> getScores() {
+    public CompletableFuture<List<ScoreItem>> getScores() {
         List<ScoreItem> scores = Arrays.asList(
                 new ScoreItem("IN", 1000),
                 new ScoreItem("SC", 999),
@@ -39,6 +40,6 @@ public class PlaceholderFirebaseInterface implements BackendInterface {
 
         Collections.sort(scores);
 
-        return scores;
+        return CompletableFuture.completedFuture(scores);
     }
 }
