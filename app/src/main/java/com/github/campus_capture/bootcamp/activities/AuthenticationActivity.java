@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,6 +21,8 @@ import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.TOS;
 import com.github.campus_capture.bootcamp.authentication.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -79,7 +82,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
         // Check if user is signed in (non-null) and go to main if yes.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
+        if(currentUser != null && currentUser.isEmailVerified()){
             goToMainActivity();
         }
     }
@@ -98,9 +101,9 @@ public class AuthenticationActivity extends AppCompatActivity {
     private void registerClicked(){
         setEditTextToString();
 
-
+        displayTos();
         if(emailText.endsWith("@epfl.ch")){
-            displayTos();
+            //displayTos();
         } else {
             Toast.makeText(this, "You must enter a epfl address", Toast.LENGTH_SHORT).show();
         }
@@ -108,7 +111,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private void register(){
         mAuth.createUserWithEmailAndPassword(emailText, passwordText)
-                .addOnCompleteListener(this, task -> onCompleteListenerContent(task, "Register failed"));
+                .addOnCompleteListener(this, task -> onCompleteRegisterListenerContent(task, "Register failed"));
     }
 
     private void setLoginButtonListener(){
@@ -128,7 +131,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private void authenticate(){
         mAuth.signInWithEmailAndPassword(emailText, passwordText)
-                .addOnCompleteListener(this, task -> onCompleteListenerContent(task, "Authentication failed"));
+                .addOnCompleteListener(this, task -> onCompleteLoginListenerContent(task, "Authentication failed"));
     }
 
     private void goToMainActivity(){
@@ -141,17 +144,53 @@ public class AuthenticationActivity extends AppCompatActivity {
         passwordText = password.getText().toString();
     }
 
-    private void onCompleteListenerContent(Task<AuthResult> task, String failText){
+    private void onCompleteRegisterListenerContent(Task<AuthResult> task, String failText){
         if (task.isSuccessful()) {
             // Sign in success, set the signed-in user's information and go to main
             FirebaseUser user = mAuth.getCurrentUser();
             assert user != null;
+
+            user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Toast.makeText(AuthenticationActivity.this, "Verification email sent", Toast.LENGTH_SHORT).show();;
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(AuthenticationActivity.this, "Verification email not sent", Toast.LENGTH_SHORT).show();
+                }
+            });
+
             if(user.getDisplayName()!=null) {
                 User.setName(user.getDisplayName());
             }
             User.setUid(user.getUid());
 
-            goToMainActivity();
+        } else {
+            // If sign in fails, display a message to the user.
+            Log.w(TAG, "signInWithEmail:failure", task.getException());
+            Toast.makeText(AuthenticationActivity.this, failText,
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onCompleteLoginListenerContent(Task<AuthResult> task, String failText){
+        if (task.isSuccessful()) {
+            // Sign in success, set the signed-in user's information and go to main
+            FirebaseUser user = mAuth.getCurrentUser();
+            assert user != null;
+
+            if(user.getDisplayName()!=null) {
+                User.setName(user.getDisplayName());
+            }
+            User.setUid(user.getUid());
+
+            if(user.isEmailVerified()) {
+                goToMainActivity();
+            } else {
+                Toast.makeText(AuthenticationActivity.this, "Please, verify your email.", Toast.LENGTH_SHORT).show();
+            }
         } else {
             // If sign in fails, display a message to the user.
             Log.w(TAG, "signInWithEmail:failure", task.getException());
