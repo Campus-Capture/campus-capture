@@ -1,15 +1,14 @@
-def getMapsAPIKey()
+def getAPIKey(String label)
 {
     try {
         def secretsFile = file("tokens.dat")
-        println("Reading API key from file")
-        return secretsFile.text
+        println("Reading key from file")
+        return secretsFile.text.lines().find(s -> s.contains(label)).split(':')[1]
     }
     catch(FileNotFoundException ignored)
     {
-        println("Reading API key from GitHub secrets")
-        println(System.getenv("API_KEY"))
-        return System.getenv("API_KEY")
+        println("Reading key from Cirrus encrypted values")
+        return System.getenv(label)
     }
     catch(Exception e)
     {
@@ -48,7 +47,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            buildConfigField("String", "API_KEY", "\"" + getMapsAPIKey() + "\"")
+            buildConfigField("String", "API_KEY", "\"" + getAPIKey("API_KEY") + "\"")
             testCoverageEnabled true
         }
     }
