@@ -1,12 +1,14 @@
 def getAPIKey(String label)
 {
     def secretsFile
-    try {
+    try
+    {
         secretsFile = file("tokens.dat")
     }
     catch(FileNotFoundException ignored)
     {
         println("Reading key from Cirrus encrypted values")
+        println(System.getenv(label))
         return System.getenv(label)
     }
     catch(Exception e)
