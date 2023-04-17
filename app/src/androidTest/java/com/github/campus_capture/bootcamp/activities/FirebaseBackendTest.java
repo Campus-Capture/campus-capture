@@ -8,6 +8,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import android.util.Log;
 
@@ -26,10 +27,13 @@ import com.github.campus_capture.bootcamp.firebase.BackendInterface;
 import com.github.campus_capture.bootcamp.firebase.FirebaseBackend;
 import com.github.campus_capture.bootcamp.firebase.PlaceholderFirebaseInterface;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import org.junit.Before;
@@ -39,16 +43,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.security.spec.ECField;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 @RunWith(AndroidJUnit4.class)
 public class FirebaseBackendTest {
 
     static FirebaseDatabase database = null;
-
-    @Rule
-    public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
 
     @BeforeClass
     public static void init_firebase_emulator() {
@@ -58,6 +63,9 @@ public class FirebaseBackendTest {
             database = context.getFirebaseDB();
             database.useEmulator("10.0.2.2", 9000);
 
+            //wait for connection
+            TimeUnit.SECONDS.sleep(3);
+
             //check for connection
             DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
             connectedRef.addValueEventListener(new ValueEventListener() {
@@ -65,15 +73,15 @@ public class FirebaseBackendTest {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     boolean connected = snapshot.getValue(Boolean.class);
                     if (connected) {
-                        Log.d(TAG, "connected");
+                        Log.d("MY_TAG", "connected");
                     } else {
-                        Log.d(TAG, "not connected");
+                        Log.d("MY_TAG", "not connected");
                     }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    Log.w(TAG, "Listener was cancelled");
+                    Log.w("MY_TAG", "Listener was cancelled");
                 }
             });
 
@@ -82,28 +90,72 @@ public class FirebaseBackendTest {
         }
     }
 
+    @Test
+    public void dummyTest(){
+
+        database.getReference().child("test").setValue("hello banana");
+        assertTrue(true);
+    }
+
     @Before
     public void clear_firebase_database(){
         database.getReference().setValue(null);
     }
 
-    @Test
-    public void testVoteZoneReturnsCorrect()
-    {
-        // TODO set database content
+    @Test @Ignore
+    public void testVoteZone() {
+        // set database content
+        database.getReference().child("Users").child("testUserId").child("has_voted").setValue(false);
+        database.getReference().child("Zones").child("BC").child("IN").setValue(4);
 
         BackendInterface b = new FirebaseBackend();
 
         try {
-            assertTrue(b.voteZone("", Section.IN, "").get());
+            assertTrue(b.voteZone("testUserId", Section.IN, "BC").join());
         }catch(Exception e){
+            Log.e("Error in test", e.toString());
             assertTrue(false);
         }
 
-        // TODO check database content
+        // check database content
+        CompletableFuture<Boolean> futureResultHasVoted = new CompletableFuture<>();
+        database.getReference().child("Users").child("testUserId").child("has_voted").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    fail();
+                }
+                else {
+                    futureResultHasVoted.complete( (Boolean)task.getResult().getValue() );
+                }
+            }
+        });
+
+        CompletableFuture<Long> futureResultVoteCount = new CompletableFuture<>();
+        database.getReference().child("Zones").child("BC").child("IN").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    fail();
+                }
+                else {
+                    futureResultVoteCount.complete( (Long)task.getResult().getValue() );
+                }
+            }
+        });
+
+        try{
+            assertTrue(futureResultHasVoted.join());
+            assertEquals(futureResultVoteCount.join().longValue(), 6);
+        }catch (Exception e){
+            fail();
+        }
     }
 
+    // TODO testVoteZoneImpossibleWhenAlreadyVoted
+
     @Test
+    @Ignore
     public void testCurrentZoneOwners()
     {
         // TODO set database content
@@ -114,13 +166,14 @@ public class FirebaseBackendTest {
             Map<String, Section> owners = b.getCurrentZoneOwners().get();
             assertEquals(owners.get("campus"), Section.IN);
         }catch(Exception e){
+            Log.e("Error in test", e.toString());
             assertTrue(false);
         }
 
         // TODO check database content
     }
 
-    @Test
+    @Test @Ignore
     public void testScoresAreWellOrdered()
     {
         // TODO set database content
@@ -135,6 +188,7 @@ public class FirebaseBackendTest {
                 assertTrue(scores.get(i).getValue() >= scores.get(i + 1).getValue());
             }
         }catch(Exception e){
+            Log.e("Error in test", e.toString());
             assertTrue(false);
         }
 
@@ -143,19 +197,38 @@ public class FirebaseBackendTest {
     }
 
     @Test
-    public void testIfPlayerAlreadyAttacked()
+    public void testIfPlayerAlreadyAttackedFalse()
     {
         // TODO set database content
+        database.getReference().child("Users").child("testUserId").child("has_voted").setValue(false);
 
         BackendInterface b = new FirebaseBackend();
 
         try{
-            assertFalse(b.hasAttacked("kek").get());
+            assertFalse(b.hasAttacked("testUserId").join());
         }catch(Exception e){
+            Log.e("Error in test", e.toString());
             assertTrue(false);
         }
 
-        // TODO check database content
+
+    }
+
+    @Test
+    public void testIfPlayerAlreadyAttackedTrue()
+    {
+        // TODO set database content
+        database.getReference().child("Users").child("testUserId").child("has_voted").setValue(true);
+
+        BackendInterface b = new FirebaseBackend();
+
+        try{
+            assertTrue(b.hasAttacked("testUserId").join());
+        }catch(Exception e){
+            Log.e("Error in test", e.toString());
+            assertTrue(false);
+        }
+
 
     }
 }

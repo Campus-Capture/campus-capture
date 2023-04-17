@@ -3,6 +3,7 @@ package com.github.campus_capture.bootcamp;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import androidx.test.core.app.ApplicationProvider;
 
@@ -25,7 +26,7 @@ public class PlaceholderBackendInterfaceTest {
         try {
             assertTrue(t.voteZone("", Section.IN, "").get());
         }catch(Exception e){
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -38,7 +39,7 @@ public class PlaceholderBackendInterfaceTest {
             Map<String, Section> owners = t.getCurrentZoneOwners().get();
             assertEquals(owners.get("campus"), Section.IN);
         }catch(Exception e){
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -55,7 +56,7 @@ public class PlaceholderBackendInterfaceTest {
                 assertTrue(scores.get(i).getValue() >= scores.get(i + 1).getValue());
             }
         }catch(Exception e){
-            assertTrue(false);
+            fail();
         }
 
     }
@@ -68,7 +69,7 @@ public class PlaceholderBackendInterfaceTest {
         try{
             assertFalse(t.hasAttacked("kek").get());
         }catch(Exception e){
-            assertTrue(false);
+            fail();
         }
 
     }

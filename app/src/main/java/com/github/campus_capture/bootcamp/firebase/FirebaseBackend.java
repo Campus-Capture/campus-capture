@@ -1,5 +1,7 @@
 package com.github.campus_capture.bootcamp.firebase;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.test.core.app.ApplicationProvider;
 
@@ -22,6 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.function.Function;
 
 public class FirebaseBackend implements BackendInterface{
     @Override
@@ -30,43 +34,79 @@ public class FirebaseBackend implements BackendInterface{
         AppContext context = (AppContext) ApplicationProvider.getApplicationContext();
         FirebaseDatabase db = context.getFirebaseDB();
 
-        //register the vote
-        CompletableFuture<Boolean> futureResultZone = new CompletableFuture<>();
+        DatabaseReference userRef = db.getReference("Users/"+ uid);
 
-        DatabaseReference zonesRef = db.getReference("Zones");
-        zonesRef.child(zonename).child(s.toString()).setValue(ServerValue.increment(1)).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        futureResultZone.complete(true);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        futureResultZone.completeExceptionally(new Throwable("Could not register the user vote"));
-                    }
-                });
-
-        return futureResultZone.thenCompose((result) -> {
+        Function<Boolean, CompletionStage<Boolean>> register_player_has_voted = (has_voted) -> {
             //register that player has voted
             CompletableFuture<Boolean> futureResultUser = new CompletableFuture<>();
 
-            DatabaseReference userRef = db.getReference("Users/"+ User.getUid());
+            if(has_voted == true){
+                futureResultUser.complete(false);
+            } else {
+                userRef.child("has_voted").setValue(true).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
 
-            userRef.child("did_vote").setValue(true).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            futureResultUser.complete(true);
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            futureResultUser.completeExceptionally(new Throwable("Could not register that user did vote"));
-                        }
-                    });
+                                Log.d("MY_TAG", "has voted set Value success");
+                                futureResultUser.complete(true);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d("MY_TAG", "has voted set Value failure");
+                                futureResultUser.completeExceptionally(new Throwable("Could not register that user did vote"));
+                            }
+                        });
+            }
             return futureResultUser;
+        };
+
+        DatabaseReference zonesRef = db.getReference("Zones");
+        CompletableFuture<Boolean> futureResultZone = new CompletableFuture<>();
+
+        Function<Boolean, CompletionStage<Boolean>> register_player_vote = (has_voted) -> {
+
+            if(has_voted == true){
+                futureResultZone.complete(false);
+            } else {
+                zonesRef.child(zonename).child(s.toString()).setValue(ServerValue.increment(1)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("MY_TAG", "register player vote set Value success");
+                                futureResultZone.complete(true);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d("MY_TAG", "register player vote set Value failure");
+                                futureResultZone.completeExceptionally(new Throwable("Could not register the user vote"));
+                            }
+                        });
+            }
+            return futureResultZone;
+        };
+
+        CompletableFuture<Boolean> futureResultHasVoted = new CompletableFuture<>();
+        userRef.child("has_voted").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.d("MY_TAG", "read has voted failure");
+                    futureResultHasVoted.completeExceptionally(new Throwable("Could not read if user has voted"));
+                }
+                else {
+                    Log.d("MY_TAG", "read has voted success " + (Boolean)task.getResult().getValue());
+                    futureResultHasVoted.complete( (Boolean)task.getResult().getValue() );
+                }
+            }
         });
+
+
+        futureResultHasVoted.thenCompose(register_player_vote).thenCompose(register_player_has_voted);
+
+        return futureResultHasVoted;
     }
 
     @Override
@@ -77,9 +117,9 @@ public class FirebaseBackend implements BackendInterface{
         AppContext context = (AppContext) ApplicationProvider.getApplicationContext();
         FirebaseDatabase db = context.getFirebaseDB();
 
-        DatabaseReference userRef = db.getReference("Users/"+ User.getUid());
+        DatabaseReference userRef = db.getReference("Users/"+ uid);
 
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        userRef.child("has_voted").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
