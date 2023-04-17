@@ -3,19 +3,23 @@ def getAPIKey(String label)
     def secretsFile = file("tokens.dat")
     try
     {
-        def val = secretsFile.text.lines().find(s -> s.contains(label)).split(':')[1].trim()
+        def val = secretsFile.text.lines().find(s -> s.contains(label))
+        if(val == null)
+        {
+            throw new GradleException("Specified local API key not found")
+        }
         println("Reading key " + label + " from file")
-        return val
+        return val.split(':')[1].trim()
     }
     catch(FileNotFoundException ignored)
     {
+        def val = System.getenv(label)
+        if(val == null)
+        {
+            throw new GradleException("Specified CI API key not found")
+        }
         println("Reading key " + label + " from Cirrus encrypted values")
         return System.getenv(label)
-    }
-    catch(Exception e)
-    {
-        println(e)
-        return ""
     }
 }
 
@@ -45,12 +49,12 @@ android {
 
     buildTypes {
         release {
-            resValue("string", "MAP_API_KEY", "\"" + getAPIKey("MAP_API_KEY") + "\"")
+            resValue("string", "MAP_API_KEY", "\"" + getAPIKey("TEST_KEY") + "\"")
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            resValue("string", "MAP_API_KEY", "\"" + getAPIKey("MAP_API_KEY") + "\"")
+            resValue("string", "MAP_API_KEY", "\"" + getAPIKey("TEST_KEY") + "\"")
             testCoverageEnabled true
         }
     }
