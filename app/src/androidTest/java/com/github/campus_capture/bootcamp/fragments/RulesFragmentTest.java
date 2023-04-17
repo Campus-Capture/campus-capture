@@ -35,6 +35,7 @@ public class RulesFragmentTest {
         onView(ViewMatchers.withId(R.id.nav_rules)).perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.rules_text)).check(matches(withText(containsString("Welcome to"))));
+        onView(ViewMatchers.withId(R.id.rules_text)).check(matches(withText(containsString("Have fun and good luck"))));
 
         Intents.release();
     }
