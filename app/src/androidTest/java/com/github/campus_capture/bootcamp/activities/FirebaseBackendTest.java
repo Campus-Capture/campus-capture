@@ -5,6 +5,9 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import android.util.Log;
 
@@ -18,10 +21,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
-import com.github.campus_capture.bootcamp.activities.MainActivity;
-import com.github.campus_capture.bootcamp.firebase.FireDatabase;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.github.campus_capture.bootcamp.authentication.Section;
+import com.github.campus_capture.bootcamp.firebase.BackendInterface;
+import com.github.campus_capture.bootcamp.firebase.FirebaseBackend;
+import com.github.campus_capture.bootcamp.firebase.PlaceholderFirebaseInterface;
+import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,8 +39,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
+import java.util.Map;
+
 @RunWith(AndroidJUnit4.class)
-public class MainActivityRuleFragmentTest {
+public class FirebaseBackendTest {
 
     static FirebaseDatabase database = null;
 
@@ -47,9 +54,9 @@ public class MainActivityRuleFragmentTest {
     public static void init_firebase_emulator() {
 
         try{
-            AppContext context = (AppContext)ApplicationProvider.getApplicationContext();
+            AppContext context = (AppContext) ApplicationProvider.getApplicationContext();
             database = context.getFirebaseDB();
-            database.useEmulator("127.0.0.1", 9000);
+            database.useEmulator("10.0.2.2", 9000);
 
             //check for connection
             DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
@@ -80,22 +87,75 @@ public class MainActivityRuleFragmentTest {
         database.getReference().setValue(null);
     }
 
-    @Ignore //TODO comment out once firebase emulator is setup on CI
     @Test
-    public void RulesFragmentShowTheRightContent() {
-        database.getReference().child("rules").setValue("The rules stocked in firebase emulator...");
+    public void testVoteZoneReturnsCorrect()
+    {
+        // TODO set database content
 
-        Intents.init();
+        BackendInterface b = new FirebaseBackend();
 
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
+        try {
+            assertTrue(b.voteZone("", Section.IN, "").get());
+        }catch(Exception e){
+            assertTrue(false);
+        }
 
-        onView(ViewMatchers.withId(R.id.nav_rules))
-                .perform(ViewActions.click());
+        // TODO check database content
+    }
 
-        onView(ViewMatchers.withId(R.id.rules_text))
-                .check(matches(withText(containsString("The rules stocked in firebase emulator..."))));
+    @Test
+    public void testCurrentZoneOwners()
+    {
+        // TODO set database content
 
-        Intents.release();
+        BackendInterface b = new FirebaseBackend();
+
+        try{
+            Map<String, Section> owners = b.getCurrentZoneOwners().get();
+            assertEquals(owners.get("campus"), Section.IN);
+        }catch(Exception e){
+            assertTrue(false);
+        }
+
+        // TODO check database content
+    }
+
+    @Test
+    public void testScoresAreWellOrdered()
+    {
+        // TODO set database content
+
+        BackendInterface b = new FirebaseBackend();
+
+        try{
+            List<ScoreItem> scores = b.getScores().get();
+
+            for(int i = 0; i < scores.size() - 1; i++)
+            {
+                assertTrue(scores.get(i).getValue() >= scores.get(i + 1).getValue());
+            }
+        }catch(Exception e){
+            assertTrue(false);
+        }
+
+        // TODO check database content
+
+    }
+
+    @Test
+    public void testIfPlayerAlreadyAttacked()
+    {
+        // TODO set database content
+
+        BackendInterface b = new FirebaseBackend();
+
+        try{
+            assertFalse(b.hasAttacked("kek").get());
+        }catch(Exception e){
+            assertTrue(false);
+        }
+
+        // TODO check database content
+
     }
 }

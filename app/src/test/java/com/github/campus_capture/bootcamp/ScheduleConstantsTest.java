@@ -3,7 +3,7 @@ package com.github.campus_capture.bootcamp;
 import static com.github.campus_capture.bootcamp.map.ScheduleConstants.*;
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ScheduleConstantsTest {
 

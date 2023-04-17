@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ScoreItemTest {
 

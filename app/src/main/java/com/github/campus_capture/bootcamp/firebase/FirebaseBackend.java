@@ -30,44 +30,43 @@ public class FirebaseBackend implements BackendInterface{
         AppContext context = (AppContext) ApplicationProvider.getApplicationContext();
         FirebaseDatabase db = context.getFirebaseDB();
 
-        //register that player uid voted
-        CompletableFuture<Boolean> futureResult1 = new CompletableFuture<>();
-
-        DatabaseReference userRef = db.getReference("Users/"+ User.getUid());
-
-        userRef.child("did_vote").setValue(true).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        futureResult1.complete(true);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        futureResult1.completeExceptionally(new Throwable("Could not register that user did vote"));
-                    }
-                });;;
-
-
         //register the vote
-        CompletableFuture<Boolean> futureResult2 = new CompletableFuture<>();
+        CompletableFuture<Boolean> futureResultZone = new CompletableFuture<>();
 
         DatabaseReference zonesRef = db.getReference("Zones");
-
         zonesRef.child(zonename).child(s.toString()).setValue(ServerValue.increment(1)).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        futureResult2.complete(true);
+                        futureResultZone.complete(true);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        futureResult2.completeExceptionally(new Throwable("Could not register user vote"));
+                        futureResultZone.completeExceptionally(new Throwable("Could not register the user vote"));
                     }
-                });;
+                });
 
-        return futureResult1.thenCombine(futureResult2, (result1, result2) -> (result1 && result2));
+        return futureResultZone.thenCompose((result) -> {
+            //register that player has voted
+            CompletableFuture<Boolean> futureResultUser = new CompletableFuture<>();
+
+            DatabaseReference userRef = db.getReference("Users/"+ User.getUid());
+
+            userRef.child("did_vote").setValue(true).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            futureResultUser.complete(true);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            futureResultUser.completeExceptionally(new Throwable("Could not register that user did vote"));
+                        }
+                    });
+            return futureResultUser;
+        });
     }
 
     @Override
