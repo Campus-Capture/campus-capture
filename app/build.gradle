@@ -1,3 +1,23 @@
+def getMapsAPIKey()
+{
+    try {
+        def secretsFile = file("tokens.dat")
+        println("Reading API key from file")
+        return secretsFile.text
+    }
+    catch(FileNotFoundException ignored)
+    {
+        println("Reading API key from GitHub secrets")
+        println(System.getenv("API_KEY"))
+        return System.getenv("API_KEY")
+    }
+    catch(Exception e)
+    {
+        println(e)
+        return ""
+    }
+}
+
 plugins {
     id 'com.android.application'
     id 'jacoco'
@@ -29,7 +49,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            buildConfigField("String", "API_KEY", "\"" + "AIzaSyAy5-75aLbkhfiq2CyqXmoW2MRiRBhLg1Q" + "\"")
+            buildConfigField("String", "API_KEY", "\"" + getMapsAPIKey() + "\"")
             testCoverageEnabled true
         }
     }
