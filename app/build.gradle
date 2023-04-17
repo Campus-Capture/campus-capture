@@ -1,9 +1,11 @@
 def getAPIKey(String label)
 {
     def secretsFile
+    def fileFound = false
     try
     {
         secretsFile = file("tokens.dat")
+        fileFound = true
     }
     catch(FileNotFoundException ignored)
     {
@@ -16,8 +18,13 @@ def getAPIKey(String label)
         println(e)
         return ""
     }
-    println("Reading key from file")
-    return secretsFile.text.lines().find(s -> s.contains(label)).split(':')[1]
+
+    if(fileFound)
+    {
+        println("Reading key from file")
+        return secretsFile.text.lines().find(s -> s.contains(label)).split(':')[1]
+    }
+    return ""
 }
 
 plugins {
