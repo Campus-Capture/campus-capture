@@ -49,7 +49,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            buildConfigField("String", "API_KEY", "\"" + getAPIKey("API_KEY") + "\"")
+            resValue("string", "API_KEY", "\"" + getAPIKey("API_KEY") + "\"")
             testCoverageEnabled true
         }
     }
