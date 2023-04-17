@@ -36,26 +36,21 @@ public class FirebaseBackend implements BackendInterface{
 
         Function<Boolean, CompletionStage<Boolean>> register_player_zone_vote = (had_already_voted) -> {
 
-            Log.d("MY_TAG", "register zone vote called");
             CompletableFuture<Boolean> futureResultVoteZone = new CompletableFuture<>();
 
             if(had_already_voted == true){
                 futureResultVoteZone.complete(false);
-                Log.d("MY_TAG", "register zone vote if");
             } else {
-                Log.d("MY_TAG", "register zone vote else");
                 DatabaseReference zonesRef = db.getReference("Zones");
                 zonesRef.child(zonename).child(s.toString()).setValue(ServerValue.increment(1)).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Log.d("MY_TAG", "register player vote set Value success");
                                 futureResultVoteZone.complete(true);
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.d("MY_TAG", "register player vote set Value failure");
                                 futureResultVoteZone.completeExceptionally(new Throwable("Could not register the user vote"));
                             }
                         });
@@ -74,15 +69,12 @@ public class FirebaseBackend implements BackendInterface{
                 userRef.child("has_voted").setValue(true).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-
-                                Log.d("MY_TAG", "has voted set Value success");
                                 futureResultUser.complete(true);
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.d("MY_TAG", "has voted set Value failure");
                                 futureResultUser.completeExceptionally(new Throwable("Could not register that user did vote"));
                             }
                         });
@@ -110,7 +102,6 @@ public class FirebaseBackend implements BackendInterface{
                     futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
                 }
                 else {
-                    Log.d("MY_TAG", "hasAttacked " + (Boolean) task.getResult().getValue());
                     futureResult.complete((Boolean) task.getResult().getValue());
                 }
             }
@@ -168,8 +159,8 @@ public class FirebaseBackend implements BackendInterface{
                     List<ScoreItem> scores = new LinkedList<>();
                     task.getResult().getChildren().forEach((section) -> {
                         String sectionName = section.getKey();
-                        Integer score = (Integer)section.child("score").getValue();
-                        ScoreItem item = new ScoreItem(sectionName, score);
+                        Long score = (Long)section.child("score").getValue();
+                        ScoreItem item = new ScoreItem(sectionName, score.intValue());
                         scores.add(item);
                     });
                     Collections.sort(scores);

@@ -63,51 +63,16 @@ public class FirebaseBackendTest {
             database = context.getFirebaseDB();
             database.useEmulator("10.0.2.2", 9000);
 
-
-
-            //check for connection
-            DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
-            connectedRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    boolean connected = snapshot.getValue(Boolean.class);
-                    if (connected) {
-                        Log.d("MY_TAG", "connected");
-                    } else {
-                        Log.d("MY_TAG", "not connected");
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.w("MY_TAG", "Listener was cancelled");
-                }
-            });
-
-            //wait for connection
-            TimeUnit.SECONDS.sleep(3);
-
         } catch (Exception e) {
             Log.e("Error init DB", e.toString());
         }
     }
 
-    @Test
-    public void dummyTest(){
-
-        database.getReference().child("test").setValue("hello banana");
-        assertTrue(true);
-    }
-
     @Before
-    public void clear_firebase_database(){
-
-        //database.getReference().setValue(null);
-    }
+    public void clear_firebase_database(){ database.getReference().setValue(null);}
 
     @Test
     public void testVoteZone() {
-        database.getReference().setValue(null);
         // set database content
         database.getReference().child("Users").child("testUserId").child("has_voted").setValue(false);
         database.getReference().child("Zones").child("BC").child("IN").setValue(4);
@@ -116,7 +81,6 @@ public class FirebaseBackendTest {
 
         try {
             Boolean result = b.voteZone("testUserId", Section.IN, "BC").get();
-            Log.d("MY_TAG", "result test vote zone " + result);
             assertTrue(result);
         }catch(Exception e){
             Log.e("Error in test", e.toString());
@@ -158,31 +122,95 @@ public class FirebaseBackendTest {
         }
     }
 
-    // TODO testVoteZoneImpossibleWhenAlreadyVoted
-
     @Test
-    @Ignore
-    public void testCurrentZoneOwners()
-    {
-        // TODO set database content
+    public void testVoteZoneImpossibleAlreadyVoted() {
+        // set database content
+        database.getReference().child("Users").child("testUserId").child("has_voted").setValue(true);
+        database.getReference().child("Zones").child("BC").child("IN").setValue(4);
 
         BackendInterface b = new FirebaseBackend();
 
-        try{
-            Map<String, Section> owners = b.getCurrentZoneOwners().get();
-            assertEquals(owners.get("campus"), Section.IN);
+        try {
+            Boolean result = b.voteZone("testUserId", Section.IN, "BC").get();
+            assertFalse(result);
         }catch(Exception e){
             Log.e("Error in test", e.toString());
             assertTrue(false);
         }
 
-        // TODO check database content
+        // check database content
+        CompletableFuture<Boolean> futureResultHasVoted = new CompletableFuture<>();
+        database.getReference().child("Users").child("testUserId").child("has_voted").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    fail();
+                }
+                else {
+                    futureResultHasVoted.complete( (Boolean)task.getResult().getValue() );
+                }
+            }
+        });
+
+        CompletableFuture<Long> futureResultVoteCount = new CompletableFuture<>();
+        database.getReference().child("Zones").child("BC").child("IN").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    fail();
+                }
+                else {
+                    futureResultVoteCount.complete( (Long)task.getResult().getValue() );
+                }
+            }
+        });
+
+        try{
+            assertTrue(futureResultHasVoted.get());
+            assertEquals(4, futureResultVoteCount.get().longValue());
+        }catch (Exception e){
+            fail();
+        }
     }
 
-    @Test @Ignore
+    @Test
+    public void testCurrentZoneOwners()
+    {
+        // set database content
+        DatabaseReference zonesRef = database.getReference().child("Zones");
+        zonesRef.child("BC").child("owner").setValue("SV");
+        zonesRef.child("CE").child("owner").setValue("IN");
+        zonesRef.child("CO").child("owner").setValue("SIE");
+        zonesRef.child("SG").child("owner").setValue("AR");
+        zonesRef.child("INF").child("owner").setValue("SC");
+
+        BackendInterface b = new FirebaseBackend();
+
+        try{
+            Map<String, Section> owners = b.getCurrentZoneOwners().get();
+            assertEquals(Section.AR, owners.get("SG"));
+            assertEquals(Section.IN, owners.get("CE"));
+            assertEquals(Section.SV, owners.get("BC"));
+            assertEquals(Section.SC, owners.get("INF"));
+            assertEquals(Section.SIE, owners.get("CO"));
+
+        }catch(Exception e){
+            Log.e("Error in test", e.toString());
+            fail();
+        }
+    }
+
+    @Test
     public void testScoresAreWellOrdered()
     {
-        // TODO set database content
+        // set database content
+        DatabaseReference sectionsRef = database.getReference().child("Sections");
+        sectionsRef.child("IN").child("score").setValue(66);
+        sectionsRef.child("SC").child("score").setValue(1);
+        sectionsRef.child("EL").child("score").setValue(12);
+        sectionsRef.child("GC").child("score").setValue(44);
+        sectionsRef.child("MX").child("score").setValue(4);
+        sectionsRef.child("MT").child("score").setValue(555);
 
         BackendInterface b = new FirebaseBackend();
 
@@ -197,15 +225,12 @@ public class FirebaseBackendTest {
             Log.e("Error in test", e.toString());
             assertTrue(false);
         }
-
-        // TODO check database content
-
     }
 
     @Test
     public void testIfPlayerAlreadyAttackedFalse()
     {
-        // TODO set database content
+        // set database content
         database.getReference().child("Users").child("testUserId").child("has_voted").setValue(false);
 
         BackendInterface b = new FirebaseBackend();
@@ -221,7 +246,7 @@ public class FirebaseBackendTest {
     @Test
     public void testIfPlayerAlreadyAttackedTrue()
     {
-        // TODO set database content
+        // set database content
         database.getReference().child("Users").child("testUserId").child("has_voted").setValue(true);
 
         BackendInterface b = new FirebaseBackend();
