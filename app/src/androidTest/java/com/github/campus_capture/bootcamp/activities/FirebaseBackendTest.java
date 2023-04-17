@@ -63,8 +63,7 @@ public class FirebaseBackendTest {
             database = context.getFirebaseDB();
             database.useEmulator("10.0.2.2", 9000);
 
-            //wait for connection
-            TimeUnit.SECONDS.sleep(3);
+
 
             //check for connection
             DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
@@ -85,6 +84,9 @@ public class FirebaseBackendTest {
                 }
             });
 
+            //wait for connection
+            TimeUnit.SECONDS.sleep(3);
+
         } catch (Exception e) {
             Log.e("Error init DB", e.toString());
         }
@@ -99,11 +101,13 @@ public class FirebaseBackendTest {
 
     @Before
     public void clear_firebase_database(){
-        database.getReference().setValue(null);
+
+        //database.getReference().setValue(null);
     }
 
-    @Test @Ignore
+    @Test
     public void testVoteZone() {
+        database.getReference().setValue(null);
         // set database content
         database.getReference().child("Users").child("testUserId").child("has_voted").setValue(false);
         database.getReference().child("Zones").child("BC").child("IN").setValue(4);
@@ -111,7 +115,9 @@ public class FirebaseBackendTest {
         BackendInterface b = new FirebaseBackend();
 
         try {
-            assertTrue(b.voteZone("testUserId", Section.IN, "BC").join());
+            Boolean result = b.voteZone("testUserId", Section.IN, "BC").get();
+            Log.d("MY_TAG", "result test vote zone " + result);
+            assertTrue(result);
         }catch(Exception e){
             Log.e("Error in test", e.toString());
             assertTrue(false);
@@ -145,8 +151,8 @@ public class FirebaseBackendTest {
         });
 
         try{
-            assertTrue(futureResultHasVoted.join());
-            assertEquals(futureResultVoteCount.join().longValue(), 6);
+            assertTrue(futureResultHasVoted.get());
+            assertEquals(5, futureResultVoteCount.get().longValue());
         }catch (Exception e){
             fail();
         }
@@ -205,13 +211,11 @@ public class FirebaseBackendTest {
         BackendInterface b = new FirebaseBackend();
 
         try{
-            assertFalse(b.hasAttacked("testUserId").join());
+            assertFalse(b.hasAttacked("testUserId").get());
         }catch(Exception e){
             Log.e("Error in test", e.toString());
             assertTrue(false);
         }
-
-
     }
 
     @Test
@@ -223,12 +227,10 @@ public class FirebaseBackendTest {
         BackendInterface b = new FirebaseBackend();
 
         try{
-            assertTrue(b.hasAttacked("testUserId").join());
+            assertTrue(b.hasAttacked("testUserId").get());
         }catch(Exception e){
             Log.e("Error in test", e.toString());
             assertTrue(false);
         }
-
-
     }
 }

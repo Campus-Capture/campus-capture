@@ -31,18 +31,46 @@ public class FirebaseBackend implements BackendInterface{
     @Override
     public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
 
-        AppContext context = (AppContext) ApplicationProvider.getApplicationContext();
+        AppContext context = ApplicationProvider.getApplicationContext();
         FirebaseDatabase db = context.getFirebaseDB();
 
-        DatabaseReference userRef = db.getReference("Users/"+ uid);
+        Function<Boolean, CompletionStage<Boolean>> register_player_zone_vote = (had_already_voted) -> {
 
-        Function<Boolean, CompletionStage<Boolean>> register_player_has_voted = (has_voted) -> {
+            Log.d("MY_TAG", "register zone vote called");
+            CompletableFuture<Boolean> futureResultVoteZone = new CompletableFuture<>();
+
+            if(had_already_voted == true){
+                futureResultVoteZone.complete(false);
+                Log.d("MY_TAG", "register zone vote if");
+            } else {
+                Log.d("MY_TAG", "register zone vote else");
+                DatabaseReference zonesRef = db.getReference("Zones");
+                zonesRef.child(zonename).child(s.toString()).setValue(ServerValue.increment(1)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("MY_TAG", "register player vote set Value success");
+                                futureResultVoteZone.complete(true);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d("MY_TAG", "register player vote set Value failure");
+                                futureResultVoteZone.completeExceptionally(new Throwable("Could not register the user vote"));
+                            }
+                        });
+            }
+            return futureResultVoteZone;
+        };
+
+        Function<Boolean, CompletionStage<Boolean>> register_player_has_voted = (zone_vote_registered) -> {
             //register that player has voted
             CompletableFuture<Boolean> futureResultUser = new CompletableFuture<>();
 
-            if(has_voted == true){
+            if(zone_vote_registered == false){
                 futureResultUser.complete(false);
             } else {
+                DatabaseReference userRef = db.getReference("Users/"+ uid);
                 userRef.child("has_voted").setValue(true).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
@@ -62,51 +90,7 @@ public class FirebaseBackend implements BackendInterface{
             return futureResultUser;
         };
 
-        DatabaseReference zonesRef = db.getReference("Zones");
-        CompletableFuture<Boolean> futureResultZone = new CompletableFuture<>();
-
-        Function<Boolean, CompletionStage<Boolean>> register_player_vote = (has_voted) -> {
-
-            if(has_voted == true){
-                futureResultZone.complete(false);
-            } else {
-                zonesRef.child(zonename).child(s.toString()).setValue(ServerValue.increment(1)).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d("MY_TAG", "register player vote set Value success");
-                                futureResultZone.complete(true);
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d("MY_TAG", "register player vote set Value failure");
-                                futureResultZone.completeExceptionally(new Throwable("Could not register the user vote"));
-                            }
-                        });
-            }
-            return futureResultZone;
-        };
-
-        CompletableFuture<Boolean> futureResultHasVoted = new CompletableFuture<>();
-        userRef.child("has_voted").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.d("MY_TAG", "read has voted failure");
-                    futureResultHasVoted.completeExceptionally(new Throwable("Could not read if user has voted"));
-                }
-                else {
-                    Log.d("MY_TAG", "read has voted success " + (Boolean)task.getResult().getValue());
-                    futureResultHasVoted.complete( (Boolean)task.getResult().getValue() );
-                }
-            }
-        });
-
-
-        futureResultHasVoted.thenCompose(register_player_vote).thenCompose(register_player_has_voted);
-
-        return futureResultHasVoted;
+        return hasAttacked(uid).thenCompose(register_player_zone_vote).thenCompose(register_player_has_voted);
     }
 
     @Override
@@ -126,6 +110,7 @@ public class FirebaseBackend implements BackendInterface{
                     futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
                 }
                 else {
+                    Log.d("MY_TAG", "hasAttacked " + (Boolean) task.getResult().getValue());
                     futureResult.complete((Boolean) task.getResult().getValue());
                 }
             }
