@@ -214,16 +214,15 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
-        <entry key="1243133584">
+        <entry key="1282976990">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
                 <map>
-                  <entry key="A209FRGJ0201" value="120" />
                   <entry key="Duration" value="90" />
-                  <entry key="Fairphone&#10; FP3" value="120" />
-                  <entry key="Pixel_2_API_33" value="120" />
+                  <entry key="HUAWEI&#10; CLT-L29" value="120" />
                   <entry key="Tests" value="360" />
+                  <entry key="WCR7N18816005753" value="120" />
                 </map>
               </option>
             </AndroidTestResultsTableState>
