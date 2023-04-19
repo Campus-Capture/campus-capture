@@ -8,7 +8,7 @@ import static com.github.campus_capture.bootcamp.map.ScheduleConstants.OWNER_REF
 import static com.github.campus_capture.bootcamp.map.ScheduleConstants.TAKEOVER_DURATION;
 import static com.github.campus_capture.bootcamp.map.ScheduleConstants.ZONE_REFRESH_RATE;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 public class ScheduleConstantsTest {
@@ -16,13 +16,13 @@ public class ScheduleConstantsTest {
     @Test
     public void testConstants()
     {
-        Assertions.assertEquals(MILLIS_PER_SEC, 1000);
-        Assertions.assertEquals(MILLIS_PER_MIN, 60 * 1000);
-        Assertions.assertEquals(MILLIS_PER_HOUR, 60 * 60 * 1000);
-        Assertions.assertEquals(ZONE_REFRESH_RATE, 10 * 1000);
-        Assertions.assertEquals(OWNER_REFRESH_DELAY, 5 * 1000);
-        Assertions.assertEquals(TAKEOVER_DURATION, 15 * 60 * 1000);
-        Assertions.assertEquals(NO_POSITION_RETRY_DELAY, 1000);
+        assertEquals(MILLIS_PER_SEC, 1000);
+        assertEquals(MILLIS_PER_MIN, 60 * 1000);
+        assertEquals(MILLIS_PER_HOUR, 60 * 60 * 1000);
+        assertEquals(ZONE_REFRESH_RATE, 10 * 1000);
+        assertEquals(OWNER_REFRESH_DELAY, 5 * 1000);
+        assertEquals(TAKEOVER_DURATION, 15 * 60 * 1000);
+        assertEquals(NO_POSITION_RETRY_DELAY, 1000);
     }
 
 }
