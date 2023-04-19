@@ -68,28 +68,5 @@ public class RulesFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        this.rulesText = getView().findViewById(R.id.rules_text);
-
-        AppContext context = (AppContext) getContext().getApplicationContext();
-
-        DatabaseReference myRef = context.getFirebaseDB().getReference("rules");
-
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                Log.d(TAG, "Rules are: " + value);
-                rulesText.setText(value);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read rules from db.", error.toException());
-            }
-        });
     }
 }

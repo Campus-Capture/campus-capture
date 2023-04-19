@@ -1,5 +1,6 @@
 env:
   CC_TEST_REPORTER_ID: ENCRYPTED[!0f645db5296da5f9df5391329da33feacafcda008fc03b66a851dcea7d350994733ca486fc381159fdee966eecbd46e7!]
+  MAP_API_KEY: ENCRYPTED[a74db0b21a25d015a9d08efcbcfa7182481d4b01b2101e27d30a13f3446bad813fd74c904ceabcb209ec4d4df52897f1]
 
 container:
   image: cirrusci/android-sdk:30

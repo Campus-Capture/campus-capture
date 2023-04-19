@@ -42,6 +42,17 @@
     <string name="position_not_found_text">Failed to retrieve position</string>
     <string name="vote_zone_toast">Attack registered</string>
     <string name="login_spectator_string">Spectator mode</string>
+    <string name="rules_text">Welcome to <b>Campus Capture</b>, the fun game where you and your section compete against the other sections to see who can occupy the most buildings on campus!\n\n
+The rules are simple:\n
+&#8226; The map shows you all the zones on campus and who they belong to\n
+&#8226; A <b>take-over</b> is the time during which zones can be attacked and defended\n
+&#8226; Take-overs span the first 15 minutes of every hour\n
+&#8226; During every take-over, go to the zone you wish to attack or defend and press the button\n
+&#8226; The section with the most players in the same zone captures it\n
+&#8226; Zones award different amounts of points depending on how desirable they are\n
+&#8226; Follow the amount of points your section has under the scoreboard tab\n
+&#8226; If you need help, invite your friends to join you in your effort under the profile tab\n\n
+Have fun and good luck!</string>
 
     <!-- for the section spinner-->
     <string-array name="profile_sections">

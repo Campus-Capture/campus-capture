@@ -185,6 +185,20 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="1282976990">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="HUAWEI&#10; CLT-L29" value="120" />
+                  <entry key="Tests" value="360" />
+                  <entry key="WCR7N18816005753" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="1394185675">
           <value>
             <AndroidTestResultsTableState>
