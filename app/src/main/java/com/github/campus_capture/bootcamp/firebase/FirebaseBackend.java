@@ -146,9 +146,6 @@ public class FirebaseBackend implements BackendInterface{
     @Override
     public CompletableFuture<List<ScoreItem>> getScores(){
 
-        //TODO remove
-        Log.d("MY_TAG", "get scores called");
-
         CompletableFuture<List<ScoreItem>> futureResult = new CompletableFuture<>();
 
         AppContext context = AppContext.getAppContext();
@@ -160,19 +157,10 @@ public class FirebaseBackend implements BackendInterface{
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
 
-                //TODO remove
-                Log.d("MY_TAG", "on complete called");
-
                 if (!task.isSuccessful()) {
-                    //TODO remove
-                    Log.d("MY_TAG", "failure");
-
                     futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
                 }
                 else {
-                    //TODO remove
-                    Log.d("MY_TAG", "success");
-
                     List<ScoreItem> scores = new LinkedList<>();
                     task.getResult().getChildren().forEach((section) -> {
                         String sectionName = section.getKey();
@@ -183,15 +171,10 @@ public class FirebaseBackend implements BackendInterface{
                     });
                     Collections.sort(scores);
 
-                    //TODO remove
-                    Log.d("MY_TAG", "sorted");
                     futureResult.complete(scores);
                 }
             }
         });
-
-        //TODO remove
-        Log.d("MY_TAG", "return future");
 
         return futureResult;
     }

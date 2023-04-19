@@ -90,8 +90,10 @@ public class MapScheduler {
         public void run()
         {
             backendInterface.getCurrentZoneOwners()
-                    .thenApply( (result) -> (zoneState = result) )
-                    .exceptionally( e -> {
+                    .thenAccept( (result) -> {
+                        zoneState = result;
+                    }).exceptionally( e -> {
+                        // TODO handle errors better ?
                         Log.e("MapScheduler", "Error ocurred when retrieving the zone owners");
                         return null;
                     });
@@ -136,12 +138,14 @@ public class MapScheduler {
         defendButton = view.findViewById(R.id.defendButton);
         timerButton = view.findViewById(R.id.timerButton);
 
-        // TODO not sure how to correctly refactor this using the new future interface
-        try{
-            zoneState = backendInterface.getCurrentZoneOwners().get();
-
-        } catch(Exception e){}
-        // ----------------
+        // TODO is not setting zoneState immediately a problem ?
+        backendInterface.getCurrentZoneOwners().thenAccept((result) -> {
+            zoneState = result;
+        }).exceptionally( e -> {
+            // TODO handle errors better ?
+            Log.e("MapScheduler", "Error ocurred when retrieving the zone owners");
+            return null;
+        });
 
         if(!overrideTime)
         {
@@ -183,9 +187,12 @@ public class MapScheduler {
             isTakeover = false;
             scheduledTaskHandler.postDelayed(openAttacksTask, (MILLIS_PER_HOUR - millisSinceHour));
         }
-        backendInterface.hasAttacked(User.getUid()).thenApply( (result) -> {
+        backendInterface.hasAttacked(User.getUid()).thenAccept( (result) -> {
             hasAttacked = result;
             zoneRefreshTask.run();
+        }).exceptionally( e -> {
+            // TODO handle errors better ?
+            Log.e("MapScheduler", "Error ocurred when retrieving if the user has attacked");
             return null;
         });
 

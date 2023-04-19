@@ -58,22 +58,20 @@ public class MapsFragment extends Fragment{
             Zone currentZone = findCurrentZone(currentPosition);
 
             if(currentZone != null) {
-/*
+
                 backendInterface.voteZone(User.getUid(), User.getSection(), currentZone.getName())
-                        .thenApply(result -> {
+                        .thenAccept(result -> {
                             if (result) {
                                 Toast.makeText(v.getContext(), getString(R.string.vote_zone_toast), Toast.LENGTH_SHORT).show();
                                 scheduler.confirmAttack();
                             } else {
                                 Toast.makeText(v.getContext(), getString(R.string.op_failed_toast_text), Toast.LENGTH_SHORT).show();
                             }
-                            return null;
-                        }).exceptionally(e -> {
-                            System.out.println(e.getCause()); // returns a throwable back
+                        }).exceptionally( e -> {
+                            // TODO handle errors better ?
+                            Log.e("MapFragment", "Error ocurred when voting");
                             return null;
                         });
-
- */
             }
             else
             {
