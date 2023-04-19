@@ -1,6 +1,5 @@
 package com.github.campus_capture.bootcamp.activities;
 
-import static com.github.campus_capture.bootcamp.fragments.Fragments.MAIN_FRAGMENT;
 import static com.github.campus_capture.bootcamp.fragments.Fragments.MAPS_FRAGMENT;
 import static com.github.campus_capture.bootcamp.fragments.Fragments.PROFILE_FRAGMENT;
 import static com.github.campus_capture.bootcamp.fragments.Fragments.RULES_FRAGMENT;
@@ -26,7 +25,6 @@ import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
 import com.github.campus_capture.bootcamp.firebase.PlaceholderFirebaseInterface;
 import com.github.campus_capture.bootcamp.fragments.Fragments;
-import com.github.campus_capture.bootcamp.fragments.MainFragment;
 import com.github.campus_capture.bootcamp.fragments.MapsFragment;
 import com.github.campus_capture.bootcamp.fragments.ProfileFragment;
 import com.github.campus_capture.bootcamp.fragments.RulesFragment;
@@ -87,10 +85,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch(fragment)
         {
-            case MAIN_FRAGMENT:
-                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new MainFragment());
-                break;
-
             case MAPS_FRAGMENT:
                 fragmentTransaction.replace(R.id.fragmentContainerViewMain, new MapsFragment(firebaseInterface));
                 break;
@@ -150,9 +144,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId())
         {
-            case R.id.nav_main:
-                openFragment(MAIN_FRAGMENT);
-                break;
             case R.id.nav_maps:
                 openFragment(MAPS_FRAGMENT);
                 break;
