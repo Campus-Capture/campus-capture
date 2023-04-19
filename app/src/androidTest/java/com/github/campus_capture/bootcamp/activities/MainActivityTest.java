@@ -1,24 +1,11 @@
 package com.github.campus_capture.bootcamp.activities;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-
 import static com.adevinta.android.barista.assertion.BaristaVisibilityAssertions.assertDisplayed;
 import static com.adevinta.android.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed;
 import static com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn;
-import static com.adevinta.android.barista.interaction.BaristaSleepInteractions.sleep;
 
-import static org.hamcrest.Matchers.allOf;
-
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-
-import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -26,12 +13,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.github.campus_capture.bootcamp.R;
-import com.github.campus_capture.bootcamp.activities.MainActivity;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -61,7 +44,7 @@ public class MainActivityTest {
         onView(ViewMatchers.withContentDescription(DRAWER_BUTTON))
                 .perform(ViewActions.click());
 
-        clickOn(R.id.nav_main);
+        clickOn(R.id.nav_maps);
 
         assertNotDisplayed(R.id.nav_view);
     }
@@ -91,9 +74,9 @@ public class MainActivityTest {
         onView(ViewMatchers.withContentDescription(DRAWER_BUTTON))
                 .perform(ViewActions.click());
 
-        clickOn(R.id.nav_greeting);
+        clickOn(R.id.nav_profile);
 
-        assertDisplayed(R.id.nav_greeting);
+        assertDisplayed(R.id.nav_profile);
 
         onView(ViewMatchers.withContentDescription(DRAWER_BUTTON))
                 .perform(ViewActions.click());
@@ -101,12 +84,6 @@ public class MainActivityTest {
         clickOn(R.id.nav_maps);
 
         assertDisplayed(R.id.nav_maps);
-
-        onView(ViewMatchers.withContentDescription(DRAWER_BUTTON))
-                .perform(ViewActions.click());
-        clickOn(R.id.nav_profile);
-
-        assertDisplayed(R.id.nav_profile);
 
         onView(ViewMatchers.withContentDescription(DRAWER_BUTTON))
                 .perform(ViewActions.click());

@@ -1,7 +1,6 @@
 package com.github.campus_capture.bootcamp.activities;
 
 import static androidx.test.espresso.Espresso.onView;
-import static com.adevinta.android.barista.assertion.BaristaVisibilityAssertions.assertDisplayed;
 import static com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,8 +17,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
-import com.github.campus_capture.bootcamp.activities.AuthenticationActivity;
-import com.github.campus_capture.bootcamp.activities.MainActivity;
 
 import org.junit.After;
 import org.junit.Before;
