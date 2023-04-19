@@ -53,8 +53,10 @@ public class MapScheduler {
     private final Runnable zoneRefreshTask = new Runnable() {
         @Override
         public void run() {
+
             String label = upper.getString(R.string.current_zone_text);
             LatLng position = upper.getCurrentPosition();
+
             if(position == null)
             {
                 label += "Unknown";
@@ -64,6 +66,7 @@ public class MapScheduler {
             else
             {
                 Zone currentZone = upper.findCurrentZone(position);
+
                 if(currentZone == null)
                 {
                     label += "None";
@@ -187,9 +190,15 @@ public class MapScheduler {
             isTakeover = false;
             scheduledTaskHandler.postDelayed(openAttacksTask, (MILLIS_PER_HOUR - millisSinceHour));
         }
+
+        // TODO properly fix errors due to null uid if user not logged in
         backendInterface.hasAttacked(User.getUid()).thenAccept( (result) -> {
-            hasAttacked = result;
-            zoneRefreshTask.run();
+
+            // TODO tmp solution ?
+            if(result != null){
+                hasAttacked = result;
+                zoneRefreshTask.run();
+            }
         }).exceptionally( e -> {
             // TODO handle errors better ?
             Log.e("MapScheduler", "Error ocurred when retrieving if the user has attacked");

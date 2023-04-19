@@ -66,7 +66,11 @@ public class ScoreboardFragment extends Fragment {
 
             recyclerView.setAdapter(new ScoreRecyclerViewAdapter(scores));
 
-        }); // TODO handle errors ?
+        }).exceptionally( e -> {
+            // TODO handle errors better ?
+            Log.e("ScoreboardFragmennt", "Error ocurred when fetching scores");
+            return null;
+        });
 
         return view;
     }

@@ -1,4 +1,4 @@
-package com.github.campus_capture.bootcamp.activities;
+package com.github.campus_capture.bootcamp;
 
 import static android.content.ContentValues.TAG;
 import static androidx.test.espresso.Espresso.onView;
@@ -61,11 +61,11 @@ public class FirebaseBackendTest {
         try{
             AppContext context = AppContext.getAppContext();
             database = context.getFirebaseDB();
-            Log.d("MY_TAG", "enable emulator");
+            Log.d("FirebaseBackendTest", "enable emulator");
             database.useEmulator("10.0.2.2", 9000);
 
         } catch (Exception e) {
-            Log.e("MY_TAG", e.toString());
+            Log.e("FirebaseBackendTest", e.toString());
         }
     }
 
