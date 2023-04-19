@@ -15,7 +15,9 @@ check_android_task:
   install_emulator_script:
     sdkmanager --install "system-images;android-30;google_apis;x86"
   install_firebase_emulator_script: |
-    curl -Lo ./firebase_bin https://firebase.tools/bin/linux/latest
+    sudo curl -sL https://firebase.tools | bash
+  launch_firebase_emulator_background_script: |
+    firebase emulators:start --import=./emulator
   create_avd_script:
     echo no | avdmanager create avd --force
     --name emulator
@@ -45,8 +47,7 @@ check_android_task:
   screen_record_background_script:
     for n in $(seq 1 20); do adb exec-out screenrecord --time-limit=180 --output-format=h264 - > $n.h264; done
   check_script: |
-    chmod +x firebase_bin
-    ./firebase_bin emulators:exec --import=emulator --project sdp-firebase-bootcamp72e24 './gradlew check connectedCheck'
+    ./gradlew check connectedCheck
   report_codeclimate_script: |
     export JACOCO_SOURCE_PATH=app/src/main/java/
     ./cc-test-reporter format-coverage ./app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml --input-type jacoco
