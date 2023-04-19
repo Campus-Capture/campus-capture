@@ -1,14 +1,11 @@
 package com.github.campus_capture.bootcamp;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.firebase.PlaceholderFirebaseInterface;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +16,7 @@ public class PlaceholderFirebaseInterfaceTest {
     public void testVoteZoneReturnsCorrect()
     {
         PlaceholderFirebaseInterface t = new PlaceholderFirebaseInterface();
-        assertTrue(t.voteZone("", Section.IN, ""));
+        Assertions.assertTrue(t.voteZone("", Section.IN, ""));
     }
 
     @Test
@@ -27,7 +24,7 @@ public class PlaceholderFirebaseInterfaceTest {
     {
         PlaceholderFirebaseInterface t = new PlaceholderFirebaseInterface();
         Map<String, Section> owners = t.getCurrentZoneOwners();
-        assertEquals(owners.get("campus"), Section.IN);
+        Assertions.assertEquals(owners.get("campus"), Section.IN);
     }
 
     @Test
@@ -38,7 +35,7 @@ public class PlaceholderFirebaseInterfaceTest {
 
         for(int i = 0; i < scores.size() - 1; i++)
         {
-            assertTrue(scores.get(i).getValue() >= scores.get(i + 1).getValue());
+            Assertions.assertTrue(scores.get(i).getValue() >= scores.get(i + 1).getValue());
         }
     }
 
@@ -46,7 +43,7 @@ public class PlaceholderFirebaseInterfaceTest {
     public void testIfPlayerAlreadyAttacked()
     {
         PlaceholderFirebaseInterface t = new PlaceholderFirebaseInterface();
-        assertFalse(t.hasAttacked("kek"));
+        Assertions.assertFalse(t.hasAttacked("kek"));
     }
 
 }
