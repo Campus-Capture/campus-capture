@@ -21,12 +21,15 @@ import java.util.List;
  */
 public class ProfileFragment extends Fragment {
 
+    // The listener to open the sharing intent once the invite button is pressed
     private final View.OnClickListener invite_listener = v -> {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         String message = getString(R.string.invitation_text) + getString(R.string.invitation_link);
         sendIntent.putExtra(Intent.EXTRA_TEXT, message);
         sendIntent.setType("text/plain");
+
+        // Use a chooser for better visuals (the default send intent is ugly)
         Intent shareIntent = Intent.createChooser(sendIntent, null);
         startActivity(shareIntent);
     };
