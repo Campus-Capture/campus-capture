@@ -48,7 +48,7 @@ check_android_task:
     for n in $(seq 1 20); do adb exec-out screenrecord --time-limit=180 --output-format=h264 - > $n.h264; done
   check_script: |
     curl 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBOJwSYjN-2BJDGUcSVwQnoW5uV72Ohj-w' -H 'Content-Type: application/json' --data-binary '{"email":"andy.murray@epfl.ch","password":"ScotlandBelongsToItself","returnSecureToken":true}'
-    curl 'https://identitytoolkit.googleapis.com/v1/accounts -X POST -H 'Content-Type: application/json' --data-raw '{"customAttributes":"","displayName":"","photoUrl":"","email":"stefanos.tsitsipas@epfl.ch","password":"NoMoneyNoProblem","phoneNumber":"","emailVerified":true,"mfaInfo":[]}''
+    curl 'https://identitytoolkit.googleapis.com/v1/accounts?key=AIzaSyBOJwSYjN-2BJDGUcSVwQnoW5uV72Ohj-w -X POST -H 'Content-Type: application/json' --data-raw '{"customAttributes":"","displayName":"","photoUrl":"","email":"stefanos.tsitsipas@epfl.ch","password":"NoMoneyNoProblem","phoneNumber":"","emailVerified":true,"mfaInfo":[]}''
     ./gradlew check connectedCheck
   report_codeclimate_script: |
     export JACOCO_SOURCE_PATH=app/src/main/java/
