@@ -147,7 +147,6 @@ public class AuthenticationActivity extends AppCompatActivity {
         if (task.isSuccessful()) {
             // Register success, send verification mail.
             FirebaseUser user = mAuth.getCurrentUser();
-            assert user != null;
 
             user.sendEmailVerification()
                     .addOnSuccessListener(unused -> Toast.makeText(AuthenticationActivity.this, "Verification email sent", Toast.LENGTH_SHORT).show())
@@ -165,11 +164,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         if (task.isSuccessful()) {
             // Sign in success, set the signed-in user's information and go to main
             FirebaseUser user = mAuth.getCurrentUser();
-            assert user != null;
 
-            if(user.getDisplayName()!=null) {
-                User.setName(user.getDisplayName());
-            }
             User.setUid(user.getUid());
 
             if(user.isEmailVerified()) {

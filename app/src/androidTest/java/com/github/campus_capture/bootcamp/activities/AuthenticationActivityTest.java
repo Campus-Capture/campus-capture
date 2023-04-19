@@ -6,6 +6,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
+import android.content.Intent;
+
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.action.ViewActions;
@@ -24,6 +26,8 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.List;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -267,5 +271,30 @@ public class AuthenticationActivityTest {
 
         //Assert that no intent was launched
         assertThat(Intents.getIntents().isEmpty(), is(true));
+    }
+
+    @Test
+    public void AutomaticallyLoggedIfAlreadyIn() throws InterruptedException {
+        onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(ALREADY_IN_EMAIL_VER));
+        onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(ALREADY_IN_PASSWORD_VER));
+
+        //Close keyboard
+        Espresso.closeSoftKeyboard();
+
+        //Click the sign in button
+        onView(ViewMatchers.withId(R.id.login_confirm_button)).perform(ViewActions.click());
+
+        //Wait 3 seconds
+        Thread.sleep(SECONDS.toMillis(3));
+
+        //Relaunch the activity
+        testRule.getScenario().onActivity(AuthenticationActivity::onStart);
+
+        //Assert that two MainActivity intents were launched
+        List<Intent> theIntents = Intents.getIntents();
+        assertThat(theIntents.size(), is(2));
+        for (Intent i: theIntents) {
+            assertThat(i.getComponent().getClassName(), is(MainActivity.class.getName()));
+        }
     }
 }
