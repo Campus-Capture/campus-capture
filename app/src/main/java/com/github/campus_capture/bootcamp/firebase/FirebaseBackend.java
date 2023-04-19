@@ -3,7 +3,6 @@ package com.github.campus_capture.bootcamp.firebase;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.test.core.app.ApplicationProvider;
 
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.authentication.Section;
@@ -14,9 +13,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,13 +26,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 public class FirebaseBackend implements BackendInterface{
     @Override
     public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
 
-        AppContext context = ApplicationProvider.getApplicationContext();
+        AppContext context = AppContext.getAppContext();
         FirebaseDatabase db = context.getFirebaseDB();
 
         Function<Boolean, CompletionStage<Boolean>> register_player_zone_vote = (had_already_voted) -> {
@@ -90,7 +93,7 @@ public class FirebaseBackend implements BackendInterface{
 
         CompletableFuture<Boolean> futureResult = new CompletableFuture<>();
 
-        AppContext context = (AppContext) ApplicationProvider.getApplicationContext();
+        AppContext context = AppContext.getAppContext();
         FirebaseDatabase db = context.getFirebaseDB();
 
         DatabaseReference userRef = db.getReference("Users/"+ uid);
@@ -114,7 +117,7 @@ public class FirebaseBackend implements BackendInterface{
     public CompletableFuture<Map<String, Section>> getCurrentZoneOwners() {
         CompletableFuture<Map<String, Section>> futureResult = new CompletableFuture<>();
 
-        AppContext context = (AppContext) ApplicationProvider.getApplicationContext();
+        AppContext context = AppContext.getAppContext();
         FirebaseDatabase db = context.getFirebaseDB();
 
         DatabaseReference zonesRef = db.getReference("Zones");
@@ -141,33 +144,54 @@ public class FirebaseBackend implements BackendInterface{
     }
 
     @Override
-    public CompletableFuture<List<ScoreItem>> getScores() {
+    public CompletableFuture<List<ScoreItem>> getScores(){
+
+        //TODO remove
+        Log.d("MY_TAG", "get scores called");
+
         CompletableFuture<List<ScoreItem>> futureResult = new CompletableFuture<>();
 
-        AppContext context = (AppContext) ApplicationProvider.getApplicationContext();
-        FirebaseDatabase db = context.getFirebaseDB();
+        AppContext context = AppContext.getAppContext();
+        FirebaseDatabase db =  context.getFirebaseDB();
 
-        DatabaseReference zonesRef = db.getReference("Sections");
+        DatabaseReference sectionsRef = db.getReference("Sections");
 
-        zonesRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        sectionsRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
+
+                //TODO remove
+                Log.d("MY_TAG", "on complete called");
+
                 if (!task.isSuccessful()) {
+                    //TODO remove
+                    Log.d("MY_TAG", "failure");
+
                     futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
                 }
                 else {
+                    //TODO remove
+                    Log.d("MY_TAG", "success");
+
                     List<ScoreItem> scores = new LinkedList<>();
                     task.getResult().getChildren().forEach((section) -> {
                         String sectionName = section.getKey();
                         Long score = (Long)section.child("score").getValue();
                         ScoreItem item = new ScoreItem(sectionName, score.intValue());
                         scores.add(item);
+
                     });
                     Collections.sort(scores);
+
+                    //TODO remove
+                    Log.d("MY_TAG", "sorted");
                     futureResult.complete(scores);
                 }
             }
         });
+
+        //TODO remove
+        Log.d("MY_TAG", "return future");
 
         return futureResult;
     }

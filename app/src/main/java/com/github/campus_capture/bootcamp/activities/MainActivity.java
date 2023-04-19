@@ -11,6 +11,7 @@ import static com.github.campus_capture.bootcamp.fragments.Fragments.TEST_FRAGME
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -26,6 +27,7 @@ import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.BackendInterface;
+import com.github.campus_capture.bootcamp.firebase.FirebaseBackend;
 import com.github.campus_capture.bootcamp.firebase.PlaceholderFirebaseInterface;
 import com.github.campus_capture.bootcamp.fragments.Fragments;
 import com.github.campus_capture.bootcamp.fragments.GreetingFragment;
@@ -35,7 +37,18 @@ import com.github.campus_capture.bootcamp.fragments.ProfileFragment;
 import com.github.campus_capture.bootcamp.fragments.RulesFragment;
 import com.github.campus_capture.bootcamp.fragments.ScoreboardFragment;
 import com.github.campus_capture.bootcamp.fragments.TestFragment;
+import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
+import com.github.campus_capture.bootcamp.scoreboard.ScoreRecyclerViewAdapter;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
@@ -56,10 +69,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setNavigationIcon(R.drawable.menu_icon);
         setSupportActionBar(toolbar);
 
-        // TODO replace once the firebase access has actually been implemented
         if(backendInterface == null)
         {
-            backendInterface = new PlaceholderFirebaseInterface();
+            backendInterface = new FirebaseBackend();
         }
 
         // Set the behavior of the navigation icon

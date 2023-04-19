@@ -59,12 +59,13 @@ public class FirebaseBackendTest {
     public static void init_firebase_emulator() {
 
         try{
-            AppContext context = (AppContext) ApplicationProvider.getApplicationContext();
+            AppContext context = AppContext.getAppContext();
             database = context.getFirebaseDB();
+            Log.d("MY_TAG", "enable emulator");
             database.useEmulator("10.0.2.2", 9000);
 
         } catch (Exception e) {
-            Log.e("Error init DB", e.toString());
+            Log.e("MY_TAG", e.toString());
         }
     }
 

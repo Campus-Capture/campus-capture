@@ -58,7 +58,7 @@ public class MapsFragment extends Fragment{
             Zone currentZone = findCurrentZone(currentPosition);
 
             if(currentZone != null) {
-
+/*
                 backendInterface.voteZone(User.getUid(), User.getSection(), currentZone.getName())
                         .thenApply(result -> {
                             if (result) {
@@ -72,6 +72,8 @@ public class MapsFragment extends Fragment{
                             System.out.println(e.getCause()); // returns a throwable back
                             return null;
                         });
+
+ */
             }
             else
             {

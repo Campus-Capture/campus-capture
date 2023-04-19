@@ -6,13 +6,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.firebase.BackendInterface;
+import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreRecyclerViewAdapter;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,10 +62,11 @@ public class ScoreboardFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.scoreboard_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // TODO not sure how to refactor this correctly using the new future interface
-        try {
-            recyclerView.setAdapter(new ScoreRecyclerViewAdapter(backendInterface.getScores().get()));
-        }catch(Exception e){}
+        backendInterface.getScores().thenAccept((scores) ->{
+
+            recyclerView.setAdapter(new ScoreRecyclerViewAdapter(scores));
+
+        }); // TODO handle errors ?
 
         return view;
     }
