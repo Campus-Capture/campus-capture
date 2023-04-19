@@ -6,8 +6,6 @@ package com.github.campus_capture.bootcamp.fragments;
 public enum Fragments {
 
     MAIN_FRAGMENT,
-    GREETING_FRAGMENT,
-    TEST_FRAGMENT,
     PROFILE_FRAGMENT,
     RULES_FRAGMENT,
     SCOREBOARD_FRAGMENT,

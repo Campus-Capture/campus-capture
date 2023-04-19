@@ -12,17 +12,6 @@
         tools:layout="@layout/fragment_main" />
 
     <fragment
-        android:id="@+id/nav_greeting"
-        android:name="com.github.campus_capture.bootcamp.ui.greeting.NavGreetingFragment"
-        android:label="@string/menu_greeting"
-        tools:layout="@layout/fragment_greeting" />
-
-    <fragment
-        android:id="@+id/nav_test"
-        android:name="com.github.campus_capture.bootcamp.ui.test.NavTestFragment"
-        android:label="@string/menu_test"
-        tools:layout="@layout/fragment_test" />
-    <fragment
         android:id="@+id/nav_profile"
         android:name="com.github.campus_capture.bootcamp.fragments.ProfileFragment"
         android:label="fragment_profile"
