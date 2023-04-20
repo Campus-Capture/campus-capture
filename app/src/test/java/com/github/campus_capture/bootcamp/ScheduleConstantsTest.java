@@ -8,8 +8,8 @@ import static com.github.campus_capture.bootcamp.map.ScheduleConstants.OWNER_REF
 import static com.github.campus_capture.bootcamp.map.ScheduleConstants.TAKEOVER_DURATION;
 import static com.github.campus_capture.bootcamp.map.ScheduleConstants.ZONE_REFRESH_RATE;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ScheduleConstantsTest {
 

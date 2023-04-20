@@ -17,7 +17,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
-import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
+import com.github.campus_capture.bootcamp.firebase.BackendInterface;
+import com.github.campus_capture.bootcamp.firebase.BackendInterface;
+import com.github.campus_capture.bootcamp.firebase.PlaceholderFirebaseInterface;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 
 import org.hamcrest.Description;
@@ -30,29 +32,32 @@ import org.junit.runner.RunWith;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @RunWith(AndroidJUnit4.class)
 public class ScoreboardFragmentTest {
 
-    final FirebaseInterface mock = new FirebaseInterface() {
+    final BackendInterface mock = new BackendInterface() {
         @Override
-        public boolean voteZone(String uid, Section s, String zonename) {
-            return false;
+        public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
+            return CompletableFuture.completedFuture(false);
         }
 
         @Override
-        public boolean hasAttacked(String uid) {
-            return false;
+        public CompletableFuture<Boolean> hasAttacked(String uid) {
+            return CompletableFuture.completedFuture(false);
         }
 
         @Override
-        public Map<String, Section> getCurrentZoneOwners() {
-            return null;
+        public CompletableFuture<Map<String, Section>> getCurrentZoneOwners() {
+            return CompletableFuture.completedFuture(null);
         }
 
         @Override
-        public List<ScoreItem> getScores() {
-            return Arrays.asList(new ScoreItem("IC", 1000), new ScoreItem("SC", 999));
+        public CompletableFuture<List<ScoreItem>> getScores() {
+            return CompletableFuture.completedFuture(
+                    Arrays.asList(new ScoreItem("IC", 1000), new ScoreItem("SC", 999))
+            );
         }
     };
 
@@ -62,7 +67,7 @@ public class ScoreboardFragmentTest {
     @Test
     public void checkThatScoreboardDisplaysCorrectValues()
     {
-        MainActivity.firebaseInterface = mock;
+        MainActivity.backendInterface = mock;
 
         Intents.init();
 
