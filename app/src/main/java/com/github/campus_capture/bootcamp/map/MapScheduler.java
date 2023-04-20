@@ -197,7 +197,7 @@ public class MapScheduler {
             // TODO tmp solution ?
             if(result != null){
                 hasAttacked = result;
-                zoneRefreshTask.run();
+                refreshZoneState.run();
             }
         }).exceptionally( e -> {
             // TODO handle errors better ?
@@ -205,6 +205,7 @@ public class MapScheduler {
             return null;
         });
 
+        zoneRefreshTask.run();
     }
 
     /**
