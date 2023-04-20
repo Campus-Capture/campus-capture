@@ -2,8 +2,10 @@ package com.github.campus_capture.bootcamp;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNull;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
@@ -132,17 +134,21 @@ public class ZoneDAOTest {
         zoneArray.add(zone1);
         zoneArray.add(zone2);
 
-        zoneDAO.insertAll(zone1, zone2);
+        zoneDAO.insert(zone1);
+        zoneDAO.insert(zone2);
 
         List<Zone> zoneArrayDB = zoneDAO.getAll();
+
+        zone1 = zoneDAO.findByName("zone1");
+        zone2 = zoneDAO.findByName("zone2");
 
         for(int i = 0; i < zoneArray.size(); ++i){
             assertThat(zoneArray.get(i).equals(zoneArrayDB.get(i)), equalTo(true));
         }
 
         zoneDAO.delete(zone1);
-
         assertThat(zoneDAO.findByName("zone2").equals(zone2), equalTo(true));
+        assertNull(zoneDAO.findByName("zone1"));
 
     }
 }
