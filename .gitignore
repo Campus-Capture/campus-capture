@@ -14,6 +14,4 @@
 .cxx
 local.properties
 /.idea/androidTestResultsUserPreferences.xml
-/database-debug.log
 /ui-debug.log
-/database-debug.log
