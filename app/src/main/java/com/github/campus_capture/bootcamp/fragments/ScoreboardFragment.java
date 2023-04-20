@@ -36,18 +36,6 @@ public class ScoreboardFragment extends Fragment {
         backendInterface = backend;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ScoreboardFragment.
-     */
-    public static ScoreboardFragment newInstance() {
-        ScoreboardFragment fragment = new ScoreboardFragment();
-        fragment.setArguments(new Bundle());
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
