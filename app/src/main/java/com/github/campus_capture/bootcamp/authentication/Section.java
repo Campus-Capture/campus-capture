@@ -1,17 +1,17 @@
 package com.github.campus_capture.bootcamp.authentication;
 
 public enum Section {
-    Archi,
+    AR,
     GC,
     SIE,
     IN,
     SC,
-    CH,
+    CGC,
     MA,
     PH,
     EL,
     SV,
     MX,
-    MECA,
+    GM,
     MT
 }

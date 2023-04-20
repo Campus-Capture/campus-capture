@@ -5,11 +5,12 @@ import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Interface modeling all of the interactions with Firebase
  */
-public interface FirebaseInterface {
+public interface BackendInterface {
 
     /**
      * Method to signal to Firebase that the user has voted for a zone
@@ -18,23 +19,23 @@ public interface FirebaseInterface {
      * @param zonename the name of the zone
      * @return boolean: success
      */
-    boolean voteZone(String uid, Section s, String zonename);
+    CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename);
 
     /**
      * Method to check if a player has attacked during the current take-over or not
      * @param uid the player's UID
      */
-    boolean hasAttacked(String uid);
+    CompletableFuture<Boolean> hasAttacked(String uid);
 
     /**
      * Method to retrieve a map of the sections and their owners
      * @return Map<String, Section>: Section may be null if there is no owner
      */
-    Map<String, Section> getCurrentZoneOwners();
+    CompletableFuture<Map<String, Section>> getCurrentZoneOwners();
 
     /**
      * Method to retrieve the score of the different sections
      * @return an ordered list of score items
      */
-    List<ScoreItem> getScores();
+    CompletableFuture<List<ScoreItem>> getScores();
 }
