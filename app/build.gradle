@@ -45,6 +45,11 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -114,9 +119,16 @@ dependencies {
     // Also add the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:20.4.1'
 
-    //Add Room library for SQLite compatibility
-    implementation("androidx.room:room-runtime:2.5.0")
-    annotationProcessor("androidx.room:room-compiler:2.5.0")
+    // Add Room library for SQLite compatibility
+    def room_version = "2.5.1"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    // RxJava support for Room
+    implementation "androidx.room:room-rxjava2:$room_version"
+    // Guava support for Room, including Optional and ListenableFuture
+    implementation "androidx.room:room-guava:$room_version"
+    // Test helpers
+    testImplementation "androidx.room:room-testing:$room_version"
 
     //Firebase authentication
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
