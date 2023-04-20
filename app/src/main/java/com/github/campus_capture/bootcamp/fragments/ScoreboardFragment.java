@@ -6,25 +6,34 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.campus_capture.bootcamp.R;
-import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
+import com.github.campus_capture.bootcamp.firebase.BackendInterface;
+import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreRecyclerViewAdapter;
 
+import java.util.List;
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link ScoreboardFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
 public class ScoreboardFragment extends Fragment {
 
-    private FirebaseInterface firebaseInterface;
+    private BackendInterface backendInterface;
 
     public ScoreboardFragment() {
         // Required empty public constructor
     }
 
-    public ScoreboardFragment(FirebaseInterface backend)
+    public ScoreboardFragment(BackendInterface backend)
     {
-        firebaseInterface = backend;
+        backendInterface = backend;
     }
 
     @Override
@@ -41,7 +50,15 @@ public class ScoreboardFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.scoreboard_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        recyclerView.setAdapter(new ScoreRecyclerViewAdapter(firebaseInterface.getScores()));
+        backendInterface.getScores().thenAccept((scores) ->{
+
+            recyclerView.setAdapter(new ScoreRecyclerViewAdapter(scores));
+
+        }).exceptionally( e -> {
+            // TODO handle errors better ?
+            Log.e("ScoreboardFragmennt", "Error ocurred when fetching scores");
+            return null;
+        });
 
         return view;
     }
