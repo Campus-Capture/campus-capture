@@ -56,12 +56,18 @@ Have fun and good luck!</string>
 
     <!-- for the section spinner-->
     <string-array name="profile_sections">
-        <item>IC</item>
-        <item>SV</item>
-        <item>MATH</item>
         <item>ARCHI</item>
+        <item>GC</item>
+        <item>SIE</item>
+        <item>IN</item>
+        <item>SC</item>
+        <item>CH</item>
+        <item>MA</item>
+        <item>PH</item>
+        <item>EL</item>
+        <item>SV</item>
         <item>MX</item>
+        <item>MECA</item>
         <item>MT</item>
-        <item>AUTRE</item>
     </string-array>
 </resources>

@@ -6,6 +6,8 @@ public class User {
     private static String uid = null;
     private static Section section;
 
+    private static boolean hasSelectedSection = false;
+
     public static String getName(){
         return name;
     }
@@ -27,6 +29,12 @@ public class User {
     }
 
     public static void setSection(Section section) {
+        hasSelectedSection = true;
         User.section = section;
     }
+
+    public static boolean hasSelectedSection() {
+        return hasSelectedSection;
+    }
+
 }
