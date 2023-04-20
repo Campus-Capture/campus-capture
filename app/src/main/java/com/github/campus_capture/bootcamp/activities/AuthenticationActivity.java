@@ -97,7 +97,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
 
         if(emailText.endsWith("@epfl.ch")){
-            if(passwordText.length() > 6) {
+            if(passwordText.length() >= 6) {
                 displayTos();
             } else {
                 Toast.makeText(this, "Your password must be at least 6 characters long", Toast.LENGTH_SHORT).show();
