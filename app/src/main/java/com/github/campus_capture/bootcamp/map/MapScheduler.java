@@ -181,6 +181,7 @@ public class MapScheduler {
         }
         hasAttacked = firebaseInterface.hasAttacked(User.getUid());
         zoneRefreshTask.run();
+        refreshZoneState.run();
     }
 
     /**
@@ -189,10 +190,7 @@ public class MapScheduler {
     public void stopAll()
     {
         scheduledTaskHandler.removeCallbacksAndMessages(null);
-        if(buttonTimer != null)
-        {
-            buttonTimer.cancel();
-        }
+        buttonTimer.cancel();
     }
 
     /**
