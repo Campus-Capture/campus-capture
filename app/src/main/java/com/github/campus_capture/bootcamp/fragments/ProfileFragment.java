@@ -11,14 +11,6 @@ import androidx.fragment.app.Fragment;
 
 import com.github.campus_capture.bootcamp.R;
 
-import java.util.Arrays;
-import java.util.List;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ProfileFragment extends Fragment {
 
     // The listener to open the sharing intent once the invite button is pressed
@@ -37,13 +29,6 @@ public class ProfileFragment extends Fragment {
     public ProfileFragment() {
         // Required empty public constructor
     }
-
-    public static ProfileFragment newInstance() {
-        ProfileFragment fragment = new ProfileFragment();
-        fragment.setArguments(new Bundle());
-        return fragment;
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
