@@ -29,6 +29,7 @@ import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
 import com.github.campus_capture.bootcamp.fragments.MapsFragment;
 import com.github.campus_capture.bootcamp.map.MapScheduler;
+import com.github.campus_capture.bootcamp.map.ScheduleConstants;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
 import com.google.android.gms.maps.model.LatLng;
@@ -54,13 +55,14 @@ public class MapVoteTest {
     LatLng noLoc = new LatLng(0, 0);
 
     private static boolean hasAttacked;
+    private static boolean voteReturnCode;
 
     final FirebaseInterface mock = new FirebaseInterface() {
 
         @Override
         public boolean voteZone(String uid, Section s, String zonename) {
             recordedZoneName = zonename;
-            return true;
+            return voteReturnCode;
         }
 
         @Override
@@ -257,6 +259,7 @@ public class MapVoteTest {
         MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
+        voteReturnCode = true;
 
         Intents.init();
 
@@ -322,6 +325,7 @@ public class MapVoteTest {
         MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
+        voteReturnCode = true;
 
         Intents.init();
 
@@ -542,6 +546,141 @@ public class MapVoteTest {
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.timerButton)).check(matches(isDisplayed()));
+
+        Intents.release();
+    }
+
+    @Test
+    public void testIfTasksAreCorrectlyClosed() throws InterruptedException {
+        MainActivity.firebaseInterface = mock;
+        MapScheduler.overrideTime = false;
+        MapsFragment.locationOverride = false;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_rules)).perform(ViewActions.click());
+
+        Intents.release();
+    }
+
+    @Test
+    public void testThatToastIsDisplayedIfLocationIsNull() throws InterruptedException {
+        MainActivity.firebaseInterface = mock;
+        User.setSection(Section.SC);
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 5);
+        time.set(Calendar.SECOND, 0);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = fixed;
+        User.setUid("");
+        hasAttacked = false;
+        voteReturnCode = true;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(2000);
+
+        MapsFragment.fixedLocation = null;
+
+        onView(ViewMatchers.withId(R.id.attackButton)).perform(ViewActions.click());
+
+        Intents.release();
+    }
+
+    @Test
+    public void checkThatZonesAreWellRefreshed() throws InterruptedException {
+        MainActivity.firebaseInterface = mock;
+        MapScheduler.overrideTime = false;
+        MapsFragment.locationOverride = false;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(ScheduleConstants.ZONE_REFRESH_RATE + 3000);
+
+        Intents.release();
+    }
+
+    @Test
+    public void checkThatToastIsShownWhenZoneOwnerNotFound() throws InterruptedException {
+        MainActivity.firebaseInterface = mock;
+        User.setSection(Section.SC);
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 5);
+        time.set(Calendar.SECOND, 0);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = fixed;
+        User.setUid("");
+        hasAttacked = false;
+        voteReturnCode = true;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
+
+        MapsFragment.fixedLocation = new LatLng(46.518541590052145, 6.56854108037592);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).perform(ViewActions.click());
+
+        Intents.release();
+    }
+
+    @Test
+    public void testThatToastIsDisplayedIfVoteFails() throws InterruptedException {
+        MainActivity.firebaseInterface = mock;
+        User.setSection(Section.SC);
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 5);
+        time.set(Calendar.SECOND, 0);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = fixed;
+        User.setUid("");
+        hasAttacked = false;
+        voteReturnCode = false;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).perform(ViewActions.click());
 
         Intents.release();
     }

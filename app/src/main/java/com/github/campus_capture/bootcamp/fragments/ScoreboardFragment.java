@@ -14,11 +14,6 @@ import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreRecyclerViewAdapter;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ScoreboardFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ScoreboardFragment extends Fragment {
 
     private FirebaseInterface firebaseInterface;
@@ -30,18 +25,6 @@ public class ScoreboardFragment extends Fragment {
     public ScoreboardFragment(FirebaseInterface backend)
     {
         firebaseInterface = backend;
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ScoreboardFragment.
-     */
-    public static ScoreboardFragment newInstance() {
-        ScoreboardFragment fragment = new ScoreboardFragment();
-        fragment.setArguments(new Bundle());
-        return fragment;
     }
 
     @Override
