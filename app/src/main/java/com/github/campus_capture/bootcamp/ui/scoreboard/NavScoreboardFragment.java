@@ -9,18 +9,18 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.github.campus_capture.bootcamp.databinding.FragmentTestBinding;
+import com.github.campus_capture.bootcamp.databinding.FragmentScoreboardBinding;
 
 public class NavScoreboardFragment extends Fragment {
 
-    private FragmentTestBinding binding;
+    private FragmentScoreboardBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         NavScoreboardViewModel navMainViewModel =
                 new ViewModelProvider(this).get(NavScoreboardViewModel.class);
 
-        binding = FragmentTestBinding.inflate(inflater, container, false);
+        binding = FragmentScoreboardBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 

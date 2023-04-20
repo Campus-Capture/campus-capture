@@ -21,7 +21,6 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerViewMain"
-        android:name="com.github.campus_capture.bootcamp.fragments.MainFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
