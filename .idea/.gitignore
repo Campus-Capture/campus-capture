@@ -1,5 +1,6 @@
 # Default ignored files
 /shelf/
 /workspace.xml
-/.idea/androidTestResultsUserPreferences.xml
-/.idea/deploymentTargetDropDown.xml
+/androidTestResultsUserPreferences.xml
+/deploymentTargetDropDown.xml
+

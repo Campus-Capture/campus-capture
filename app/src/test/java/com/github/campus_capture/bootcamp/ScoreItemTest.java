@@ -1,10 +1,8 @@
 package com.github.campus_capture.bootcamp;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 public class ScoreItemTest {

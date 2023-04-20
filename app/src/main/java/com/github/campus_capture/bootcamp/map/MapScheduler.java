@@ -213,10 +213,7 @@ public class MapScheduler {
     public void stopAll()
     {
         scheduledTaskHandler.removeCallbacksAndMessages(null);
-        if(buttonTimer != null)
-        {
-            buttonTimer.cancel();
-        }
+        buttonTimer.cancel();
     }
 
     /**

@@ -13,6 +13,7 @@ import static org.junit.Assert.assertEquals;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.room.Room;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.action.ViewActions;
@@ -20,6 +21,7 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
@@ -27,7 +29,9 @@ import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.BackendInterface;
 import com.github.campus_capture.bootcamp.fragments.MapsFragment;
 import com.github.campus_capture.bootcamp.map.MapScheduler;
+import com.github.campus_capture.bootcamp.map.ScheduleConstants;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
+import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.hamcrest.Matcher;
@@ -52,6 +56,7 @@ public class MapVoteTest {
     LatLng noLoc = new LatLng(0, 0);
 
     private static boolean hasAttacked;
+    private static boolean voteReturnCode;
 
     final BackendInterface mock = new BackendInterface() {
 
@@ -255,6 +260,7 @@ public class MapVoteTest {
         MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
+        voteReturnCode = true;
 
         Intents.init();
 
@@ -320,6 +326,7 @@ public class MapVoteTest {
         MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
+        voteReturnCode = true;
 
         Intents.init();
 
@@ -540,6 +547,141 @@ public class MapVoteTest {
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.timerButton)).check(matches(isDisplayed()));
+
+        Intents.release();
+    }
+
+    @Test
+    public void testIfTasksAreCorrectlyClosed() throws InterruptedException {
+        MainActivity.backendInterface = mock;
+        MapScheduler.overrideTime = false;
+        MapsFragment.locationOverride = false;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_rules)).perform(ViewActions.click());
+
+        Intents.release();
+    }
+
+    @Test
+    public void testThatToastIsDisplayedIfLocationIsNull() throws InterruptedException {
+        MainActivity.backendInterface = mock;
+        User.setSection(Section.SC);
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 5);
+        time.set(Calendar.SECOND, 0);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = fixed;
+        User.setUid("");
+        hasAttacked = false;
+        voteReturnCode = true;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(2000);
+
+        MapsFragment.fixedLocation = null;
+
+        onView(ViewMatchers.withId(R.id.attackButton)).perform(ViewActions.click());
+
+        Intents.release();
+    }
+
+    @Test
+    public void checkThatZonesAreWellRefreshed() throws InterruptedException {
+        MainActivity.backendInterface = mock;
+        MapScheduler.overrideTime = false;
+        MapsFragment.locationOverride = false;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(ScheduleConstants.ZONE_REFRESH_RATE + 3000);
+
+        Intents.release();
+    }
+
+    @Test
+    public void checkThatToastIsShownWhenZoneOwnerNotFound() throws InterruptedException {
+        MainActivity.backendInterface = mock;
+        User.setSection(Section.SC);
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 5);
+        time.set(Calendar.SECOND, 0);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = fixed;
+        User.setUid("");
+        hasAttacked = false;
+        voteReturnCode = true;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
+
+        MapsFragment.fixedLocation = new LatLng(46.518541590052145, 6.56854108037592);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).perform(ViewActions.click());
+
+        Intents.release();
+    }
+
+    @Test
+    public void testThatToastIsDisplayedIfVoteFails() throws InterruptedException {
+        MainActivity.backendInterface = mock;
+        User.setSection(Section.SC);
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 5);
+        time.set(Calendar.SECOND, 0);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = fixed;
+        User.setUid("");
+        hasAttacked = false;
+        voteReturnCode = false;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).perform(ViewActions.click());
 
         Intents.release();
     }

@@ -53,11 +53,5 @@ public class ScoreRecyclerViewAdapter extends RecyclerView.Adapter<ScoreRecycler
             mIdView = binding.itemNumber;
             mContentView = binding.content;
         }
-
-        @NonNull
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
-        }
     }
 }

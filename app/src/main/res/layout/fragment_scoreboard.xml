@@ -3,13 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="20dp"
     tools:context=".fragments.ScoreboardFragment">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/scoreboard_title"
-        android:textSize="34sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/scoreboard_view"
@@ -19,5 +14,11 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/scoreboard_title"
+        android:textSize="34sp" />
 
 </FrameLayout>
