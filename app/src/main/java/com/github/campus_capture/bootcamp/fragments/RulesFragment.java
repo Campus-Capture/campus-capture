@@ -4,21 +4,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.github.campus_capture.bootcamp.R;
-import com.google.firebase.database.FirebaseDatabase;
 
 // TODO refactor to inject the DB
 public class RulesFragment extends Fragment {
-
-    final FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-    private TextView rulesText;
 
     public RulesFragment() {
         // Required empty public constructor
