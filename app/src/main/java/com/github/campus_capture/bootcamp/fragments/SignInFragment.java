@@ -39,8 +39,10 @@ public class SignInFragment extends Fragment {
     private String passwordText;
     private FirebaseAuth mAuth;
 
-    public SignInFragment() {
+    public SignInFragment(String email, String password) {
         // Required empty public constructor
+        emailText = email;
+        passwordText = password;
     }
 
     @Override
@@ -63,6 +65,10 @@ public class SignInFragment extends Fragment {
         // Init texts
         email = view.findViewById(R.id.login_email_address);
         password = view.findViewById(R.id.login_password);
+
+        //Set text
+        email.setText(emailText);
+        password.setText(passwordText);
 
         // Init Auth (Authenticater)
         AppContext context = AppContext.getAppContext();

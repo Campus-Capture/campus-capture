@@ -103,6 +103,7 @@ public class RegisterFragment extends Fragment {
 
     private void register(){
         mAuth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(this::onCompleteRegisterListenerContent);
+        goToSignInFragment(emailText, passwordText);
     }
 
     private void onCompleteRegisterListenerContent(Task<AuthResult> task){
@@ -135,7 +136,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private void setAlreadyRegisteredButtonListener() {
-        already_registered_button.setOnClickListener(view -> goToSignInFragment());
+        already_registered_button.setOnClickListener(view -> goToSignInFragment("", ""));
     }
 
     private void setSpectatorButtonListener(){
@@ -154,11 +155,11 @@ public class RegisterFragment extends Fragment {
     /**
      * Method which opens the sign in fragment
      */
-    private void goToSignInFragment(){
+    private void goToSignInFragment(String email, String password){
         // Fragments are managed by transactions
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment());
+        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(email, password));
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit(); // Commit the transaction
     }

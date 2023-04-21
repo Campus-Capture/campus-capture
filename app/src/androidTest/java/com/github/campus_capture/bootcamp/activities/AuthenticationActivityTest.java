@@ -5,7 +5,6 @@ import static com.adevinta.android.barista.interaction.BaristaClickInteractions.
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 import android.content.Intent;
 
@@ -95,9 +94,6 @@ public class AuthenticationActivityTest {
         //Click the sign in button
         onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
 
-        //Wait 3 seconds
-        //Thread.sleep(SECONDS.toMillis(3));
-
         //Assert that no intent was launched
         assertThat(Intents.getIntents().isEmpty(), is(true));
 
@@ -118,9 +114,6 @@ public class AuthenticationActivityTest {
 
         //Click the sign in button
         onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
-
-        //Wait 3 seconds
-        //Thread.sleep(SECONDS.toMillis(3));
 
         //Assert that no intent was launched
         assertThat(Intents.getIntents().isEmpty(), is(true));
@@ -143,9 +136,6 @@ public class AuthenticationActivityTest {
         //Agree the TOS
         clickOn("I agree");
 
-        //Wait 3 seconds
-        //Thread.sleep(SECONDS.toMillis(3));
-
         //Assert that no intent was launched
         assertThat(Intents.getIntents().isEmpty(), is(true));
 
@@ -162,9 +152,6 @@ public class AuthenticationActivityTest {
 
         //Click the register button
         onView(ViewMatchers.withId(R.id.register_button)).perform(ViewActions.click());
-
-        //Wait 3 seconds
-        //Thread.sleep(SECONDS.toMillis(3));
 
         //Assert that no intent was launched
         assertThat(Intents.getIntents().isEmpty(), is(true));
@@ -188,9 +175,6 @@ public class AuthenticationActivityTest {
 
         clickOn("I agree");
 
-        //Wait 3 seconds
-        //Thread.sleep(SECONDS.toMillis(3));
-
         //Assert that no intent was launched
         assertThat(Intents.getIntents().isEmpty(), is(true));
     }
@@ -209,9 +193,6 @@ public class AuthenticationActivityTest {
 
         //Click the sign in button
         onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
-
-        //Wait 3 seconds
-        //Thread.sleep(SECONDS.toMillis(3));
 
         //Assert that an intent was launched
         Intents.intended(IntentMatchers.hasComponent(MainActivity.class.getName()));
@@ -232,9 +213,6 @@ public class AuthenticationActivityTest {
         //Click the sign in button
         onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
 
-        //Wait 3 seconds
-        //Thread.sleep(SECONDS.toMillis(3));
-
         //Assert that no intent was launched
         assertThat(Intents.getIntents().isEmpty(), is(true));
 
@@ -244,9 +222,6 @@ public class AuthenticationActivityTest {
     public void SpectatorWorks() {
         //Click the sign in button
         onView(ViewMatchers.withId(R.id.register_spectator_button)).perform(ViewActions.click());
-
-        //Wait 3 seconds
-        //Thread.sleep(SECONDS.toMillis(3));
 
         //Assert that an intent was launched
         Intents.intended(IntentMatchers.hasComponent(MainActivity.class.getName()));
@@ -264,9 +239,6 @@ public class AuthenticationActivityTest {
         onView(ViewMatchers.withId(R.id.register_button)).perform(ViewActions.click());
 
         clickOn("No");
-
-        //Wait 3 seconds
-        //Thread.sleep(SECONDS.toMillis(3));
 
         //Assert that no intent was launched
         assertThat(Intents.getIntents().isEmpty(), is(true));
@@ -301,17 +273,10 @@ public class AuthenticationActivityTest {
         //Click the sign in button
         onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
 
-        //Wait 3 seconds
-        //Thread.sleep(SECONDS.toMillis(3));
-
         //Relaunch the activity
         Espresso.pressBack();
-        //Thread.sleep(SECONDS.toMillis(1));
 
-        //AuthenticationActivityTestRule.launchActivity(null);
         ActivityScenario.launch(AuthenticationActivity.class);
-
-        //Thread.sleep(SECONDS.toMillis(1));
 
         //Assert that two MainActivity intents were launched
         List<Intent> theIntents = Intents.getIntents();
