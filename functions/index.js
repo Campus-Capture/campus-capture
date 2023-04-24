@@ -21,6 +21,14 @@ admin.initializeApp();
 
 const sections = ["AR", "CGC", "GC", "GM", "EL", "IN", "SV", "MA", "MT", "PH", "MX", "SIE", "SC"]
 
+function set_error_callback (error) {
+    if (error) {
+      console.log('Data could not be saved.' + error)
+    } else {
+      console.log('Data saved successfully.')
+    }
+}
+
 exports.resetVotesScheduledFunction = functions.region('europe-west1').pubsub.schedule("0 * * * *").onRun((context) => {
 
     console.log("It's minute 0!");
@@ -44,13 +52,7 @@ exports.resetVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
                     var section_name = zoneChildSnapshot.key
 
                     // reset count to 0
-                    refZones.child(zone_name).child(section_name).set(0, (error) => {
-                        if (error) {
-                          console.log('Data could not be saved.' + error)
-                        } else {
-                          console.log('Data saved successfully.')
-                        }
-                    })
+                    refZones.child(zone_name).child(section_name).set(0, set_error_callback)
                 }
             })
         })
@@ -63,13 +65,7 @@ exports.resetVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
 
             var user_id = userSnapshot.key;
 
-            refUsers.child(user_id).child("has_voted").set(false, (error) => {
-                if (error) {
-                  console.log('Data could not be saved.' + error)
-                } else {
-                  console.log('Data saved successfully.')
-                }
-            })
+            refUsers.child(user_id).child("has_voted").set(false, set_error_callback)
         })
     })
 
@@ -127,13 +123,7 @@ exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
 
                 sectionsScores.set(new_owner, sectionsScores.get(new_owner) + 1)
     
-                refZones.child(zone_name).child("owner").set(new_owner, (error) => {
-                    if (error) {
-                      console.log('Data could not be saved.' + error)
-                    } else {
-                      console.log('Data saved successfully.')
-                    }
-                })
+                refZones.child(zone_name).child("owner").set(new_owner, set_error_callback)
             } else {
 
                 sectionsScores.set(current_owner, sectionsScores.get(current_owner) + 1)
@@ -144,13 +134,7 @@ exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
 
         sectionsScores.forEach( (val, key) => {
             if(key != "no owner"){
-                refSections.child(key).child("score").set(val, (error) => {
-                    if (error) {
-                      console.log('Data could not be saved.' + error)
-                    } else {
-                      console.log('Data saved successfully.')
-                    }
-                })
+                refSections.child(key).child("score").set(val, set_error_callback)
             }
         })
 
