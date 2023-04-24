@@ -4,6 +4,7 @@ const functions = require("firebase-functions");
 const { getDatabase } = require('firebase-admin/database');
 
 const admin = require('firebase-admin');
+const { user } = require("firebase-functions/v1/auth");
 admin.initializeApp();
 
 // // Create and deploy your first functions
@@ -20,7 +21,7 @@ admin.initializeApp();
 
 const sections = ["AR", "CGC", "GC", "GM", "EL", "IN", "SV", "MA", "MT", "PH", "MX", "SIE", "SC"]
 
-exports.resetVotesScheduledFunction = functions.region('europe-west1').pubsub.schedule("* * * * *").onRun((context) => {
+exports.resetVotesScheduledFunction = functions.region('europe-west1').pubsub.schedule("0 * * * *").onRun((context) => {
 
     console.log("It's minute 0!");
   
@@ -33,10 +34,17 @@ exports.resetVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
 
         // reset for each zone
         zonesSnapshot.forEach((zoneSnapshot) => {
+
+            var zone_name = zoneSnapshot.key
+
             zoneSnapshot.forEach((zoneChildSnapshot) => {
+                
                 if (zoneChildSnapshot.key != "owner"){
+
+                    var section_name = zoneChildSnapshot.key
+
                     // reset count to 0
-                    zoneChildSnapshot.set(0, (error) => {
+                    refZones.child(zone_name).child(section_name).set(0, (error) => {
                         if (error) {
                           console.log('Data could not be saved.' + error)
                         } else {
@@ -52,7 +60,10 @@ exports.resetVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
 
         // reset for each user
         usersSnapshot.forEach((userSnapshot) => {
-            userSnapshot.child("has_voted").set(false, (error) => {
+
+            var user_id = userSnapshot.key;
+
+            refUsers.child(user_id).child("has_voted").set(false, (error) => {
                 if (error) {
                   console.log('Data could not be saved.' + error)
                 } else {
@@ -67,19 +78,27 @@ exports.resetVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
 
 exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.schedule("15 * * * *").onRun((context) => {
 
-    console.log("It's minute 15!");
+    console.log("It's minute 15!")
   
-    const db = getDatabase();
-    const refZones = db.ref('Zones');
+    const db = getDatabase()
+    const refZones = db.ref('Zones')
+    const refSections = db.ref('Sections')
+
+    const sectionsScores = new Map()
+    for(var i = 0, size = sections.length; i < size ; i++){
+        sectionsScores.set(sections[i], 0);
+    }
 
     refZones.once('value').then( (zonesSnapshot) => {
 
         // update for each zone
         zonesSnapshot.forEach((zoneChildSnapshot) => {
 
-            var zone_name = zoneChildSnapshot.key;
+            var zone_name = zoneChildSnapshot.key
 
-            var owner = "no owner"
+            var new_owner = "no owner"
+            var current_owner = zoneChildSnapshot.child("owner").val()
+
             var max = 0
             var second_max = 0
 
@@ -92,33 +111,47 @@ exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
 
                     let val_section = zoneChildSnapshot.child(section).val()
 
-                    console.log(section + " " + val_section)
                     if(val_section > max){
                         max = val_section
-                        owner = section
+                        new_owner = section
                     } else if(val_section > second_max){
                         second_max = val_section
                     }
                 }
             }
+        
 
             // no capture if equality
             if(max != second_max){
+
+                sectionsScores.set(new_owner, sectionsScores.get(new_owner) + 1)
     
-                ref.child(zone_name).child("owner").set(owner, (error) => {
+                refZones.child(zone_name).child("owner").set(new_owner, (error) => {
                     if (error) {
-                      console.log('Data could not be saved.' + error);
+                      console.log('Data could not be saved.' + error)
                     } else {
-                      console.log('Data saved successfully.');
+                      console.log('Data saved successfully.')
                     }
-                });
+                })
             } else {
-                console.log("equality, no new owner for zone " + zone_name)
+
+                sectionsScores.set(current_owner, sectionsScores.get(current_owner) + 1)
 
             }
 
         })
-    });
 
-    return null;
-});
+        sectionsScores.forEach( (val, key) => {
+            refSections.child(key).child("score").set(val, (error) => {
+                if (error) {
+                  console.log('Data could not be saved.' + error)
+                } else {
+                  console.log('Data saved successfully.')
+                }
+            })
+        })
+
+    })
+
+    return null
+})
