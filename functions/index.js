@@ -88,6 +88,7 @@ exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
     for(var i = 0, size = sections.length; i < size ; i++){
         sectionsScores.set(sections[i], 0);
     }
+    sectionsScores.set("no owner", 0);
 
     refZones.once('value').then( (zonesSnapshot) => {
 
@@ -142,13 +143,15 @@ exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
         })
 
         sectionsScores.forEach( (val, key) => {
-            refSections.child(key).child("score").set(val, (error) => {
-                if (error) {
-                  console.log('Data could not be saved.' + error)
-                } else {
-                  console.log('Data saved successfully.')
-                }
-            })
+            if(key != "no owner"){
+                refSections.child(key).child("score").set(val, (error) => {
+                    if (error) {
+                      console.log('Data could not be saved.' + error)
+                    } else {
+                      console.log('Data saved successfully.')
+                    }
+                })
+            }
         })
 
     })
