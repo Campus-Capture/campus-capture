@@ -19,7 +19,7 @@ admin.initializeApp();
 
 
 
-const sections = ["AR", "CGC", "GC", "GM", "EL", "IN", "SV", "MA", "MT", "PH", "MX", "SIE", "SC"]
+const sections = ["AR", "CGC", "GC", "GM", "EL", "IN", "SV", "MA", "MT", "PH", "MX", "SIE", "SC", "NONE"]
 
 function set_error_callback (error) {
     if (error) {
@@ -84,7 +84,6 @@ exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
     for(var i = 0, size = sections.length; i < size ; i++){
         sectionsScores.set(sections[i], 0);
     }
-    sectionsScores.set("no owner", 0);
 
     refZones.once('value').then( (zonesSnapshot) => {
 
@@ -93,7 +92,7 @@ exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
 
             var zone_name = zoneChildSnapshot.key
 
-            var new_owner = "no owner"
+            var new_owner = "NONE"
             var current_owner = zoneChildSnapshot.child("owner").val()
 
             var max = 0
@@ -133,7 +132,7 @@ exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
         })
 
         sectionsScores.forEach( (val, key) => {
-            if(key != "no owner"){
+            if(key != "NONE"){
                 refSections.child(key).child("score").set(val, set_error_callback)
             }
         })
