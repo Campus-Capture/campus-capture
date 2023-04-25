@@ -1,5 +1,7 @@
 package com.github.campus_capture.bootcamp.firebase;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.github.campus_capture.bootcamp.AppContext;
@@ -210,6 +212,7 @@ public class FirebaseBackend implements BackendInterface{
 
     @Override
     public CompletableFuture<Boolean> setUserSection(String uid, Section section){
+
         AppContext context = AppContext.getAppContext();
         FirebaseDatabase db = context.getFirebaseDB();
 
