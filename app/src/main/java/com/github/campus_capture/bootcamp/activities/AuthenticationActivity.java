@@ -17,6 +17,8 @@ import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.TOS;
 import com.github.campus_capture.bootcamp.authentication.User;
+import com.github.campus_capture.bootcamp.firebase.BackendInterface;
+import com.github.campus_capture.bootcamp.firebase.FirebaseBackend;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -151,6 +153,9 @@ public class AuthenticationActivity extends AppCompatActivity {
             user.sendEmailVerification()
                     .addOnSuccessListener(unused -> Toast.makeText(AuthenticationActivity.this, "Verification email sent", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> Toast.makeText(AuthenticationActivity.this, "Verification email not sent", Toast.LENGTH_SHORT).show());
+
+            BackendInterface backendInterface = new FirebaseBackend();
+            backendInterface.registerUserInDB(user.getUid());
 
         } else {
             // If register fails, display a message to the user.

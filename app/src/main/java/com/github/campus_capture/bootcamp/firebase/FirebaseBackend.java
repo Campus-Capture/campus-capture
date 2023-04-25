@@ -178,4 +178,28 @@ public class FirebaseBackend implements BackendInterface{
 
         return futureResult;
     }
+
+    @Override
+    public CompletableFuture<Boolean> registerUserInDB(String uid){
+        AppContext context = AppContext.getAppContext();
+        FirebaseDatabase db = context.getFirebaseDB();
+
+        DatabaseReference userRef = db.getReference("Users/"+ uid);
+
+        CompletableFuture<Boolean> futureRegisterUserResult = new CompletableFuture<>();
+        userRef.child("has_voted").setValue(false).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        futureRegisterUserResult.complete(true);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        futureRegisterUserResult.completeExceptionally(new Throwable("Could not register that user did vote"));
+                    }
+                });
+
+        return futureRegisterUserResult;
+    }
 }

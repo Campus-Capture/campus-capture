@@ -42,4 +42,9 @@ public class PlaceholderFirebaseInterface implements BackendInterface {
 
         return CompletableFuture.completedFuture(scores);
     }
+
+    @Override
+    public CompletableFuture<Boolean> registerUserInDB(String uid){
+        return CompletableFuture.completedFuture(true);
+    }
 }

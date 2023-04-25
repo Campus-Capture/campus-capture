@@ -259,4 +259,38 @@ public class FirebaseBackendTest {
             assertTrue(false);
         }
     }
+
+    @Test
+    public void testRegisterUserInDB() {
+
+        BackendInterface b = new FirebaseBackend();
+
+        try {
+            Boolean result = b.registerUserInDB("testUserId").get();
+            assertTrue(result);
+        }catch(Exception e){
+            Log.e("Error in test", e.toString());
+            assertTrue(false);
+        }
+
+        // check database content
+        CompletableFuture<Boolean> futureResultRegistered = new CompletableFuture<>();
+        database.getReference().child("Users").child("testUserId").child("has_voted").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    fail();
+                }
+                else {
+                    futureResultRegistered.complete( (Boolean)task.getResult().getValue() );
+                }
+            }
+        });
+
+        try{
+            assertFalse(futureResultRegistered.get());
+        }catch (Exception e){
+            fail();
+        }
+    }
 }
