@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class PlaceholderFirebaseInterface implements BackendInterface {
+public class PlaceholderBackend implements BackendInterface {
     @Override
     public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
         return CompletableFuture.completedFuture(true);
