@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.TOS;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.BackendInterface;
@@ -155,7 +156,8 @@ public class AuthenticationActivity extends AppCompatActivity {
                     .addOnFailureListener(e -> Toast.makeText(AuthenticationActivity.this, "Verification email not sent", Toast.LENGTH_SHORT).show());
 
             BackendInterface backendInterface = new FirebaseBackend();
-            backendInterface.registerUserInDB(user.getUid());
+            // TODO allow user to choose section
+            backendInterface.initUserInDB(user.getUid(), Section.IN);
 
         } else {
             // If register fails, display a message to the user.

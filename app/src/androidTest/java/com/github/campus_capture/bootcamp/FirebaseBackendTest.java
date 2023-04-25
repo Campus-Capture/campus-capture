@@ -246,7 +246,7 @@ public class FirebaseBackendTest {
         BackendInterface b = new FirebaseBackend();
 
         try {
-            Boolean result = b.registerUserInDB("testUserId").get();
+            Boolean result = b.initUserInDB("testUserId", Section.IN).get();
             assertTrue(result);
         }catch(Exception e){
             Log.e("Error in test", e.toString());
@@ -254,7 +254,7 @@ public class FirebaseBackendTest {
         }
 
         // check database content
-        CompletableFuture<Boolean> futureResultRegistered = new CompletableFuture<>();
+        CompletableFuture<Boolean> futureResultInitHasVoted = new CompletableFuture<>();
         database.getReference().child("Users").child("testUserId").child("has_voted").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -262,13 +262,28 @@ public class FirebaseBackendTest {
                     fail();
                 }
                 else {
-                    futureResultRegistered.complete( (Boolean)task.getResult().getValue() );
+                    futureResultInitHasVoted.complete( (Boolean)task.getResult().getValue() );
+                }
+            }
+        });
+
+        // check database content
+        CompletableFuture<String> futureResultRegisteredSection = new CompletableFuture<>();
+        database.getReference().child("Users").child("testUserId").child("section").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    fail();
+                }
+                else {
+                    futureResultRegisteredSection.complete( String.valueOf(task.getResult().getValue()) );
                 }
             }
         });
 
         try{
-            assertFalse(futureResultRegistered.get());
+            assertFalse(futureResultInitHasVoted.get());
+            assertEquals(Section.IN.toString(), futureResultRegisteredSection.get());
         }catch (Exception e){
             fail();
         }

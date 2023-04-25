@@ -44,7 +44,17 @@ public class PlaceholderBackend implements BackendInterface {
     }
 
     @Override
-    public CompletableFuture<Boolean> registerUserInDB(String uid){
+    public CompletableFuture<Boolean> initUserInDB(String uid, Section section){
         return CompletableFuture.completedFuture(true);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setUserSection(String uid, Section section) {
+        return CompletableFuture.completedFuture(true);
+    }
+
+    @Override
+    public CompletableFuture<Section> getUserSection(String uid) {
+        return CompletableFuture.completedFuture(Section.IN);
     }
 }

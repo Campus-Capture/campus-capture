@@ -43,5 +43,9 @@ public interface BackendInterface {
      * Register the user with all initialized attributes in the DB
      * @return boolean: success
      */
-    CompletableFuture<Boolean> registerUserInDB(String uid);
+    CompletableFuture<Boolean> initUserInDB(String uid, Section section);
+
+    CompletableFuture<Boolean> setUserSection(String uid, Section section);
+
+    CompletableFuture<Section> getUserSection(String uid);
 }
