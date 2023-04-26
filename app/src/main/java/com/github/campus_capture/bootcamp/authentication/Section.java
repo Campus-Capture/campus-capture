@@ -13,5 +13,6 @@ public enum Section {
     SV,
     MX,
     GM,
-    MT
+    MT,
+    NONE
 }
