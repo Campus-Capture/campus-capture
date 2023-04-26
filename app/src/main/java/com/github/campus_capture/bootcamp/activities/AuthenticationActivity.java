@@ -1,6 +1,7 @@
 package com.github.campus_capture.bootcamp.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -10,11 +11,15 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.authentication.Section;
+import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.fragments.RegisterFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class AuthenticationActivity extends AppCompatActivity {
+
+    SharedPreferences mSharedPreferences;
 
 
     /**
@@ -33,9 +38,12 @@ public class AuthenticationActivity extends AppCompatActivity {
         AppContext context = AppContext.getAppContext();
         FirebaseAuth auth = context.getFirebaseAuth();
 
+        mSharedPreferences = getPreferences(MODE_PRIVATE);
+
         // Check if user is signed in (non-null) and go to main if yes.
         FirebaseUser currentUser = auth.getCurrentUser();
         if(currentUser != null && currentUser.isEmailVerified()){
+            User.setSection(Section.valueOf(mSharedPreferences.getString("Section", "NONE")));
             goToMainActivity();
         } else {
             goToRegisterFragment();

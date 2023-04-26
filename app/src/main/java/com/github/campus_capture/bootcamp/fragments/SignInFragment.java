@@ -2,7 +2,9 @@ package com.github.campus_capture.bootcamp.fragments;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +40,7 @@ public class SignInFragment extends Fragment {
     private EditText password;
     private String passwordText;
     private FirebaseAuth mAuth;
+    private SharedPreferences mSharedPreferences;
 
     public SignInFragment(String email, String password) {
         // Required empty public constructor
@@ -49,6 +52,7 @@ public class SignInFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
     }
 
     @Override
@@ -112,6 +116,10 @@ public class SignInFragment extends Fragment {
             FirebaseUser user = mAuth.getCurrentUser();
 
             User.setUid(user.getUid());
+
+            //TODO: Remove that and put an equivalent in the login screen!!!
+            SharedPreferences.Editor editor = mSharedPreferences.edit();
+            editor.putString("Section", "IN");
 
             if(user.isEmailVerified()) {
                 goToMainActivity();
