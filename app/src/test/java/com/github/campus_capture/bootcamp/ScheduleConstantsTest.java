@@ -1,9 +1,15 @@
 package com.github.campus_capture.bootcamp;
 
-import static com.github.campus_capture.bootcamp.map.ScheduleConstants.*;
-import static org.junit.Assert.assertEquals;
+import static com.github.campus_capture.bootcamp.map.ScheduleConstants.MILLIS_PER_HOUR;
+import static com.github.campus_capture.bootcamp.map.ScheduleConstants.MILLIS_PER_MIN;
+import static com.github.campus_capture.bootcamp.map.ScheduleConstants.MILLIS_PER_SEC;
+import static com.github.campus_capture.bootcamp.map.ScheduleConstants.NO_POSITION_RETRY_DELAY;
+import static com.github.campus_capture.bootcamp.map.ScheduleConstants.OWNER_REFRESH_DELAY;
+import static com.github.campus_capture.bootcamp.map.ScheduleConstants.TAKEOVER_DURATION;
+import static com.github.campus_capture.bootcamp.map.ScheduleConstants.ZONE_REFRESH_RATE;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ScheduleConstantsTest {
 

@@ -5,7 +5,7 @@ import static org.hamcrest.core.Is.is;
 
 import com.github.campus_capture.bootcamp.authentication.User;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class UserTest {
 

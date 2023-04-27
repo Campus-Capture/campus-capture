@@ -1,11 +1,12 @@
 package com.github.campus_capture.bootcamp.activities;
 
 import static androidx.test.espresso.Espresso.onView;
-import static com.adevinta.android.barista.assertion.BaristaVisibilityAssertions.assertDisplayed;
 import static com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static java.util.concurrent.TimeUnit.SECONDS;
+
+import android.content.Intent;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
@@ -18,8 +19,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
-import com.github.campus_capture.bootcamp.activities.AuthenticationActivity;
-import com.github.campus_capture.bootcamp.activities.MainActivity;
 
 import org.junit.After;
 import org.junit.Before;
@@ -27,6 +26,8 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.List;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -36,8 +37,11 @@ public class AuthenticationActivityTest {
     private final static String REG_EMAIL = "rafael.nadal@epfl.ch";
     private final static String UNREG_EMAIL = "roger.federer@epfl.ch";
     private final static String ALREADY_IN_EMAIL = "andy.murray@epfl.ch";
+    private final static String ALREADY_IN_EMAIL_VER = "stefanos.tsitsipas@epfl.ch";
     private final static String PASSWORD = "NadalMyLove";
     private final static String ALREADY_IN_PASSWORD = "ScotlandBelongsToItself";
+    private final static String ALREADY_IN_PASSWORD_VER = "NoMoneyNoProblem";
+    private final static String SMALL_PASSWORD = "pass";
 
 
 
@@ -179,14 +183,14 @@ public class AuthenticationActivityTest {
         //Wait 3 seconds
         Thread.sleep(SECONDS.toMillis(3));
 
-        //Assert that an intent was launched
-        Intents.intended(IntentMatchers.hasComponent(MainActivity.class.getName()));
+        //Assert that no intent was launched
+        assertThat(Intents.getIntents().isEmpty(), is(true));
     }
 
     @Test
     public void AuthenticateWorks() throws InterruptedException {
-        onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(ALREADY_IN_EMAIL));
-        onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(ALREADY_IN_PASSWORD));
+        onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(ALREADY_IN_EMAIL_VER));
+        onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(ALREADY_IN_PASSWORD_VER));
 
         //Close keyboard
         Espresso.closeSoftKeyboard();
@@ -203,6 +207,25 @@ public class AuthenticationActivityTest {
     }
 
     @Test
+    public void AuthenticateDoesNotWorksIfEmailNotVerified() throws InterruptedException {
+        onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(ALREADY_IN_EMAIL));
+        onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(ALREADY_IN_PASSWORD));
+
+        //Close keyboard
+        Espresso.closeSoftKeyboard();
+
+        //Click the sign in button
+        onView(ViewMatchers.withId(R.id.login_confirm_button)).perform(ViewActions.click());
+
+        //Wait 3 seconds
+        Thread.sleep(SECONDS.toMillis(3));
+
+        //Assert that no intent was launched
+        assertThat(Intents.getIntents().isEmpty(), is(true));
+
+    }
+
+    @Test
     public void SpectatorWorks() throws InterruptedException {
         //Click the sign in button
         onView(ViewMatchers.withId(R.id.login_spectator_button)).perform(ViewActions.click());
@@ -214,7 +237,7 @@ public class AuthenticationActivityTest {
         Intents.intended(IntentMatchers.hasComponent(MainActivity.class.getName()));
     }
 
-    @ Test
+    @Test
     public void CantConnectIfTOSNotAgreed() throws InterruptedException {
 
         onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(REG_EMAIL));
@@ -235,10 +258,25 @@ public class AuthenticationActivityTest {
         assertThat(Intents.getIntents().isEmpty(), is(true));
     }
 
-    /*@Test
-    public void worksIfAlreadyRegistered() throws InterruptedException {
-        onView(ViewMatchers.withId(R.id.editTextTextEmailAddress2)).perform(ViewActions.typeText(ALREADY_IN_EMAIL));
-        onView(ViewMatchers.withId(R.id.editTextTextPassword2)).perform(ViewActions.typeText(ALREADY_IN_PASSWORD));
+    @Test
+    public void CannotRegisterIfPasswordTooShort(){
+        onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(REG_EMAIL));
+        onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(SMALL_PASSWORD));
+
+        //Close keyboard
+        Espresso.closeSoftKeyboard();
+
+        //Click the sign in button
+        onView(ViewMatchers.withId(R.id.login_register_button)).perform(ViewActions.click());
+
+        //Assert that no intent was launched
+        assertThat(Intents.getIntents().isEmpty(), is(true));
+    }
+
+    @Test
+    public void AutomaticallyLoggedIfAlreadyIn() throws InterruptedException {
+        onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(ALREADY_IN_EMAIL_VER));
+        onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(ALREADY_IN_PASSWORD_VER));
 
         //Close keyboard
         Espresso.closeSoftKeyboard();
@@ -246,16 +284,17 @@ public class AuthenticationActivityTest {
         //Click the sign in button
         onView(ViewMatchers.withId(R.id.login_confirm_button)).perform(ViewActions.click());
 
-        Espresso.pressBack();
-
+        //Wait 3 seconds
         Thread.sleep(SECONDS.toMillis(3));
 
-        myActivityTestRule.launchActivity(null);
+        //Relaunch the activity
+        testRule.getScenario().onActivity(AuthenticationActivity::onStart);
 
-        Thread.sleep(SECONDS.toMillis(3));
-
-        Intents.intended(IntentMatchers.hasComponent(MainActivity.class.getName()));
-    }*/
-
-
+        //Assert that two MainActivity intents were launched
+        List<Intent> theIntents = Intents.getIntents();
+        assertThat(theIntents.size(), is(2));
+        for (Intent i: theIntents) {
+            assertThat(i.getComponent().getClassName(), is(MainActivity.class.getName()));
+        }
+    }
 }

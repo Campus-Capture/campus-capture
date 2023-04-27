@@ -2,8 +2,10 @@ package com.github.campus_capture.bootcamp;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNull;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
@@ -22,6 +24,7 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @RunWith(AndroidJUnit4.class)
 public class ZoneDAOTest {
@@ -52,5 +55,100 @@ public class ZoneDAOTest {
         Zone byName1 = zoneDAO.findByName("zone1");
 
         assertThat(byName1.equals(zone1), equalTo(true));
+    }
+
+    @Test
+    public void writeZoneAndGetAll() throws Exception {
+        List<LatLng> vertices1 = new ArrayList<>();
+        vertices1.add(new LatLng(10, 20));
+        vertices1.add(new LatLng(0, 0));
+        vertices1.add(new LatLng(-1000, 20.1));
+
+        List<LatLng> vertices2 = new ArrayList<>();
+        vertices2.add(new LatLng(10, 2));
+        vertices2.add(new LatLng(9, 0));
+        vertices2.add(new LatLng(-100, -10));
+
+        Zone zone1 = new Zone("zone1", vertices1);
+        Zone zone2 = new Zone("zone2", vertices2);
+
+        List<Zone> zoneArray = new ArrayList();
+        zoneArray.add(zone1);
+        zoneArray.add(zone2);
+
+        zoneDAO.insertAll(zone1, zone2);
+
+        List<Zone> zoneArrayDB = zoneDAO.getAll();
+
+        for(int i = 0; i < zoneArray.size(); ++i){
+            assertThat(zoneArray.get(i).equals(zoneArrayDB.get(i)), equalTo(true));
+        }
+    }
+
+    @Test
+    public void writeZoneAndloadAll() throws Exception {
+        List<LatLng> vertices1 = new ArrayList<>();
+        vertices1.add(new LatLng(10, 20));
+        vertices1.add(new LatLng(0, 0));
+        vertices1.add(new LatLng(-1000, 20.1));
+
+        List<LatLng> vertices2 = new ArrayList<>();
+        vertices2.add(new LatLng(10, 2));
+        vertices2.add(new LatLng(9, 0));
+        vertices2.add(new LatLng(-100, -10));
+
+        Zone zone1 = new Zone("zone1", vertices1);
+        Zone zone2 = new Zone("zone2", vertices2);
+
+        List<Zone> zoneArray = new ArrayList();
+        zoneArray.add(zone1);
+        zoneArray.add(zone2);
+
+        zoneDAO.insertAll(zone1, zone2);
+
+        int [] zoneList = IntStream.rangeClosed(0, zoneArray.size()).toArray();
+
+        List<Zone> zoneArrayDB = zoneDAO.loadAllByIds(zoneList);
+
+        for(int i = 0; i < zoneArray.size(); ++i){
+            assertThat(zoneArray.get(i).equals(zoneArrayDB.get(i)), equalTo(true));
+        }
+    }
+
+    @Test
+    public void writeZoneAndDelete() throws Exception {
+        List<LatLng> vertices1 = new ArrayList<>();
+        vertices1.add(new LatLng(10, 20));
+        vertices1.add(new LatLng(0, 0));
+        vertices1.add(new LatLng(-1000, 20.1));
+
+        List<LatLng> vertices2 = new ArrayList<>();
+        vertices2.add(new LatLng(10, 2));
+        vertices2.add(new LatLng(9, 0));
+        vertices2.add(new LatLng(-100, -10));
+
+        Zone zone1 = new Zone("zone1", vertices1);
+        Zone zone2 = new Zone("zone2", vertices2);
+
+        List<Zone> zoneArray = new ArrayList();
+        zoneArray.add(zone1);
+        zoneArray.add(zone2);
+
+        zoneDAO.insert(zone1);
+        zoneDAO.insert(zone2);
+
+        List<Zone> zoneArrayDB = zoneDAO.getAll();
+
+        zone1 = zoneDAO.findByName("zone1");
+        zone2 = zoneDAO.findByName("zone2");
+
+        for(int i = 0; i < zoneArray.size(); ++i){
+            assertThat(zoneArray.get(i).equals(zoneArrayDB.get(i)), equalTo(true));
+        }
+
+        zoneDAO.delete(zone1);
+        assertThat(zoneDAO.findByName("zone2").equals(zone2), equalTo(true));
+        assertNull(zoneDAO.findByName("zone1"));
+
     }
 }

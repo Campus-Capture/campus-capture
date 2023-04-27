@@ -39,10 +39,10 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         AppBarConfiguration.Builder appBarBuilder;
         if (User.getUid() == null) {
             appBarBuilder = new AppBarConfiguration.Builder(
-                    R.id.nav_main, R.id.nav_greeting, R.id.nav_maps, R.id.nav_test, R.id.nav_rules, R.id.nav_scoreboard);
+                    R.id.nav_maps, R.id.nav_profile, R.id.nav_rules, R.id.nav_scoreboard);
         } else {
             appBarBuilder = new AppBarConfiguration.Builder(
-                    R.id.nav_main, R.id.nav_greeting, R.id.nav_maps, R.id.nav_test, R.id.nav_profile, R.id.nav_rules, R.id.nav_scoreboard);
+                    R.id.nav_maps, R.id.nav_profile, R.id.nav_rules, R.id.nav_scoreboard);
         }
         mAppBarConfiguration = appBarBuilder
                 .setOpenableLayout(drawer)

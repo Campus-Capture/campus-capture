@@ -25,8 +25,11 @@ public interface ZoneDAO {
     Zone findByName(String name);
 
     @Insert
-    void insertAll(Zone... zones);
+    List<Long> insertAll(Zone... zones);
+
+    @Insert
+    long insert(Zone zone);
 
     @Delete
-    void delete(Zone zone);
+    int delete(Zone zone);
 }

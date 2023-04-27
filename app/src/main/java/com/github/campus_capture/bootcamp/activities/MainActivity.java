@@ -1,12 +1,9 @@
 package com.github.campus_capture.bootcamp.activities;
 
-import static com.github.campus_capture.bootcamp.fragments.Fragments.GREETING_FRAGMENT;
-import static com.github.campus_capture.bootcamp.fragments.Fragments.MAIN_FRAGMENT;
 import static com.github.campus_capture.bootcamp.fragments.Fragments.MAPS_FRAGMENT;
 import static com.github.campus_capture.bootcamp.fragments.Fragments.PROFILE_FRAGMENT;
 import static com.github.campus_capture.bootcamp.fragments.Fragments.RULES_FRAGMENT;
 import static com.github.campus_capture.bootcamp.fragments.Fragments.SCOREBOARD_FRAGMENT;
-import static com.github.campus_capture.bootcamp.fragments.Fragments.TEST_FRAGMENT;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -25,21 +22,18 @@ import androidx.fragment.app.FragmentTransaction;
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.User;
-import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
-import com.github.campus_capture.bootcamp.firebase.PlaceholderFirebaseInterface;
+import com.github.campus_capture.bootcamp.firebase.BackendInterface;
+import com.github.campus_capture.bootcamp.firebase.FirebaseBackend;
 import com.github.campus_capture.bootcamp.fragments.Fragments;
-import com.github.campus_capture.bootcamp.fragments.GreetingFragment;
-import com.github.campus_capture.bootcamp.fragments.MainFragment;
 import com.github.campus_capture.bootcamp.fragments.MapsFragment;
 import com.github.campus_capture.bootcamp.fragments.ProfileFragment;
 import com.github.campus_capture.bootcamp.fragments.RulesFragment;
 import com.github.campus_capture.bootcamp.fragments.ScoreboardFragment;
-import com.github.campus_capture.bootcamp.fragments.TestFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
-    public static FirebaseInterface firebaseInterface;
+    public static BackendInterface backendInterface;
 
     /**
      * Required empty constructor, which will set the placeholder as the back-end
@@ -56,10 +50,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setNavigationIcon(R.drawable.menu_icon);
         setSupportActionBar(toolbar);
 
-        // TODO replace once the firebase access has actually been implemented
-        if(firebaseInterface == null)
+        if(backendInterface == null)
         {
-            firebaseInterface = new PlaceholderFirebaseInterface();
+            backendInterface = new FirebaseBackend();
         }
 
         // Set the behavior of the navigation icon
@@ -72,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         // Open the main fragment inside the fragment container
-        openFragment(MAIN_FRAGMENT);
+        openFragment(MAPS_FRAGMENT);
 
         // Add a listener for the navigation drawer
         NavigationView navView = findViewById(R.id.nav_view);
@@ -91,20 +84,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch(fragment)
         {
-            case MAIN_FRAGMENT:
-                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new MainFragment());
-                break;
-
-            case GREETING_FRAGMENT:
-                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new GreetingFragment());
-                break;
-
             case MAPS_FRAGMENT:
-                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new MapsFragment(firebaseInterface));
-                break;
-
-            case TEST_FRAGMENT:
-                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new TestFragment());
+                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new MapsFragment(backendInterface));
                 break;
 
             case PROFILE_FRAGMENT:
@@ -116,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case SCOREBOARD_FRAGMENT:
-                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new ScoreboardFragment(firebaseInterface));
+                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new ScoreboardFragment(backendInterface));
                 break;
 
             default:
@@ -162,17 +143,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId())
         {
-            case R.id.nav_main:
-                openFragment(MAIN_FRAGMENT);
-                break;
-            case R.id.nav_greeting:
-                openFragment(GREETING_FRAGMENT);
-                break;
             case R.id.nav_maps:
                 openFragment(MAPS_FRAGMENT);
-                break;
-            case R.id.nav_test:
-                openFragment(TEST_FRAGMENT);
                 break;
             case R.id.nav_profile:
                 openFragment(PROFILE_FRAGMENT);

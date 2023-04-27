@@ -26,9 +26,10 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
-import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
+import com.github.campus_capture.bootcamp.firebase.BackendInterface;
 import com.github.campus_capture.bootcamp.fragments.MapsFragment;
 import com.github.campus_capture.bootcamp.map.MapScheduler;
+import com.github.campus_capture.bootcamp.map.ScheduleConstants;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
 import com.google.android.gms.maps.model.LatLng;
@@ -45,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @RunWith(AndroidJUnit4.class)
 public class MapVoteTest {
@@ -54,29 +56,30 @@ public class MapVoteTest {
     LatLng noLoc = new LatLng(0, 0);
 
     private static boolean hasAttacked;
+    private static boolean voteReturnCode;
 
-    final FirebaseInterface mock = new FirebaseInterface() {
+    final BackendInterface mock = new BackendInterface() {
 
         @Override
-        public boolean voteZone(String uid, Section s, String zonename) {
+        public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
             recordedZoneName = zonename;
-            return true;
+            return CompletableFuture.completedFuture(true);
         }
 
         @Override
-        public boolean hasAttacked(String uid) {
-            return hasAttacked;
+        public CompletableFuture<Boolean> hasAttacked(String uid) {
+            return CompletableFuture.completedFuture(hasAttacked);
         }
 
         @Override
-        public Map<String, Section> getCurrentZoneOwners() {
+        public CompletableFuture<Map<String, Section>> getCurrentZoneOwners() {
             Map<String, Section> out = new HashMap<>();
             out.put("BC", Section.IN);
-            return out;
+            return CompletableFuture.completedFuture(out);
         }
 
         @Override
-        public List<ScoreItem> getScores() {
+        public CompletableFuture<List<ScoreItem>> getScores() {
             return null;
         }
     };
@@ -86,7 +89,7 @@ public class MapVoteTest {
 
     @Test
     public void correctDisplayWhenPositionIsUnknown() throws InterruptedException {
-        MainActivity.firebaseInterface = mock;
+        MainActivity.backendInterface = mock;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = null;
         User.setUid("");
@@ -108,7 +111,7 @@ public class MapVoteTest {
 
     @Test
     public void correctDisplayWhenOutsideOfZones() throws InterruptedException {
-        MainActivity.firebaseInterface = mock;
+        MainActivity.backendInterface = mock;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = noLoc;
         User.setUid("");
@@ -130,7 +133,7 @@ public class MapVoteTest {
 
     @Test
     public void zoneIsDisplayedWhenInsideZone() throws InterruptedException {
-        MainActivity.firebaseInterface = mock;
+        MainActivity.backendInterface = mock;
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = fixed;
         User.setUid("");
@@ -152,7 +155,7 @@ public class MapVoteTest {
 
     @Test
     public void timerbuttonIsDisplayedWhenOutsideOfTakeover() throws InterruptedException {
-        MainActivity.firebaseInterface = mock;
+        MainActivity.backendInterface = mock;
         Calendar time = Calendar.getInstance();
         time.set(Calendar.MINUTE, 30);
         time.set(Calendar.SECOND, 0);
@@ -180,7 +183,7 @@ public class MapVoteTest {
 
     @Test
     public void timerButtonCorrectlyCountsDownTime() throws ParseException, InterruptedException {
-        MainActivity.firebaseInterface = mock;
+        MainActivity.backendInterface = mock;
         Calendar time = Calendar.getInstance();
         time.set(Calendar.MINUTE, 30);
         time.set(Calendar.SECOND, 0);
@@ -215,7 +218,7 @@ public class MapVoteTest {
 
     @Test
     public void attackButtonIsDisplayedDuringTakeover() throws InterruptedException {
-        MainActivity.firebaseInterface = mock;
+        MainActivity.backendInterface = mock;
         User.setSection(Section.SC);
         Calendar time = Calendar.getInstance();
         time.set(Calendar.MINUTE, 5);
@@ -245,7 +248,7 @@ public class MapVoteTest {
 
     @Test
     public void attackButtonIsDisabledOnAttack() throws InterruptedException {
-        MainActivity.firebaseInterface = mock;
+        MainActivity.backendInterface = mock;
         User.setSection(Section.SC);
         Calendar time = Calendar.getInstance();
         time.set(Calendar.MINUTE, 5);
@@ -257,6 +260,7 @@ public class MapVoteTest {
         MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
+        voteReturnCode = true;
 
         Intents.init();
 
@@ -280,7 +284,7 @@ public class MapVoteTest {
 
     @Test
     public void defendButtonIsDisplayedDuringTakeover() throws InterruptedException {
-        MainActivity.firebaseInterface = mock;
+        MainActivity.backendInterface = mock;
         User.setSection(Section.IN);
         Calendar time = Calendar.getInstance();
         time.set(Calendar.MINUTE, 5);
@@ -310,7 +314,7 @@ public class MapVoteTest {
 
     @Test
     public void defendButtonIsDisabledOnAttack() throws InterruptedException {
-        MainActivity.firebaseInterface = mock;
+        MainActivity.backendInterface = mock;
         User.setSection(Section.IN);
         Calendar time = Calendar.getInstance();
         time.set(Calendar.MINUTE, 5);
@@ -322,6 +326,7 @@ public class MapVoteTest {
         MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
+        voteReturnCode = true;
 
         Intents.init();
 
@@ -345,7 +350,7 @@ public class MapVoteTest {
 
     @Test
     public void testIfButtonsAreHiddenWhenInSpectatorMode() throws InterruptedException {
-        MainActivity.firebaseInterface = mock;
+        MainActivity.backendInterface = mock;
         User.setUid(null);
         MapsFragment.locationOverride = true;
         MapsFragment.fixedLocation = fixed;
@@ -369,7 +374,7 @@ public class MapVoteTest {
 
     @Test
     public void testIfAttackButtonIsShownAtStartOfTakeover() throws InterruptedException {
-        MainActivity.firebaseInterface = mock;
+        MainActivity.backendInterface = mock;
         User.setSection(Section.SC);
         Calendar time = Calendar.getInstance();
         time.set(Calendar.MINUTE, 59);
@@ -406,7 +411,7 @@ public class MapVoteTest {
 
     @Test
     public void testIfDefendButtonIsShownAtStartOfTakeover() throws InterruptedException {
-        MainActivity.firebaseInterface = mock;
+        MainActivity.backendInterface = mock;
         User.setSection(Section.IN);
         Calendar time = Calendar.getInstance();
         time.set(Calendar.MINUTE, 59);
@@ -443,7 +448,7 @@ public class MapVoteTest {
 
     @Test
     public void testIfAttackButtonIsCorrectlyClosedAtEndOfTakeover() throws InterruptedException {
-        MainActivity.firebaseInterface = mock;
+        MainActivity.backendInterface = mock;
         User.setSection(Section.SC);
         Calendar time = Calendar.getInstance();
         time.set(Calendar.MINUTE, 14);
@@ -480,7 +485,7 @@ public class MapVoteTest {
 
     @Test
     public void testIfDefendButtonIsCorrectlyClosedAtEndOfTakeover() throws InterruptedException {
-        MainActivity.firebaseInterface = mock;
+        MainActivity.backendInterface = mock;
         User.setSection(Section.IN);
         Calendar time = Calendar.getInstance();
         time.set(Calendar.MINUTE, 14);
@@ -517,7 +522,7 @@ public class MapVoteTest {
 
     @Test
     public void testIfAttackButtonsAreHiddenWhenAlreadyAttacked() throws InterruptedException {
-        MainActivity.firebaseInterface = mock;
+        MainActivity.backendInterface = mock;
         User.setSection(Section.SC);
         Calendar time = Calendar.getInstance();
         time.set(Calendar.MINUTE, 10);
@@ -542,6 +547,141 @@ public class MapVoteTest {
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.timerButton)).check(matches(isDisplayed()));
+
+        Intents.release();
+    }
+
+    @Test
+    public void testIfTasksAreCorrectlyClosed() throws InterruptedException {
+        MainActivity.backendInterface = mock;
+        MapScheduler.overrideTime = false;
+        MapsFragment.locationOverride = false;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_rules)).perform(ViewActions.click());
+
+        Intents.release();
+    }
+
+    @Test
+    public void testThatToastIsDisplayedIfLocationIsNull() throws InterruptedException {
+        MainActivity.backendInterface = mock;
+        User.setSection(Section.SC);
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 5);
+        time.set(Calendar.SECOND, 0);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = fixed;
+        User.setUid("");
+        hasAttacked = false;
+        voteReturnCode = true;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(2000);
+
+        MapsFragment.fixedLocation = null;
+
+        onView(ViewMatchers.withId(R.id.attackButton)).perform(ViewActions.click());
+
+        Intents.release();
+    }
+
+    @Test
+    public void checkThatZonesAreWellRefreshed() throws InterruptedException {
+        MainActivity.backendInterface = mock;
+        MapScheduler.overrideTime = false;
+        MapsFragment.locationOverride = false;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(ScheduleConstants.ZONE_REFRESH_RATE + 3000);
+
+        Intents.release();
+    }
+
+    @Test
+    public void checkThatToastIsShownWhenZoneOwnerNotFound() throws InterruptedException {
+        MainActivity.backendInterface = mock;
+        User.setSection(Section.SC);
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 5);
+        time.set(Calendar.SECOND, 0);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = fixed;
+        User.setUid("");
+        hasAttacked = false;
+        voteReturnCode = true;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
+
+        MapsFragment.fixedLocation = new LatLng(46.518541590052145, 6.56854108037592);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).perform(ViewActions.click());
+
+        Intents.release();
+    }
+
+    @Test
+    public void testThatToastIsDisplayedIfVoteFails() throws InterruptedException {
+        MainActivity.backendInterface = mock;
+        User.setSection(Section.SC);
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 5);
+        time.set(Calendar.SECOND, 0);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = fixed;
+        User.setUid("");
+        hasAttacked = false;
+        voteReturnCode = false;
+
+        Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(1000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).perform(ViewActions.click());
 
         Intents.release();
     }

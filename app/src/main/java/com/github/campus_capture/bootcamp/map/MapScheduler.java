@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
-import com.github.campus_capture.bootcamp.firebase.FirebaseInterface;
+import com.github.campus_capture.bootcamp.firebase.BackendInterface;
 import com.github.campus_capture.bootcamp.fragments.MapsFragment;
 import com.github.campus_capture.bootcamp.storage.entities.Zone;
 import com.google.android.gms.maps.model.LatLng;
@@ -38,7 +38,7 @@ public class MapScheduler {
     private final Button attackButton;
     private final Button defendButton;
     private final Button timerButton;
-    private final FirebaseInterface firebaseInterface;
+    private final BackendInterface backendInterface;
     private final MapsFragment upper;
     private final Handler scheduledTaskHandler;
     private boolean isZoneOwned;
@@ -53,8 +53,10 @@ public class MapScheduler {
     private final Runnable zoneRefreshTask = new Runnable() {
         @Override
         public void run() {
+
             String label = upper.getString(R.string.current_zone_text);
             LatLng position = upper.getCurrentPosition();
+
             if(position == null)
             {
                 label += "Unknown";
@@ -64,6 +66,7 @@ public class MapScheduler {
             else
             {
                 Zone currentZone = upper.findCurrentZone(position);
+
                 if(currentZone == null)
                 {
                     label += "None";
@@ -89,15 +92,14 @@ public class MapScheduler {
         @Override
         public void run()
         {
-            CompletableFuture<Map<String, Section>> val = CompletableFuture.supplyAsync(firebaseInterface::getCurrentZoneOwners);
-            try
-            {
-                zoneState = val.get();
-            }
-            catch(Exception e)
-            {
-                Log.e("MapScheduler", "Error ocurred when retrieving the zone owners");
-            }
+            backendInterface.getCurrentZoneOwners()
+                    .thenAccept( (result) -> {
+                        zoneState = result;
+                    }).exceptionally( e -> {
+                        // TODO handle errors better ?
+                        Log.e("MapScheduler", "Error ocurred when retrieving the zone owners");
+                        return null;
+                    });
         }
     };
 
@@ -129,16 +131,25 @@ public class MapScheduler {
      * @param backend the back-end to be used
      * @param upper the fragment above
      */
-    public MapScheduler(View view, FirebaseInterface backend, MapsFragment upper)
+    public MapScheduler(View view, BackendInterface backend, MapsFragment upper)
     {
-        firebaseInterface = backend;
+        backendInterface = backend;
         this.upper = upper;
         scheduledTaskHandler = new Handler();
         zoneText = view.findViewById(R.id.currentZoneText);
         attackButton = view.findViewById(R.id.attackButton);
         defendButton = view.findViewById(R.id.defendButton);
         timerButton = view.findViewById(R.id.timerButton);
-        zoneState = firebaseInterface.getCurrentZoneOwners();
+
+        // TODO is not setting zoneState immediately a problem ?
+        backendInterface.getCurrentZoneOwners().thenAccept((result) -> {
+            zoneState = result;
+        }).exceptionally( e -> {
+            // TODO handle errors better ?
+            Log.e("MapScheduler", "Error ocurred when retrieving the zone owners");
+            return null;
+        });
+
         if(!overrideTime)
         {
             time = Calendar.getInstance();
@@ -179,7 +190,21 @@ public class MapScheduler {
             isTakeover = false;
             scheduledTaskHandler.postDelayed(openAttacksTask, (MILLIS_PER_HOUR - millisSinceHour));
         }
-        hasAttacked = firebaseInterface.hasAttacked(User.getUid());
+
+        // TODO properly fix errors due to null uid if user not logged in
+        backendInterface.hasAttacked(User.getUid()).thenAccept( (result) -> {
+
+            // TODO tmp solution ?
+            if(result != null){
+                hasAttacked = result;
+                refreshZoneState.run();
+            }
+        }).exceptionally( e -> {
+            // TODO handle errors better ?
+            Log.e("MapScheduler", "Error ocurred when retrieving if the user has attacked");
+            return null;
+        });
+
         zoneRefreshTask.run();
     }
 
@@ -189,10 +214,7 @@ public class MapScheduler {
     public void stopAll()
     {
         scheduledTaskHandler.removeCallbacksAndMessages(null);
-        if(buttonTimer != null)
-        {
-            buttonTimer.cancel();
-        }
+        buttonTimer.cancel();
     }
 
     /**
