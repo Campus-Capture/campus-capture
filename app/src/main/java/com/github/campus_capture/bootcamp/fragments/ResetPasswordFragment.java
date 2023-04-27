@@ -21,10 +21,7 @@ public class ResetPasswordFragment extends Fragment {
     private String iniEmailText;
     private EditText email;
     private String emailText = "";
-    private EditText newPassword;
-    private EditText code;
     private Button sendMailButton;
-    private Button changePasswordButton;
     private final FirebaseAuth mAuth;
 
     public ResetPasswordFragment(String email) {
@@ -45,49 +42,33 @@ public class ResetPasswordFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_reset_password, container, false);
 
         email = view.findViewById(R.id.change_password_email_address);
-        newPassword = view.findViewById(R.id.change_password_text);
-        code = view.findViewById(R.id.change_password_code);
 
         sendMailButton = view.findViewById(R.id.send_mail_button);
-        changePasswordButton = view.findViewById(R.id.change_password_button);
 
         email.setText(iniEmailText);
 
-        sendMailButton.setOnClickListener(view12 -> {
-            emailText = email.getText().toString();
-            mAuth.sendPasswordResetEmail(emailText);
-
-            changeLayoutObjectsVisibility();
-
-            Toast.makeText(getActivity(), "Please, write the code you receive at "+emailText+".", Toast.LENGTH_LONG).show();
-        });
-
-        changePasswordButton.setOnClickListener(view1 -> {
-            String codeText = code.getText().toString();
-            String newPasswordText = newPassword.getText().toString();
-            mAuth.confirmPasswordReset(codeText, newPasswordText).addOnSuccessListener(unused -> goToSignInFragment(emailText, newPasswordText));
-        });
+        sendMailButton.setOnClickListener(view12 -> sendMailButtonListener());
 
         return view;
     }
 
-    private void changeLayoutObjectsVisibility(){
-        email.setVisibility(View.GONE);
-        sendMailButton.setVisibility(View.GONE);
+    private void sendMailButtonListener(){
+        emailText = email.getText().toString();
+        mAuth.sendPasswordResetEmail(emailText);
 
-        newPassword.setVisibility(View.VISIBLE);
-        code.setVisibility(View.VISIBLE);
-        changePasswordButton.setVisibility(View.VISIBLE);
+        Toast.makeText(getActivity(), "You can change your password with the link you receive at "+emailText+".", Toast.LENGTH_LONG).show();
+
+        goToSignInFragment(emailText);
     }
 
     /**
      * Method which opens the sign in fragment
      */
-    private void goToSignInFragment(String email, String password){
+    private void goToSignInFragment(String email){
         // Fragments are managed by transactions
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(email, password));
+        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(email, ""));
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit(); // Commit the transaction
     }

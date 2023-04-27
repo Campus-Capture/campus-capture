@@ -44,6 +44,7 @@ public class AuthenticationActivityTest {
     private final static String ALREADY_IN_PASSWORD = "ScotlandBelongsToItself";
     private final static String ALREADY_IN_PASSWORD_VER = "NoMoneyNoProblem";
     private final static String SMALL_PASSWORD = "pass";
+    private final static String DUMB_USER = "dumb.user@epfl.ch";
 
 
 
@@ -299,5 +300,27 @@ public class AuthenticationActivityTest {
 
         //Assert that the state is still working
         assertTrue(testRule.getScenario().getState().isAtLeast(Lifecycle.State.STARTED));
+    }
+
+    @Test
+    public void CanChangePassword(){
+        //Go to login screen
+        onView(ViewMatchers.withId(R.id.register_already_registered_button)).perform(ViewActions.click());
+
+        //Come back to register screen
+        onView(ViewMatchers.withId(R.id.login_password_forgotten_button)).perform(ViewActions.click());
+
+        //Enter mail
+        onView(ViewMatchers.withId(R.id.change_password_email_address)).perform(ViewActions.typeText(DUMB_USER));
+
+        //Close keyboard
+        Espresso.closeSoftKeyboard();
+
+        //Click on the send mail button
+        onView(ViewMatchers.withId(R.id.send_mail_button)).perform(ViewActions.click());
+
+        //Assert that the state is still working and we did not launch any intent
+        assertTrue(testRule.getScenario().getState().isAtLeast(Lifecycle.State.STARTED));
+        assertThat(Intents.getIntents().isEmpty(), is(true));
     }
 }
