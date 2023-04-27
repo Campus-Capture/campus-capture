@@ -2,7 +2,10 @@ package com.github.campus_capture.bootcamp.fragments;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,7 +32,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
@@ -37,6 +44,8 @@ import com.google.maps.android.PolyUtil;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
+import kotlinx.coroutines.internal.Symbol;
 
 public class MapsFragment extends Fragment{
 
@@ -91,29 +100,17 @@ public class MapsFragment extends Fragment{
 
         enableMyLocation();
 
-        //Listener when user clicks on the "my position" button
-        map.setOnMyLocationButtonClickListener(() -> {
-            Toast.makeText(getActivity(), "MyLocation button clicked", Toast.LENGTH_SHORT).show();
-            return false;
-        });
-
-        //Listener when user clicks on the "my position" blue dot
-        map.setOnMyLocationClickListener(location -> Toast.makeText(getActivity(), "Current location:\n" + location, Toast.LENGTH_LONG).show());
-
-        // Add a marker at Satellite and move the camera
+        // Move the camera to the campus
         LatLng epfl = new LatLng(46.520536, 6.568318);
-        LatLng satellite = new LatLng(46.520544, 6.567825);
-        map.addMarker(new MarkerOptions().position(satellite).title("Satellite").snippet("5 ⭐"));
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(epfl, 15));
-
-        map.setOnMarkerClickListener(marker -> {
-            return false;
-        });
 
         for (Zone zone : zoneDAO.getAll()){
             Polygon poly = map.addPolygon(new PolygonOptions().addAll(zone.getVertices()));
             poly.setStrokeWidth(0);
             poly.setFillColor(Color.argb(25, 255, 0, 0));
+
+            map.addMarker(new MarkerOptions().position(zone.getCenter())
+                    .icon(createPureTextIcon(zone.getName())));
         }
 
         map.setOnPolygonClickListener(polygon ->{
@@ -121,6 +118,30 @@ public class MapsFragment extends Fragment{
 
         // scheduler.startAll();
     };
+
+    //TODO Documentation
+    public BitmapDescriptor createPureTextIcon(String text) {
+
+        Paint textPaint = new Paint();
+
+        textPaint.setTextSize(20f); //TODO less arbitrary value (dynamic)
+
+        float textWidth = textPaint.measureText(text);
+        float textHeight = textPaint.getTextSize();
+        int width = (int) (textWidth);
+        int height = (int) (textHeight);
+
+        Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(image);
+
+        canvas.translate(0, height);
+
+        // For development only: //TODO REMOVE
+        //canvas.drawColor(Color.LTGRAY);
+
+        canvas.drawText(text, 0, 0, textPaint);
+        return BitmapDescriptorFactory.fromBitmap(image);
+    }
 
     /**
      * Overloaded constructor to allow the fragment to use a specific back-end

@@ -9,6 +9,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.List;
 
@@ -27,6 +28,15 @@ public class Zone {
         this.name = name;
         this.vertices = vertices;
 
+    }
+
+    public LatLng getCenter() {
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+        for(LatLng vertex : vertices){
+            boundsBuilder.include(vertex);
+        }
+
+        return boundsBuilder.build().getCenter();
     }
 
     @Override
