@@ -44,6 +44,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         FirebaseUser currentUser = auth.getCurrentUser();
         if(currentUser != null && currentUser.isEmailVerified()){
             User.setSection(Section.valueOf(mSharedPreferences.getString("Section", "NONE")));
+            User.setUid(mSharedPreferences.getString("UID", null));
             goToMainActivity();
         } else {
             goToRegisterFragment();

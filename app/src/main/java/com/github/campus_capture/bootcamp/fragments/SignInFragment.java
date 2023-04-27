@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
+import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -120,8 +121,11 @@ public class SignInFragment extends Fragment {
             //TODO: Remove that and put an equivalent in the login screen!!!
             SharedPreferences.Editor editor = mSharedPreferences.edit();
             editor.putString("Section", "IN");
+            User.setSection(Section.IN);
 
             if(user.isEmailVerified()) {
+                editor.putString("UID", User.getUid());
+                editor.apply();
                 goToMainActivity();
             } else {
                 Toast.makeText(getActivity(), "Please, verify your email.", Toast.LENGTH_SHORT).show();
