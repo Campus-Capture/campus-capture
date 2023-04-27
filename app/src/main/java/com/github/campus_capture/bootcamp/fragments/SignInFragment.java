@@ -139,7 +139,11 @@ public class SignInFragment extends Fragment {
     }
 
     private void setPasswordForgottenListener(){
-        password_forgotten_button.setOnClickListener(view -> Toast.makeText(getActivity(), "That is sad", Toast.LENGTH_SHORT).show());
+        password_forgotten_button.setOnClickListener(view -> {
+            Toast.makeText(getActivity(), "That is sad", Toast.LENGTH_SHORT).show();
+            goToChangePasswordFragment();
+        });
+
     }
 
     private void goToMainActivity(){
@@ -164,4 +168,18 @@ public class SignInFragment extends Fragment {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit(); // Commit the transaction
     }
+
+    /**
+     * Method which opens the change password fragment
+     */
+    private void goToChangePasswordFragment()
+    {
+        // Fragments are managed by transactions
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new ResetPasswordFragment(email.getText().toString()));
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit(); // Commit the transaction
+    }
+
 }
