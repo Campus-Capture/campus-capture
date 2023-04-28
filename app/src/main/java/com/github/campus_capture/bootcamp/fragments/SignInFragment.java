@@ -118,12 +118,15 @@ public class SignInFragment extends Fragment {
 
             User.setUid(user.getUid());
 
-            //TODO: Remove that and put an equivalent in the login screen!!!
-            SharedPreferences.Editor editor = mSharedPreferences.edit();
-            editor.putString("Section", "IN");
-            User.setSection(Section.IN);
+
 
             if(user.isEmailVerified()) {
+
+                //TODO: Remove that and put an equivalent in the login screen!!!
+                SharedPreferences.Editor editor = mSharedPreferences.edit();
+                editor.putString("Section", "IN");
+                User.setSection(Section.IN);
+
                 editor.putString("UID", User.getUid());
                 editor.apply();
                 goToMainActivity();
