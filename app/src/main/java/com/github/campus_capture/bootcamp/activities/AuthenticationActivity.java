@@ -60,6 +60,9 @@ public class AuthenticationActivity extends AppCompatActivity {
         super.onStart();
     }
 
+    /**
+     * Directly go to main
+     */
     private void goToMainActivity(){
         Intent mainIntent = new Intent(AuthenticationActivity.this, MainActivity.class);
         startActivity(mainIntent);

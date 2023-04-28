@@ -43,6 +43,11 @@ public class SignInFragment extends Fragment {
     private FirebaseAuth mAuth;
     private SharedPreferences mSharedPreferences;
 
+    /**
+     * Constructor
+     * @param email Email already entered
+     * @param password Password already entered
+     */
     public SignInFragment(String email, String password) {
         // Required empty public constructor
         emailText = email;
@@ -87,15 +92,26 @@ public class SignInFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Sets the OnClickListener on the "actually_no_button"
+     */
     private void setActuallyNoButtonListener(){
         actually_no_button.setOnClickListener(view -> goToRegisterFragment());
     }
 
+    /**
+     * Sets the OnClickListener on the "login_button"
+     */
     private void setLoginButtonListener(){
         login_button.setOnClickListener(view -> loginClicked());
     }
 
+    /**
+     * Does actions when login_button is clicked
+     */
     private void loginClicked(){
+
+        // Update the email and password texts
         setEditTextToString();
 
         //If email ends with "@epfl.ch" accords authentication. Otherwise, show a message.
@@ -106,17 +122,23 @@ public class SignInFragment extends Fragment {
         }
     }
 
+    /**
+     * Starts the authentication process
+     */
     private void authenticate(){
+        // Signs in the user in Firebase
         mAuth.signInWithEmailAndPassword(emailText, passwordText)
                 .addOnCompleteListener(this::onCompleteLoginListenerContent);
     }
 
+    /**
+     * OnCompleteListener of the login_button
+     * @param task
+     */
     private void onCompleteLoginListenerContent(Task<AuthResult> task){
         if (task.isSuccessful()) {
             // Sign in success, set the signed-in user's information and go to main
             FirebaseUser user = mAuth.getCurrentUser();
-
-            User.setUid(user.getUid());
 
 
 
@@ -127,8 +149,13 @@ public class SignInFragment extends Fragment {
                 editor.putString("Section", "IN");
                 User.setSection(Section.IN);
 
+                // Puts the UID in the disk and in the user
                 editor.putString("UID", User.getUid());
+                User.setUid(user.getUid());
+
                 editor.apply();
+
+                // Goes to MainActivity
                 goToMainActivity();
             } else {
                 Toast.makeText(getActivity(), "Please, verify your email.", Toast.LENGTH_SHORT).show();
@@ -141,6 +168,9 @@ public class SignInFragment extends Fragment {
         }
     }
 
+    /**
+     * Sets the OnClickListener on the "password_forgotten_button"
+     */
     private void setPasswordForgottenListener(){
         password_forgotten_button.setOnClickListener(view -> {
             Toast.makeText(getActivity(), "That is sad", Toast.LENGTH_SHORT).show();
@@ -149,11 +179,17 @@ public class SignInFragment extends Fragment {
 
     }
 
+    /**
+     * Directly goes to main
+     */
     private void goToMainActivity(){
         Intent mainIntent = new Intent(getActivity(), MainActivity.class);
         startActivity(mainIntent);
     }
 
+    /**
+     * Update the emailText and passwordText to be consistent to the current values
+     */
     private void setEditTextToString(){
         emailText = email.getText().toString();
         passwordText = password.getText().toString();

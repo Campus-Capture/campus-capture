@@ -89,6 +89,7 @@ public class RegisterFragment extends Fragment {
         setEditTextToString();
 
 
+        //If email and password are valid, display TOS
         if(emailText.endsWith("@epfl.ch")){
             if(passwordText.length() >= 6) {
                 displayTos();
@@ -101,16 +102,27 @@ public class RegisterFragment extends Fragment {
         }
     }
 
+    /**
+     * Launch the register protocol: create a new user and go to sign in fragment.
+     */
     private void register(){
+        //Create user in Fiebase
         mAuth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(this::onCompleteRegisterListenerContent);
+
+        //Go to sign in fragment
         goToSignInFragment(emailText, passwordText);
     }
 
+    /**
+     * CompleteListener of the user creation on Firebase
+     * @param task Result of the action
+     */
     private void onCompleteRegisterListenerContent(Task<AuthResult> task){
         if (task.isSuccessful()) {
             // Register success, send verification mail.
             FirebaseUser user = mAuth.getCurrentUser();
 
+            // Send the verification mail
             user.sendEmailVerification()
                     .addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Verification email sent", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> Toast.makeText(getActivity(), "Verification email not sent", Toast.LENGTH_SHORT).show());
@@ -123,11 +135,17 @@ public class RegisterFragment extends Fragment {
         }
     }
 
+    /**
+     * Display the TOS
+     */
     private void displayTos() {
+        // Display the dialog popup
         new AlertDialog.Builder(getActivity())
                 .setTitle("License agreement")
                 .setPositiveButton("I agree", (dialog, which) -> {
                     TOS.asAgreed = true;
+
+                    // Start the register protocol when "I agree" clicked
                     register();
                 })
                 .setNegativeButton("No", null)
@@ -135,18 +153,28 @@ public class RegisterFragment extends Fragment {
                 .show();
     }
 
+    /**
+     * Sets the Listener on the "already_registered_button"
+     */
     private void setAlreadyRegisteredButtonListener() {
         already_registered_button.setOnClickListener(view -> goToSignInFragment("", ""));
     }
 
+    /**
+     * Sets the Listener on the "spectator_button"
+     */
     private void setSpectatorButtonListener(){
         spectator_button.setOnClickListener(view -> {
+
+            // Directly go to MainActivity
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
         });
     }
 
-
+    /**
+     * Update the emailText and passwordText to be consistent with the current value.
+     */
     private void setEditTextToString(){
         emailText = email.getText().toString();
         passwordText = password.getText().toString();
