@@ -106,7 +106,7 @@ public class RegisterFragment extends Fragment {
      * Launch the register protocol: create a new user and go to sign in fragment.
      */
     private void register(){
-        //Create user in Fiebase
+        //Create user in Firebase
         mAuth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(this::onCompleteRegisterListenerContent);
 
         //Go to sign in fragment
