@@ -22,6 +22,7 @@ import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.BackendInterface;
 import com.github.campus_capture.bootcamp.map.MapScheduler;
+import com.github.campus_capture.bootcamp.map.SectionColors;
 import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
 import com.github.campus_capture.bootcamp.storage.dao.ZoneDAO;
 import com.github.campus_capture.bootcamp.storage.entities.Zone;
@@ -118,7 +119,7 @@ public class MapsFragment extends Fragment{
         for (Zone zone : zoneDAO.getAll()){
             Polygon poly = map.addPolygon(new PolygonOptions().addAll(zone.getVertices()));
             poly.setStrokeWidth(0);
-            poly.setFillColor(Color.argb(25, 255, 0, 0));
+            poly.setFillColor(getContext().getColor(R.color.none_color));
             polygonMap.put(zone.getName(), poly);
         }
 
@@ -178,7 +179,6 @@ public class MapsFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
@@ -269,7 +269,20 @@ public class MapsFragment extends Fragment{
 
     public void refreshZoneColors(Map<String, Section> zoneState)
     {
-
+        for(String name : zoneState.keySet())
+        {
+            Section s = zoneState.get(name);
+            if(s == null)
+            {
+                s = Section.NONE;
+            }
+            Polygon p = polygonMap.get(name);
+            if(p == null)
+            {
+                throw new IllegalArgumentException("Zone not found");
+            }
+            p.setFillColor(SectionColors.getColor(s, getContext()));
+        }
     }
 
 }

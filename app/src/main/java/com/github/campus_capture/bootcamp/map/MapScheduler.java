@@ -95,6 +95,7 @@ public class MapScheduler {
             backendInterface.getCurrentZoneOwners()
                     .thenAccept( (result) -> {
                         zoneState = result;
+                        upper.refreshZoneColors(zoneState);
                     }).exceptionally( e -> {
                         // TODO handle errors better ?
                         Log.e("MapScheduler", "Error ocurred when retrieving the zone owners");
@@ -140,15 +141,7 @@ public class MapScheduler {
         attackButton = view.findViewById(R.id.attackButton);
         defendButton = view.findViewById(R.id.defendButton);
         timerButton = view.findViewById(R.id.timerButton);
-
-        // TODO is not setting zoneState immediately a problem ?
-        backendInterface.getCurrentZoneOwners().thenAccept((result) -> {
-            zoneState = result;
-        }).exceptionally( e -> {
-            // TODO handle errors better ?
-            Log.e("MapScheduler", "Error ocurred when retrieving the zone owners");
-            return null;
-        });
+        refreshZoneState.run();
 
         if(!overrideTime)
         {
