@@ -98,7 +98,7 @@ public class MapScheduler {
                         upper.refreshZoneColors(zoneState);
                     }).exceptionally( e -> {
                         // TODO handle errors better ?
-                        Log.e("MapScheduler", "Error ocurred when retrieving the zone owners");
+                        Log.e("MapScheduler", "Error ocurred when retrieving the zone owners:\n\t" + e.getMessage());
                         return null;
                     });
         }

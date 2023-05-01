@@ -22,6 +22,7 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
@@ -86,6 +87,9 @@ public class MapVoteTest {
 
     @Rule
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
+
+    @Rule
+    public GrantPermissionRule permissionLocation = GrantPermissionRule.grant("android.permission.ACCESS_FINE_LOCATION");
 
     @Test
     public void correctDisplayWhenPositionIsUnknown() throws InterruptedException {

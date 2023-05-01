@@ -279,7 +279,8 @@ public class MapsFragment extends Fragment{
             Polygon p = polygonMap.get(name);
             if(p == null)
             {
-                throw new IllegalArgumentException("Zone not found");
+                Log.e("MapsFragment", "Error: zone with name " + name + " not found in map");
+                continue;
             }
             p.setFillColor(SectionColors.getColor(s, getContext()));
         }
