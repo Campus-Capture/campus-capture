@@ -24,6 +24,6 @@
     <color name="sv_color">#4000FF91</color>
     <color name="mx_color">#40FF7300</color>
     <color name="gm_color">#402448FF</color>
-    <color name="mt_color"></color>
+    <color name="mt_color">#40EE0000</color>
     <color name="none_color">#408A8A8A</color>
 </resources>

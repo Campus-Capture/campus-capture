@@ -15,7 +15,6 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.room.Room;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.action.ViewActions;
@@ -34,7 +33,6 @@ import com.github.campus_capture.bootcamp.fragments.MapsFragment;
 import com.github.campus_capture.bootcamp.map.MapScheduler;
 import com.github.campus_capture.bootcamp.map.ScheduleConstants;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
-import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.hamcrest.Matcher;
@@ -62,7 +60,7 @@ public class MapVoteTest {
     private static boolean hasAttacked;
     private static boolean voteReturnCode;
 
-    final BackendInterface mock = new BackendInterface() {
+    private final BackendInterface mock = new BackendInterface() {
 
         @Override
         public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
