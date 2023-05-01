@@ -24,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 
 import androidx.test.espresso.action.ViewActions;
@@ -127,7 +128,7 @@ public class MapColorTest {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            System.out.println("Current dir:" + currentPath);
+            Log.d("DEBUG", "Current dir:" + currentPath);
             /*try(FileOutputStream out = new FileOutputStream("bitmap.png"))
             {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
