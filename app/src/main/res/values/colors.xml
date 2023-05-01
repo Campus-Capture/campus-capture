@@ -12,4 +12,18 @@
     <color name="red">#DD0000</color>
     <color name="blue">#697AFF</color>
     <color name="dark_gray">#888888</color>
+    <color name="ar_color">#FF77FC03</color>
+    <color name="gc_color">#FFCB82FF</color>
+    <color name="sie_color">#FF94FFF6</color>
+    <color name="in_color">#FFFF775C</color>
+    <color name="sc_color">#FF8330FF</color>
+    <color name="cgc_color">#FFFCFF42</color>
+    <color name="ma_color">#FFFF425E</color>
+    <color name="ph_color">#FF47C900</color>
+    <color name="el_color">#FFFFC800</color>
+    <color name="sv_color">#FF00FF91</color>
+    <color name="mx_color">#FFFF7300</color>
+    <color name="gm_color">#FF2448FF</color>
+    <color name="mt_color"></color>
+    <color name="none_color">#FF8A8A8A</color>
 </resources>

@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
 import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.BackendInterface;
 import com.github.campus_capture.bootcamp.map.MapScheduler;
@@ -35,7 +36,9 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.PolyUtil;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class MapsFragment extends Fragment{
@@ -84,6 +87,9 @@ public class MapsFragment extends Fragment{
      * Flag indicating whether a requested permission has been denied
      */
     private boolean permissionDenied = false;
+
+    private Map<String, Polygon> polygonMap;
+
     private final OnMapReadyCallback callback = googleMap -> {
         ZoneDAO zoneDAO = zoneDB.zoneDAO();
 
@@ -106,14 +112,14 @@ public class MapsFragment extends Fragment{
         map.addMarker(new MarkerOptions().position(satellite).title("Satellite").snippet("5 ⭐"));
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(epfl, 15));
 
-        map.setOnMarkerClickListener(marker -> {
-            return false;
-        });
+        //map.setOnMarkerClickListener(marker -> false);
+        polygonMap = new HashMap<>();
 
         for (Zone zone : zoneDAO.getAll()){
             Polygon poly = map.addPolygon(new PolygonOptions().addAll(zone.getVertices()));
             poly.setStrokeWidth(0);
             poly.setFillColor(Color.argb(25, 255, 0, 0));
+            polygonMap.put(zone.getName(), poly);
         }
 
         map.setOnPolygonClickListener(polygon ->{
@@ -259,6 +265,11 @@ public class MapsFragment extends Fragment{
         {
             return fixedLocation;
         }
+    }
+
+    public void refreshZoneColors(Map<String, Section> zoneState)
+    {
+
     }
 
 }
