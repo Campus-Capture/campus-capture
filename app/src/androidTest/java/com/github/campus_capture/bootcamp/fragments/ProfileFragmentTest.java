@@ -5,6 +5,8 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.junit.Assert.assertNotNull;
+
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -12,6 +14,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
+import com.github.campus_capture.bootcamp.authentication.User;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,5 +41,10 @@ public class ProfileFragmentTest {
         onView(ViewMatchers.withId(R.id.invite_button)).perform(ViewActions.click());
 
         Intents.release();
+    }
+
+    @Test
+    public void TestUidNameExists() {
+        assertNotNull(User.getUid());
     }
 }

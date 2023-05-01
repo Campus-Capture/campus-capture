@@ -7,23 +7,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-
-import androidx.fragment.app.Fragment;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 
+import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
-import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
-import com.github.campus_capture.bootcamp.firebase.FireDatabase;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Objects;
 
 public class ProfileFragment extends Fragment {
 
@@ -44,7 +42,8 @@ public class ProfileFragment extends Fragment {
     private Spinner sectionSpinner;
     private TextView userName;
     private Button confirmButton;
-    private Section section;
+    private Section section = Section.NONE;
+    private DatabaseReference userRef;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -62,11 +61,21 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        // Retriev info of the user from database
+        AppContext context = AppContext.getAppContext();
+        FirebaseDatabase db = context.getFirebaseDB();
+
+        userRef = db.getReference(User.getUid());
+        DatabaseReference sectionRef = userRef.child("Section");
+
+        if (Objects.isNull(sectionRef.)) {
+            section = Section.NONE;
+        } else {
+            section = Section.valueOf(sectionRef.get());
+        }
+
         Button invite_button = view.findViewById(R.id.invite_button);
         invite_button.setOnClickListener(invite_listener);
-
-        return view;
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         // Retrieve the views from the layout
         sectionSpinner = view.findViewById(R.id.profile_section_spinner);
@@ -75,10 +84,11 @@ public class ProfileFragment extends Fragment {
         selectedSection = view.findViewById(R.id.profile_section_selected);
 
         // Display the name of the player
-        userName.setText(User.getName());
+        String name = userRef.child("email").toString();
+        userName.setText(name);
 
         // Only show section selection if not already registered
-        if (!User.hasSelectedSection()) {
+        if (section == Section.NONE) {
             showSelection(true);
             setSpinnerListener(sectionSpinner);
             setConfirmButtonListener(confirmButton);
@@ -140,9 +150,9 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
+                        // Finaly we can set the section in database and in User
+                        userRef.child("Section").setValue(section.toString());
                         User.setSection(section);
-
-                        FireDatabase.initUser(section);
 
                         showSelection(false);
                     }
