@@ -128,7 +128,7 @@ public class MapColorTest {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            Log.d("DEBUG", "Current dir:" + currentPath);
+            throw new RuntimeException(currentPath);
             /*try(FileOutputStream out = new FileOutputStream("bitmap.png"))
             {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
