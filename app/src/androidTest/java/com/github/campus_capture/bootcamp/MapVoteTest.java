@@ -183,11 +183,6 @@ public class MapVoteTest {
 
         Intents.init();
 
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
-
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.timerButton)).check(matches(withText(containsString("Next takeover in"))));
