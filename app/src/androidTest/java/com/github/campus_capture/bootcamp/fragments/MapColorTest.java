@@ -115,20 +115,27 @@ public class MapColorTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
-        Thread.sleep(1000);
+        Thread.sleep(2000);
 
         // Here I have to convert the view to a bitmap, since Google Maps is actually a view containing
         // a generated image. As such, I'll target the individual pixels of the view and get the color from there
         onView(ViewMatchers.withId(R.id.map)).check((view, noViewFoundException) -> {
             Bitmap bitmap = getBitmapFromView(view);
-            try(FileOutputStream out = new FileOutputStream("bitmap.png"))
+            String currentPath;
+            try {
+                currentPath = new java.io.File(".").getCanonicalPath();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("Current dir:" + currentPath);
+            /*try(FileOutputStream out = new FileOutputStream("bitmap.png"))
             {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             }
             catch(IOException e)
             {
                 e.printStackTrace();
-            }
+            }*/
             //Context c = InstrumentationRegistry.getInstrumentation().getContext();
 
             // AR
