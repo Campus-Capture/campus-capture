@@ -45,13 +45,22 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MapColorTest {
 
@@ -122,11 +131,21 @@ public class MapColorTest {
         // a generated image. As such, I'll target the individual pixels of the view and get the color from there
         onView(ViewMatchers.withId(R.id.map)).check((view, noViewFoundException) -> {
             Bitmap bitmap = getBitmapFromView(view);
-            String currentPath;
-            try {
-                currentPath = new java.io.File(".").getCanonicalPath();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            String currentPath = "";
+            Set<String> fileSet = new HashSet<>();
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("."))) {
+                for (Path path : stream) {
+                    if (!Files.isDirectory(path)) {
+                        fileSet.add(path.getFileName()
+                                .toString());
+                    }
+                }
+            }
+            catch(Exception ignored)
+            {}
+            for(String s : fileSet)
+            {
+                currentPath += s + ",";
             }
             throw new RuntimeException(currentPath);
             /*try(FileOutputStream out = new FileOutputStream("bitmap.png"))
