@@ -10,6 +10,8 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -36,6 +38,7 @@ import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -90,6 +93,13 @@ public class MapVoteTest {
 
     @Rule
     public GrantPermissionRule permissionLocation = GrantPermissionRule.grant("android.permission.ACCESS_FINE_LOCATION");
+
+    @Before
+    public void init()
+    {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+    }
 
     @Test
     public void correctDisplayWhenPositionIsUnknown() throws InterruptedException {
