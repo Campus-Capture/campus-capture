@@ -127,6 +127,9 @@ public class MapVoteTest {
 
         Intents.init();
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.currentZoneText)).check(matches(withText(containsString("Current zone:\nNone"))));
