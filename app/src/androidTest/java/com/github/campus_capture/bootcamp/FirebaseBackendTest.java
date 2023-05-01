@@ -288,4 +288,21 @@ public class FirebaseBackendTest {
             fail();
         }
     }
+
+    @Test
+    public void testGetUserSection() {
+
+        database.getReference().child("Users").child("testUserId").child("section").setValue("SC");
+
+
+        BackendInterface b = new FirebaseBackend();
+
+        try {
+            Section result = b.getUserSection("testUserId").get();
+            assertEquals(result, Section.SC);
+        }catch(Exception e){
+            Log.e("Error in test", e.toString());
+            assertTrue(false);
+        }
+    }
 }
