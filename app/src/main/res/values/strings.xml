@@ -21,15 +21,14 @@
     <string name="permission_rationale_location">This app needs to be able to locate players in order to be playable. Please click OK to give access to your location. If you refuse, Campus Capture won\'t be playable and will close.</string>
     <string name="location_permission_denied">Campus Capture will not work without having access to precise location</string>
     <string name="menu_profile">Profile</string>
-    <string name="login_welcome_text">Campus Capture</string>
-    <string name="login_spectator_text">Spectator</string>
-    <string name="login_google_text">Log in</string>
+    <string name="login_welcome_text">Login</string>
+    <string name="login_google_text">Already registered?</string>
     <string name="profile_title">Profile</string>
     <string name="profile_placeholder_name"><![CDATA[<name>]]></string>
     <string name="profile_section">Section</string>
     <string name="profile_apply_button">Apply</string>
     <string name="placeholder_description">Add description here</string>
-    <string name="login_register_string">Register</string>
+    <string name="register_string">Register</string>
     <string name="login_email_string">Email</string>
     <string name="login_password_string">Password</string>
     <string name="current_zone_text">Current zone:\n</string>
@@ -41,7 +40,7 @@
     <string name="no_zone_toast_text">No zone to attack found</string>
     <string name="position_not_found_text">Failed to retrieve position</string>
     <string name="vote_zone_toast">Attack registered</string>
-    <string name="login_spectator_string">Spectator mode</string>
+    <string name="register_spectator_string">Spectator mode</string>
     <string name="rules_text">Welcome to <b>Campus Capture</b>, the fun game where you and your section compete against the other sections to see who can occupy the most buildings on campus!\n\n
 The rules are simple:\n
 &#8226; The map shows you all the zones on campus and who they belong to\n
@@ -56,6 +55,13 @@ Have fun and good luck!</string>
     <string name="invite_button">Invite your friends</string>
     <string name="invitation_text">Hey there, I need help defending our faculty\'s territory in Campus Capture!\nCome join me now: </string>
     <string name="invitation_link">&lt;App link here&gt;</string>
+    <string name="login_actually_no_text">Actually no</string>
+    <string name="login_string">Login</string>
+    <string name="register_welcome_text">Register</string>
+    <string name="register_already_registered_text">Already registered</string>
+    <string name="login_password_forgotten_string">Password forgotten?</string>
+    <string name="change_password_greeting_string">Enter your email address and you will receive a mail</string>
+    <string name="send_mail_button_string">Send mail</string>
 
     <!-- for the section spinner-->
     <string-array name="profile_sections">
@@ -73,4 +79,6 @@ Have fun and good luck!</string>
         <item>MECA</item>
         <item>MT</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
