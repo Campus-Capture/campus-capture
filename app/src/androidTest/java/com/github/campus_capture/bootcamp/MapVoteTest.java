@@ -97,8 +97,7 @@ public class MapVoteTest {
     @Before
     public void init()
     {
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
     }
 
     @Test
@@ -110,11 +109,6 @@ public class MapVoteTest {
         hasAttacked = false;
 
         Intents.init();
-
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
         Thread.sleep(1000);
 
@@ -133,11 +127,6 @@ public class MapVoteTest {
 
         Intents.init();
 
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
-
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.currentZoneText)).check(matches(withText(containsString("Current zone:\nNone"))));
@@ -154,11 +143,6 @@ public class MapVoteTest {
         hasAttacked = false;
 
         Intents.init();
-
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
         Thread.sleep(1000);
 
@@ -183,11 +167,6 @@ public class MapVoteTest {
 
         Intents.init();
 
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
-
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.timerButton)).check(matches(withText(containsString("Next takeover in"))));
@@ -210,11 +189,6 @@ public class MapVoteTest {
         hasAttacked = false;
 
         Intents.init();
-
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
         Thread.sleep(1000);
 
@@ -247,11 +221,6 @@ public class MapVoteTest {
 
         Intents.init();
 
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
-
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(isDisplayed()));
@@ -277,11 +246,6 @@ public class MapVoteTest {
         voteReturnCode = true;
 
         Intents.init();
-
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
         Thread.sleep(1000);
 
@@ -313,11 +277,6 @@ public class MapVoteTest {
 
         Intents.init();
 
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
-
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(isDisplayed()));
@@ -344,11 +303,6 @@ public class MapVoteTest {
 
         Intents.init();
 
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
-
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.defendButton)).perform(ViewActions.click());
@@ -371,11 +325,6 @@ public class MapVoteTest {
         hasAttacked = false;
 
         Intents.init();
-
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
         Thread.sleep(1000);
 
@@ -402,11 +351,6 @@ public class MapVoteTest {
         hasAttacked = false;
 
         Intents.init();
-
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
         Thread.sleep(1000);
 
@@ -440,11 +384,6 @@ public class MapVoteTest {
 
         Intents.init();
 
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
-
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
@@ -476,11 +415,6 @@ public class MapVoteTest {
         hasAttacked = false;
 
         Intents.init();
-
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
         Thread.sleep(1000);
 
@@ -514,11 +448,6 @@ public class MapVoteTest {
 
         Intents.init();
 
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
-
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
@@ -551,11 +480,6 @@ public class MapVoteTest {
 
         Intents.init();
 
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
-
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
@@ -572,11 +496,6 @@ public class MapVoteTest {
         MapsFragment.locationOverride = false;
 
         Intents.init();
-
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
         Thread.sleep(1000);
 
@@ -606,11 +525,6 @@ public class MapVoteTest {
 
         Intents.init();
 
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
-
         Thread.sleep(2000);
 
         MapsFragment.fixedLocation = null;
@@ -627,11 +541,6 @@ public class MapVoteTest {
         MapsFragment.locationOverride = false;
 
         Intents.init();
-
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
         Thread.sleep(ScheduleConstants.ZONE_REFRESH_RATE + 3000);
 
@@ -655,11 +564,6 @@ public class MapVoteTest {
         voteReturnCode = true;
 
         Intents.init();
-
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
         Thread.sleep(1000);
 
@@ -687,11 +591,6 @@ public class MapVoteTest {
         voteReturnCode = false;
 
         Intents.init();
-
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
         Thread.sleep(1000);
 
