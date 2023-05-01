@@ -97,8 +97,7 @@ public class MapVoteTest {
     @Before
     public void init()
     {
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
     }
 
     @Test
@@ -127,6 +126,9 @@ public class MapVoteTest {
         hasAttacked = false;
 
         Intents.init();
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
         Thread.sleep(1000);
 
