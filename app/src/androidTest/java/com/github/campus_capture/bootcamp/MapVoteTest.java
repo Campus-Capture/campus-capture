@@ -96,8 +96,7 @@ public class MapVoteTest {
     @Before
     public void init()
     {
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
     }
 
     @After
@@ -121,6 +120,9 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.currentZoneText)).check(matches(withText(containsString("Current zone:\nUnknown"))));
@@ -140,6 +142,9 @@ public class MapVoteTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
         Thread.sleep(1000);
 
@@ -161,6 +166,9 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.currentZoneText)).check(matches(withText(containsString("Current zone:\nBC"))));
@@ -181,6 +189,14 @@ public class MapVoteTest {
         hasAttacked = false;
 
         Intents.init();
+
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
         Thread.sleep(1000);
 
@@ -207,6 +223,9 @@ public class MapVoteTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
         Thread.sleep(1000);
 
@@ -242,6 +261,9 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(isDisplayed()));
@@ -270,6 +292,9 @@ public class MapVoteTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
         Thread.sleep(1000);
 
@@ -304,6 +329,9 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(isDisplayed()));
@@ -333,6 +361,9 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.defendButton)).perform(ViewActions.click());
@@ -358,6 +389,9 @@ public class MapVoteTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
         Thread.sleep(1000);
 
@@ -387,6 +421,9 @@ public class MapVoteTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
         Thread.sleep(1000);
 
@@ -423,6 +460,9 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
@@ -457,6 +497,9 @@ public class MapVoteTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
         Thread.sleep(1000);
 
@@ -493,6 +536,9 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
@@ -528,6 +574,9 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
@@ -547,6 +596,9 @@ public class MapVoteTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
         Thread.sleep(1000);
 
@@ -579,6 +631,9 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(2000);
 
         MapsFragment.fixedLocation = null;
@@ -598,6 +653,9 @@ public class MapVoteTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
         Thread.sleep(ScheduleConstants.ZONE_REFRESH_RATE + 3000);
     }
@@ -624,6 +682,9 @@ public class MapVoteTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
         Thread.sleep(1000);
 
@@ -654,6 +715,9 @@ public class MapVoteTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
         Thread.sleep(1000);
 
