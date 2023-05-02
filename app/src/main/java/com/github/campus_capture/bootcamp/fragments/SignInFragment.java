@@ -133,7 +133,7 @@ public class SignInFragment extends Fragment {
 
     /**
      * OnCompleteListener of the login_button
-     * @param task
+     * @param task The task
      */
     private void onCompleteLoginListenerContent(Task<AuthResult> task){
         if (task.isSuccessful()) {
@@ -196,16 +196,15 @@ public class SignInFragment extends Fragment {
     }
 
     /**
-     * Method which opens the register fragment
+     * Goes to the register fragment
      */
     private void goToRegisterFragment()
     {
-        // Fragments are managed by transactions
-        FragmentManager fragmentManager = getParentFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new RegisterFragment());
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit(); // Commit the transaction
+        FragmentManager signInFragmentManager = getParentFragmentManager();
+        FragmentTransaction signInFragmentTransaction = signInFragmentManager.beginTransaction();
+        signInFragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new RegisterFragment());
+        signInFragmentTransaction.addToBackStack(null);
+        signInFragmentTransaction.commit();
     }
 
     /**
