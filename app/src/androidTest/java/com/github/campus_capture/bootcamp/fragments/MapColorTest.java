@@ -139,7 +139,7 @@ public class MapColorTest {
             }
             catch(IOException e)
             {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
             //Context c = InstrumentationRegistry.getInstrumentation().getContext();
 
