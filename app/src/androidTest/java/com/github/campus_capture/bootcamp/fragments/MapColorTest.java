@@ -138,39 +138,12 @@ public class MapColorTest {
         // containing a generated image. As such, we will target the individual pixels of the view
         // and get the color from there
         onView(ViewMatchers.withId(R.id.map)).check((view, noViewFoundException) -> {
-            Set<String> fileSet = new HashSet<>();
-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("."))) {
-                for (Path path : stream) {
-                    if (!Files.isDirectory(path)) {
-                        fileSet.add(path.getFileName()
-                                .toString());
-                    }
-                }
-            }
-            catch(IOException e)
-            {
-                throw new RuntimeException(e);
-            }
-            String out = "";
-            for(String s : fileSet)
-            {
-                out += s + ", ";
-            }
-            throw new RuntimeException(out);
-            /*Bitmap bitmap = getBitmapFromView(view);
-            String currentPath = "";
-            try(FileOutputStream out = new FileOutputStream("./bitmap.png"))
-            {
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-            }
-            catch(IOException e)
-            {
-                throw new RuntimeException(e);
-            }*/
+            Bitmap bitmap = getBitmapFromView(view);
             //Context c = InstrumentationRegistry.getInstrumentation().getContext();
 
             // AR
             //assertEquals(bitmap.getColor(), Color.valueOf(SectionColors.getColor(AR, c)));
+            throw new RuntimeException("AR color:" + bitmap.getColor(64, 350));
         });
     }
 
