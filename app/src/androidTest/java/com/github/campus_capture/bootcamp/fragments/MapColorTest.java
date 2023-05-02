@@ -132,30 +132,14 @@ public class MapColorTest {
         onView(ViewMatchers.withId(R.id.map)).check((view, noViewFoundException) -> {
             Bitmap bitmap = getBitmapFromView(view);
             String currentPath = "";
-            Set<String> fileSet = new HashSet<>();
-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("./"))) {
-                for (Path path : stream) {
-                    if (!Files.isDirectory(path)) {
-                        fileSet.add(path.getFileName()
-                                .toString());
-                    }
-                }
-            }
-            catch(Exception ignored)
-            {}
-            for(String s : fileSet)
-            {
-                currentPath += s + ",";
-            }
-            throw new RuntimeException(currentPath);
-            /*try(FileOutputStream out = new FileOutputStream("bitmap.png"))
+            try(FileOutputStream out = new FileOutputStream("app/build/outputs/androidTest-results/bitmap.png"))
             {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             }
             catch(IOException e)
             {
                 e.printStackTrace();
-            }*/
+            }
             //Context c = InstrumentationRegistry.getInstrumentation().getContext();
 
             // AR
