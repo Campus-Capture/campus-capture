@@ -133,7 +133,7 @@ public class MapColorTest {
             Bitmap bitmap = getBitmapFromView(view);
             String currentPath = "";
             Set<String> fileSet = new HashSet<>();
-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("."))) {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("./"))) {
                 for (Path path : stream) {
                     if (!Files.isDirectory(path)) {
                         fileSet.add(path.getFileName()
