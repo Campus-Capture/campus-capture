@@ -134,7 +134,6 @@ public class MapColorTest {
 
         Thread.sleep(2000);
 
-
         // Here we have to convert the view to a bitmap, since Google Maps is actually a view
         // containing a generated image. As such, we will target the individual pixels of the view
         // and get the color from there
