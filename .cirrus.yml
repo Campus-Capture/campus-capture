@@ -68,5 +68,5 @@ check_android_task:
     androidtest_artifacts:
       path: "./app/build/outputs/**/*.xml"
       format: junit
-    androidtest_artifacts_images:
+    androidtest_image_artifacts:
       path: "./app/build/outputs/**/.png"

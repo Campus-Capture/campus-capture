@@ -8,6 +8,7 @@ import static com.github.campus_capture.bootcamp.fragments.Fragments.SCOREBOARD_
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -54,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(backendInterface == null)
         {
             backendInterface = new FirebaseBackend();
+        }
+        else
+        {
+            Log.i("MainActivity", "Back-end overridden");
         }
 
         // Set the behavior of the navigation icon

@@ -24,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 
@@ -127,23 +128,24 @@ public class MapColorTest {
 
         Intents.init();
 
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
-
-        Thread.sleep(2000);
+        Thread.sleep(5000);
 
         // Here we have to convert the view to a bitmap, since Google Maps is actually a view
         // containing a generated image. As such, we will target the individual pixels of the view
         // and get the color from there
         onView(ViewMatchers.withId(R.id.map)).check((view, noViewFoundException) -> {
+
+            Context c = InstrumentationRegistry.getInstrumentation().getContext();
+
             Bitmap bitmap = getBitmapFromView(view);
-            //Context c = InstrumentationRegistry.getInstrumentation().getContext();
+            Log.e("TEST", "------------------------------------------------");
+            // Ref: Height: 1869, width: 1080
+            Log.e("TEST", "BITMAP: Height: " + bitmap.getHeight() + ", width: " + bitmap.getWidth());
+            Log.e("TEST", bitmap.getColor(1022, 219).toString());
+            Log.e("TEST", "------------------------------------------------");
 
             // AR
             //assertEquals(bitmap.getColor(), Color.valueOf(SectionColors.getColor(AR, c)));
-            throw new RuntimeException("AR color:" + bitmap.getColor(64, 350));
         });
     }
 
@@ -158,17 +160,8 @@ public class MapColorTest {
         Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
         //Bind a canvas to it
         Canvas canvas = new Canvas(returnedBitmap);
-        //Get the view's background
-        Drawable bgDrawable =view.getBackground();
-        if (bgDrawable!=null)
-            //has background drawable, then draw it on the canvas
-            bgDrawable.draw(canvas);
-        else
-            //does not have background drawable, then draw white background on the canvas
-            canvas.drawColor(Color.WHITE);
-        // draw the view on the canvas
+        view.layout(0, 0, view.getWidth(), view.getHeight());
         view.draw(canvas);
-        //return the bitmap
         return returnedBitmap;
     }
 

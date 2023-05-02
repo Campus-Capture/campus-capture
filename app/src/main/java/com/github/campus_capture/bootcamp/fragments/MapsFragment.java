@@ -285,4 +285,14 @@ public class MapsFragment extends Fragment{
         }
     }
 
+    public int getColorOfPolygon(String poly)
+    {
+        Polygon p = polygonMap.get(poly);
+        if(p == null)
+        {
+            return -1;
+        }
+        return p.getFillColor();
+    }
+
 }
