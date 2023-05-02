@@ -140,7 +140,7 @@ public class MapColorTest {
         onView(ViewMatchers.withId(R.id.map)).check((view, noViewFoundException) -> {
             Bitmap bitmap = getBitmapFromView(view);
             String currentPath = "";
-            try(FileOutputStream out = new FileOutputStream("./app/build/outputs/bitmap.png"))
+            try(FileOutputStream out = new FileOutputStream("./bitmap.png"))
             {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             }
