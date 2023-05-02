@@ -214,7 +214,7 @@ public class MapVoteTest {
         String comp1 = getText(ViewMatchers.withId(R.id.timerButton));
         Date date1 = new SimpleDateFormat("mm:ss").parse(comp1.substring(17));
         assert date1 != null;
-        String comp2 = "Next takeover in " + new SimpleDateFormat("mm:ss").format(new Date(date1.getTime() - 5000));
+        String comp2 = "Next takeover in " + new SimpleDateFormat("mm:ss").format(new Date(date1.getTime() - 4000));
 
         Thread.sleep(5000);
 
