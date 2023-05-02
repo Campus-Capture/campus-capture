@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class PlaceholderFirebaseInterface implements BackendInterface {
+public class PlaceholderBackend implements BackendInterface {
     @Override
     public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
         return CompletableFuture.completedFuture(true);
@@ -41,5 +41,20 @@ public class PlaceholderFirebaseInterface implements BackendInterface {
         Collections.sort(scores);
 
         return CompletableFuture.completedFuture(scores);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> initUserInDB(String uid, Section section){
+        return CompletableFuture.completedFuture(true);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setUserSection(String uid, Section section) {
+        return CompletableFuture.completedFuture(true);
+    }
+
+    @Override
+    public CompletableFuture<Section> getUserSection(String uid) {
+        return CompletableFuture.completedFuture(Section.IN);
     }
 }

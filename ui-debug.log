@@ -1,2 +1,15 @@
-Web / API server started at 127.0.0.1:4000
-Web / API server started at ::1:4000
+/home/raphael/.cache/firebase/emulators/ui-v1.11.5/server/server.js:569
+        re"use strict";
+          ^^^^^^^^^^^^
+
+SyntaxError: Unexpected string
+    at internalCompileFunction (node:internal/vm:73:18)
+    at wrapSafe (node:internal/modules/cjs/loader:1176:20)
+    at Module._compile (node:internal/modules/cjs/loader:1218:27)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1308:10)
+    at Module.load (node:internal/modules/cjs/loader:1117:32)
+    at Module._load (node:internal/modules/cjs/loader:958:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)
+    at node:internal/main/run_main_module:23:47
+
+Node.js v18.16.0
