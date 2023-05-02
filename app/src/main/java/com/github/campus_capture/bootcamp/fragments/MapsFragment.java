@@ -25,10 +25,13 @@ import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
 import com.github.campus_capture.bootcamp.storage.dao.ZoneDAO;
 import com.github.campus_capture.bootcamp.storage.entities.Zone;
 import com.github.campus_capture.bootcamp.utils.PermissionUtils;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
@@ -79,6 +82,7 @@ public class MapsFragment extends Fragment{
             }
         }
     };
+
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     /**
      * Flag indicating whether a requested permission has been denied
@@ -88,6 +92,10 @@ public class MapsFragment extends Fragment{
         ZoneDAO zoneDAO = zoneDB.zoneDAO();
 
         map = googleMap;
+        UiSettings mapUiSettings = map.getUiSettings();
+
+        mapUiSettings.setRotateGesturesEnabled(false);
+        mapUiSettings.setTiltGesturesEnabled(false);
 
         enableMyLocation();
 
