@@ -41,6 +41,7 @@ import com.github.campus_capture.bootcamp.firebase.BackendInterface;
 import com.github.campus_capture.bootcamp.map.SectionColors;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -114,6 +115,12 @@ public class MapColorTest {
         context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
     }
 
+    @After
+    public void close()
+    {
+        Intents.release();
+    }
+
     @Test
     public void testZoneColors() throws InterruptedException {
         MainActivity.backendInterface = mock;
@@ -132,7 +139,7 @@ public class MapColorTest {
         onView(ViewMatchers.withId(R.id.map)).check((view, noViewFoundException) -> {
             Bitmap bitmap = getBitmapFromView(view);
             String currentPath = "";
-            try(FileOutputStream out = new FileOutputStream("./app/build/outputs/img/bitmap.png"))
+            try(FileOutputStream out = new FileOutputStream("./app/build/outputs/bitmap.png"))
             {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             }
@@ -145,8 +152,6 @@ public class MapColorTest {
             // AR
             //assertEquals(bitmap.getColor(), Color.valueOf(SectionColors.getColor(AR, c)));
         });
-
-        Intents.release();
     }
 
     /**
