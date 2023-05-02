@@ -20,7 +20,9 @@ import androidx.fragment.app.FragmentTransaction;
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
+import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.TOS;
+import com.github.campus_capture.bootcamp.authentication.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -108,6 +110,9 @@ public class RegisterFragment extends Fragment {
     private void register(){
         //Create user in Firebase
         mAuth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(this::onCompleteRegisterListenerContent);
+
+        // TODO: Improve this section attribution (even if it seems currently good)
+        User.setSection(Section.IN);
 
         //Go to sign in fragment
         goToSignInFragment(emailText, passwordText);
