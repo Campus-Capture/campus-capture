@@ -96,7 +96,7 @@ public class SignInFragment extends Fragment {
      * Sets the OnClickListener on the "actually_no_button"
      */
     private void setActuallyNoButtonListener(){
-        actually_no_button.setOnClickListener(view -> goToRegisterFragment());
+        actually_no_button.setOnClickListener(view -> fromSignInGoToRegisterFragment());
     }
 
     /**
@@ -198,7 +198,7 @@ public class SignInFragment extends Fragment {
     /**
      * Goes to the register fragment
      */
-    private void goToRegisterFragment()
+    private void fromSignInGoToRegisterFragment()
     {
         FragmentManager signInFragmentManager = getParentFragmentManager();
         FragmentTransaction signInFragmentTransaction = signInFragmentManager.beginTransaction();
