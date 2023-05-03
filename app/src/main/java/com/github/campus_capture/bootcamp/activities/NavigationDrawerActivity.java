@@ -35,16 +35,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
 
-        // should not display the profile screen in spectator mod
-        AppBarConfiguration.Builder appBarBuilder;
-        if (User.getUid() == null) {
-            appBarBuilder = new AppBarConfiguration.Builder(
-                    R.id.nav_maps, R.id.nav_profile, R.id.nav_rules, R.id.nav_scoreboard);
-        } else {
-            appBarBuilder = new AppBarConfiguration.Builder(
-                    R.id.nav_maps, R.id.nav_profile, R.id.nav_rules, R.id.nav_scoreboard);
-        }
-        mAppBarConfiguration = appBarBuilder
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_maps, R.id.nav_rules, R.id.nav_scoreboard)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_navigation_drawer);

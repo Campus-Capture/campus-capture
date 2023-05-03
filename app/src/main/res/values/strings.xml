@@ -23,10 +23,6 @@
     <string name="menu_profile">Profile</string>
     <string name="login_welcome_text">Login</string>
     <string name="login_google_text">Already registered?</string>
-    <string name="profile_title">Profile</string>
-    <string name="profile_placeholder_name"><![CDATA[<name>]]></string>
-    <string name="profile_section">Section</string>
-    <string name="profile_apply_button">Apply</string>
     <string name="placeholder_description">Add description here</string>
     <string name="register_string">Register</string>
     <string name="login_email_string">Email</string>
@@ -62,6 +58,10 @@ Have fun and good luck!</string>
     <string name="login_password_forgotten_string">Password forgotten?</string>
     <string name="change_password_greeting_string">Enter your email address and you will receive a mail</string>
     <string name="send_mail_button_string">Send mail</string>
+    <string name="profile_subtitle_string">Please select the faculty you want to fight for!</string>
+    <string name="profile_title">Profile</string>
+    <string name="profile_section">Section</string>
+    <string name="profile_apply_button">Apply</string>
 
     <!-- for the section spinner-->
     <string-array name="profile_sections">
