@@ -18,8 +18,7 @@ import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.firebase.BackendInterface;
-import com.github.campus_capture.bootcamp.firebase.BackendInterface;
-import com.github.campus_capture.bootcamp.firebase.PlaceholderFirebaseInterface;
+import com.github.campus_capture.bootcamp.firebase.PlaceholderBackend;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 
 import org.hamcrest.Description;
@@ -37,7 +36,7 @@ import java.util.concurrent.CompletableFuture;
 @RunWith(AndroidJUnit4.class)
 public class ScoreboardFragmentTest {
 
-    final BackendInterface mock = new BackendInterface() {
+    final BackendInterface mock = new PlaceholderBackend() {
         @Override
         public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
             return CompletableFuture.completedFuture(false);

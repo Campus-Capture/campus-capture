@@ -68,7 +68,7 @@ public class ResetPasswordFragment extends Fragment {
         // Fragments are managed by transactions
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(email, ""));
+        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(email, "", false));
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit(); // Commit the transaction
     }
