@@ -23,6 +23,7 @@ import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
+import com.github.campus_capture.bootcamp.firebase.FirebaseBackend;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,16 +43,17 @@ public class SignInFragment extends Fragment {
     private String passwordText;
     private FirebaseAuth mAuth;
     private SharedPreferences mSharedPreferences;
-
+    private final boolean firstLogin;
     /**
      * Constructor
      * @param email Email already entered
      * @param password Password already entered
      */
-    public SignInFragment(String email, String password) {
+    public SignInFragment(String email, String password, boolean firstLogin) {
         // Required empty public constructor
         emailText = email;
         passwordText = password;
+        this.firstLogin = firstLogin;
     }
 
     @Override
@@ -140,20 +142,9 @@ public class SignInFragment extends Fragment {
             // Sign in success, set the signed-in user's information and go to main
             FirebaseUser user = mAuth.getCurrentUser();
 
-
-
             if(user.isEmailVerified()) {
 
-                //TODO: Remove that and put an equivalent in the login screen!!!
-                SharedPreferences.Editor editor = mSharedPreferences.edit();
-                editor.putString("Section", "IN");
-                User.setSection(Section.IN);
-
-                // Puts the UID in the disk and in the user
-                editor.putString("UID", User.getUid());
-                User.setUid(user.getUid());
-
-                editor.apply();
+                storeUserInfo(user.getUid());
 
                 // Goes to MainActivity
                 goToMainActivity();
@@ -220,5 +211,45 @@ public class SignInFragment extends Fragment {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit(); // Commit the transaction
     }
+
+    private void storeUserInfo(String uid) {
+        Section section;
+
+        if(firstLogin) {
+            // Fetch section info from User class
+            section = User.getSection();
+            storeUserOnDB(uid, section);
+        } else {
+            // Fetch section info from database
+            try {
+                section = (new FirebaseBackend()).getUserSection(uid).get();
+            } catch (Exception e) {
+                section = Section.NONE;
+            }
+
+            initUser(uid, section);
+        }
+
+        // in both cases, we store on disk
+        storeUserOnDisk(uid, section);
+    }
+
+    private void storeUserOnDB(String uid, Section section) {
+        FirebaseBackend backend = new FirebaseBackend();
+        backend.setUserSection(uid, section);
+    }
+
+    private void storeUserOnDisk(String uid, Section section) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString("UID", uid);
+        editor.putString("Section", section.toString());
+        editor.apply();
+    }
+
+    private void initUser(String uid, Section section) {
+        User.setUid(uid);
+        User.setSection(section);
+    }
+
 
 }

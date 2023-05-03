@@ -108,9 +108,6 @@ public class RegisterFragment extends Fragment {
     private void register(){
         //Create user in Fiebase
         mAuth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(this::onCompleteRegisterListenerContent);
-
-        //Go to sign in fragment
-        goToSignInFragment(emailText, passwordText);
     }
 
     /**
@@ -126,6 +123,9 @@ public class RegisterFragment extends Fragment {
             user.sendEmailVerification()
                     .addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Verification email sent", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> Toast.makeText(getActivity(), "Verification email not sent", Toast.LENGTH_SHORT).show());
+
+            //Go to sign in fragment
+            goToProfileFragment(emailText, passwordText);
 
         } else {
             // If register fails, display a message to the user.
@@ -187,7 +187,19 @@ public class RegisterFragment extends Fragment {
         // Fragments are managed by transactions
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(email, password));
+        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(email, password, false));
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit(); // Commit the transaction
+    }
+
+    /**
+     * Method which opens the profile fragment
+     */
+    private void goToProfileFragment(String email, String password){
+        // Fragments are managed by transactions
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new ProfileFragment(email, password));
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit(); // Commit the transaction
     }

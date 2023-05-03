@@ -43,8 +43,8 @@ public class AuthenticationActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and go to main if yes.
         FirebaseUser currentUser = auth.getCurrentUser();
         if(currentUser != null && currentUser.isEmailVerified()){
-            User.setSection(Section.valueOf(mSharedPreferences.getString("Section", "NONE")));
-            User.setUid(mSharedPreferences.getString("UID", null));
+            // Fetch section info from disk
+            readUserInfoFromDisk(currentUser.getUid());
             goToMainActivity();
         } else {
             goToRegisterFragment();
@@ -79,5 +79,12 @@ public class AuthenticationActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new RegisterFragment());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit(); // Commit the transaction
+    }
+
+    private void readUserInfoFromDisk(String uid) {
+
+        Section section = Section.valueOf(mSharedPreferences.getString("Section", "NONE"));
+        User.setUid(uid);
+        User.setSection(section);
     }
 }

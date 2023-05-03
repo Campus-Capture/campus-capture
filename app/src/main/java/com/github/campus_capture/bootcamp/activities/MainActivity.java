@@ -1,7 +1,6 @@
 package com.github.campus_capture.bootcamp.activities;
 
 import static com.github.campus_capture.bootcamp.fragments.Fragments.MAPS_FRAGMENT;
-import static com.github.campus_capture.bootcamp.fragments.Fragments.PROFILE_FRAGMENT;
 import static com.github.campus_capture.bootcamp.fragments.Fragments.RULES_FRAGMENT;
 import static com.github.campus_capture.bootcamp.fragments.Fragments.SCOREBOARD_FRAGMENT;
 
@@ -26,7 +25,6 @@ import com.github.campus_capture.bootcamp.firebase.BackendInterface;
 import com.github.campus_capture.bootcamp.firebase.FirebaseBackend;
 import com.github.campus_capture.bootcamp.fragments.Fragments;
 import com.github.campus_capture.bootcamp.fragments.MapsFragment;
-import com.github.campus_capture.bootcamp.fragments.ProfileFragment;
 import com.github.campus_capture.bootcamp.fragments.RulesFragment;
 import com.github.campus_capture.bootcamp.fragments.ScoreboardFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -88,10 +86,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentTransaction.replace(R.id.fragmentContainerViewMain, new MapsFragment(backendInterface));
                 break;
 
-            case PROFILE_FRAGMENT:
-                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new ProfileFragment());
-                break;
-
             case RULES_FRAGMENT:
                 fragmentTransaction.replace(R.id.fragmentContainerViewMain, new RulesFragment());
                 break;
@@ -145,9 +139,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             case R.id.nav_maps:
                 openFragment(MAPS_FRAGMENT);
-                break;
-            case R.id.nav_profile:
-                openFragment(PROFILE_FRAGMENT);
                 break;
             case R.id.nav_rules:
                 openFragment(RULES_FRAGMENT);
