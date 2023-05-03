@@ -3,7 +3,6 @@ package com.github.campus_capture.bootcamp.fragments;
 import static android.content.ContentValues.TAG;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,12 +14,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
-import com.github.campus_capture.bootcamp.activities.MainActivity;
+import com.github.campus_capture.bootcamp.activities.AuthenticationActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.google.android.gms.tasks.Task;
@@ -33,6 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
  */
 public class SignInFragment extends Fragment {
 
+    private final AuthenticationActivity currentActivity;
     private Button actually_no_button;
     private Button login_button;
     private Button password_forgotten_button;
@@ -48,8 +46,9 @@ public class SignInFragment extends Fragment {
      * @param email Email already entered
      * @param password Password already entered
      */
-    public SignInFragment(String email, String password) {
+    public SignInFragment(AuthenticationActivity currentActivity, String email, String password) {
         // Required empty public constructor
+        this.currentActivity = currentActivity;
         emailText = email;
         passwordText = password;
     }
@@ -58,7 +57,7 @@ public class SignInFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        mSharedPreferences = currentActivity.getPreferences(Context.MODE_PRIVATE);
     }
 
     @Override
@@ -96,7 +95,7 @@ public class SignInFragment extends Fragment {
      * Sets the OnClickListener on the "actually_no_button"
      */
     private void setActuallyNoButtonListener(){
-        actually_no_button.setOnClickListener(view -> fromSignInGoToRegisterFragment());
+        actually_no_button.setOnClickListener(view -> currentActivity.goToRegisterFragment());
     }
 
     /**
@@ -156,7 +155,7 @@ public class SignInFragment extends Fragment {
                 editor.apply();
 
                 // Goes to MainActivity
-                goToMainActivity();
+                currentActivity.goToMainActivity();
             } else {
                 Toast.makeText(getActivity(), "Please, verify your email.", Toast.LENGTH_SHORT).show();
             }
@@ -174,17 +173,9 @@ public class SignInFragment extends Fragment {
     private void setPasswordForgottenListener(){
         password_forgotten_button.setOnClickListener(view -> {
             Toast.makeText(getActivity(), "That is sad", Toast.LENGTH_SHORT).show();
-            goToChangePasswordFragment();
+            currentActivity.goToChangePasswordFragment(email.getText().toString());
         });
 
-    }
-
-    /**
-     * Directly goes to main
-     */
-    private void goToMainActivity(){
-        Intent mainIntent = new Intent(getActivity(), MainActivity.class);
-        startActivity(mainIntent);
     }
 
     /**
@@ -193,31 +184,6 @@ public class SignInFragment extends Fragment {
     private void setEditTextToString(){
         emailText = email.getText().toString();
         passwordText = password.getText().toString();
-    }
-
-    /**
-     * Goes to the register fragment
-     */
-    private void fromSignInGoToRegisterFragment()
-    {
-        FragmentManager signInFragmentManager = getParentFragmentManager();
-        FragmentTransaction signInFragmentTransaction = signInFragmentManager.beginTransaction();
-        signInFragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new RegisterFragment());
-        signInFragmentTransaction.addToBackStack(null);
-        signInFragmentTransaction.commit();
-    }
-
-    /**
-     * Method which opens the change password fragment
-     */
-    private void goToChangePasswordFragment()
-    {
-        // Fragments are managed by transactions
-        FragmentManager fragmentManager = getParentFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new ResetPasswordFragment(email.getText().toString()));
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit(); // Commit the transaction
     }
 
 }

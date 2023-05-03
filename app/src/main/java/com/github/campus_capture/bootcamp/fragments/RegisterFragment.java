@@ -14,11 +14,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.activities.AuthenticationActivity;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.TOS;
@@ -34,6 +33,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class RegisterFragment extends Fragment {
 
 
+    private final AuthenticationActivity currentActivity;
     private Button already_registered_button;
     private Button register_button;
     private Button spectator_button;
@@ -44,7 +44,8 @@ public class RegisterFragment extends Fragment {
     private FirebaseAuth mAuth;
 
 
-    public RegisterFragment() {
+    public RegisterFragment(AuthenticationActivity activity) {
+        currentActivity = activity;
         // Required empty public constructor
     }
 
@@ -114,8 +115,9 @@ public class RegisterFragment extends Fragment {
         // TODO: Improve this section attribution (even if it seems currently good)
         User.setSection(Section.IN);
 
+        currentActivity.goToRegisterFragment();
         //Go to sign in fragment
-        goToSignInFragment(emailText, passwordText);
+        currentActivity.goToSignInFragment(emailText, passwordText);
     }
 
     /**
@@ -162,7 +164,7 @@ public class RegisterFragment extends Fragment {
      * Sets the Listener on the "already_registered_button"
      */
     private void setAlreadyRegisteredButtonListener() {
-        already_registered_button.setOnClickListener(view -> goToSignInFragment("", ""));
+        already_registered_button.setOnClickListener(view -> currentActivity.goToSignInFragment( "", ""));
     }
 
     /**
@@ -183,17 +185,5 @@ public class RegisterFragment extends Fragment {
     private void setEditTextToString(){
         emailText = email.getText().toString();
         passwordText = password.getText().toString();
-    }
-
-    /**
-     * Method which opens the sign in fragment
-     */
-    private void goToSignInFragment(String email, String password){
-        // Fragments are managed by transactions
-        FragmentManager fragmentManager = getParentFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(email, password));
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit(); // Commit the transaction
     }
 }
