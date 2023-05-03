@@ -112,9 +112,6 @@ public class RegisterFragment extends Fragment {
         //Create user in Firebase
         mAuth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(this::onCompleteRegisterListenerContent);
 
-        // TODO: Improve this section attribution (even if it seems currently good)
-        User.setSection(Section.IN);
-
         currentActivity.goToRegisterFragment();
         //Go to sign in fragment
         currentActivity.goToSignInFragment(emailText, passwordText);

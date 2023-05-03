@@ -149,7 +149,7 @@ public class SignInFragment extends Fragment {
                 User.setSection(Section.IN);
 
                 // Puts the UID in the disk and in the user
-                editor.putString("UID", User.getUid());
+                editor.putString("UID", user.getUid());
                 User.setUid(user.getUid());
 
                 editor.apply();
