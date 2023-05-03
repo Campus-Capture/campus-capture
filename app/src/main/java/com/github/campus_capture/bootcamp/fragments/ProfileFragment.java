@@ -10,18 +10,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.Objects;
 
 public class ProfileFragment extends Fragment {
 
@@ -38,15 +34,26 @@ public class ProfileFragment extends Fragment {
         startActivity(shareIntent);
     };
 
-    private TextView selectedSection;
-    private Spinner sectionSpinner;
-    private TextView userName;
-    private Button confirmButton;
-    private Section section = Section.NONE;
-    private DatabaseReference userRef;
+    AdapterView.OnItemSelectedListener sectionSpinnerListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            section = Section.values()[(int) id];
+        }
 
-    public ProfileFragment() {
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
+
+    private Section section;
+    private final String emailText;
+    private final String passwordText;
+
+    public ProfileFragment(String emailText, String passwordText) {
         // Required empty public constructor
+        this.emailText = emailText;
+        this.passwordText = passwordText;
     }
 
     @Override
@@ -61,86 +68,24 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        // Retriev info of the user from database
-        AppContext context = AppContext.getAppContext();
-        FirebaseDatabase db = context.getFirebaseDB();
-
-        userRef = db.getReference(User.getUid());
-        DatabaseReference sectionRef = userRef.child("Section");
-
-        if (Objects.isNull(sectionRef.)) {
-            section = Section.NONE;
-        } else {
-            section = Section.valueOf(sectionRef.get());
-        }
-
+        //TODO: put this in the ... of the action bar
         Button invite_button = view.findViewById(R.id.invite_button);
         invite_button.setOnClickListener(invite_listener);
 
         // Retrieve the views from the layout
-        sectionSpinner = view.findViewById(R.id.profile_section_spinner);
-        userName = view.findViewById(R.id.profile_name);
-        confirmButton = view.findViewById(R.id.profile_confirm_button);
-        selectedSection = view.findViewById(R.id.profile_section_selected);
+        Spinner sectionSpinner = view.findViewById(R.id.profile_section_spinner);
+        Button confirmButton = view.findViewById(R.id.profile_confirm_button);
 
         // Display the name of the player
-        String name = userRef.child("email").toString();
-        userName.setText(name);
+//        String name = userRef.child("email").toString();
+//        userName.setText(name);
 
-        // Only show section selection if not already registered
-        if (section == Section.NONE) {
-            showSelection(true);
-            setSpinnerListener(sectionSpinner);
-            setConfirmButtonListener(confirmButton);
-        } else {
-            showSelection(false);
-        }
+        // Display and set listener
+//        showSelection(true);
+        sectionSpinner.setOnItemSelectedListener(sectionSpinnerListener);
+        confirmButton.setOnClickListener(this::displayAlert);
 
         return view;
-    }
-
-    private void setConfirmButtonListener(Button confirmButton) {
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                displayAlert(v);
-            }
-        });
-    }
-
-    /**
-     * Show the corresponding feature of the fragment based on if the selection as already
-     * been made before.
-     * @param b true to show selection, false to hide it.
-     */
-    private void showSelection(boolean b) {
-        if(b){
-            selectedSection.setVisibility(View.GONE);
-
-            sectionSpinner.setVisibility(View.VISIBLE);
-            confirmButton.setVisibility(View.VISIBLE);
-        } else {
-            selectedSection.setText(User.getSection().toString());
-
-            sectionSpinner.setVisibility(View.GONE);
-            confirmButton.setVisibility(View.GONE);
-
-            selectedSection.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void setSpinnerListener(Spinner spinner) {
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                section = Section.values()[(int) id];
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
     }
 
     private void displayAlert(View view) {
@@ -148,17 +93,23 @@ public class ProfileFragment extends Fragment {
                 .setTitle("Are you sure ?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        // Finaly we can set the section in database and in User
-                        userRef.child("Section").setValue(section.toString());
+                     public void onClick(DialogInterface dialog, int which) {
                         User.setSection(section);
-
-                        showSelection(false);
+                        goToSignInFragment();
                     }
                 })
                 .setNegativeButton("No", null)
                 .setMessage("Once selected, the selected section will be permanent ! Do you want to proceed ?")
                 .show();
     }
+
+    private void goToSignInFragment() {
+        // Fragments are managed by transactions
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(emailText, passwordText, true));
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit(); // Commit the transaction
+    }
+
 }
