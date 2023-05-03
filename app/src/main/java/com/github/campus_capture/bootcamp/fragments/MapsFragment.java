@@ -2,6 +2,7 @@ package com.github.campus_capture.bootcamp.fragments;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -94,10 +96,18 @@ public class MapsFragment extends Fragment{
         map = googleMap;
         UiSettings mapUiSettings = map.getUiSettings();
 
-        mapUiSettings.setRotateGesturesEnabled(false);
-        mapUiSettings.setTiltGesturesEnabled(false);
-
         enableMyLocation();
+
+        View compassButton = this.getView().findViewWithTag("GoogleMapCompass");
+        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) compassButton.getLayoutParams();
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP,0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+        int bottomMargin = Math.round((40 * this.getContext().getResources().getDisplayMetrics().density));
+        int leftMargin = Math.round((5 * this.getContext().getResources().getDisplayMetrics().density));
+        rlp.setMargins(leftMargin, 0, 0, bottomMargin);
 
         //Listener when user clicks on the "my position" button
         map.setOnMyLocationButtonClickListener(() -> {
