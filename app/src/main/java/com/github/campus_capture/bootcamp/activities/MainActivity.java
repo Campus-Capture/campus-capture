@@ -168,8 +168,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             case R.id.action_logout:
                 logOut();
+                break;
             case R.id.action_invite:
                 sendInvite();
+                break;
             default:
                 break;
         }
