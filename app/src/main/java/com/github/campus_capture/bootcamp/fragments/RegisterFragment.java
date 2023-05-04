@@ -157,7 +157,8 @@ public class RegisterFragment extends Fragment {
      * Sets the Listener on the "already_registered_button"
      */
     private void setAlreadyRegisteredButtonListener() {
-        already_registered_button.setOnClickListener(view -> goToSignInFragment("", ""));
+        setEditTextToString();
+        already_registered_button.setOnClickListener(view -> goToSignInFragment(emailText, passwordText));
     }
 
     /**
