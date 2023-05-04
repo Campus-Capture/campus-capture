@@ -107,12 +107,6 @@ public class MapVoteTest {
     @Rule
     public GrantPermissionRule permissionLocation = GrantPermissionRule.grant("android.permission.ACCESS_FINE_LOCATION");
 
-    @Before
-    public void init()
-    {
-
-    }
-
     @After
     public void close()
     {
