@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
@@ -102,6 +103,11 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
 
         map = googleMap;
         map.setOnCameraMoveListener(this);
+
+        map.setMaxZoomPreference(18);
+        map.setMinZoomPreference(16);
+
+        map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.no_poi_style));
 
         enableMyLocation();
 
@@ -290,7 +296,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
     public void onCameraMove() {
         CameraPosition cp = map.getCameraPosition();
         for (Marker label : zoneLabels){
-            label.setVisible(cp.zoom > 16);
+            label.setVisible(cp.zoom > 15);
         }
     }
 }
