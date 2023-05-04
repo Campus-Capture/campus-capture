@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -166,22 +167,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(item.getItemId())
         {
             case R.id.action_logout:
-
-                Intent log_in_intent = new Intent(this, AuthenticationActivity.class);
-                User.setName(null);
-                User.setUid(null);
-                User.setSection(null);
-
-                AppContext context = (AppContext) getApplicationContext();
-                context.getFirebaseAuth().signOut();
-
-                // Use this to pass the name of the origin activity
-                //log_in_intent.putExtra("message", "From: " + FirstActivity.class.getSimpleName());
-
-                startActivity(log_in_intent);
+                logOut();
+            case R.id.action_invite:
+                sendInvite();
             default:
                 break;
         }
         return true;
+    }
+
+    /**
+     * Set up and launch the activity to send an invitation
+     */
+    private void sendInvite() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        String message = getString(R.string.invitation_text) + getString(R.string.invitation_link);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, message);
+        sendIntent.setType("text/plain");
+
+        // Use a chooser for better visuals (the default send intent is ugly)
+        Intent shareIntent = Intent.createChooser(sendIntent, null);
+        startActivity(shareIntent);
+    }
+
+    /**
+     * Performs all the necessary operation needed on the logOut of the user
+     */
+    private void logOut() {
+        Intent log_in_intent = new Intent(this, AuthenticationActivity.class);
+        User.setName(null);
+        User.setUid(null);
+        User.setSection(null);
+
+        AppContext context = (AppContext) getApplicationContext();
+        context.getFirebaseAuth().signOut();
+
+        // Use this to pass the name of the origin activity
+        //log_in_intent.putExtra("message", "From: " + FirstActivity.class.getSimpleName());
+
+        startActivity(log_in_intent);
     }
 }

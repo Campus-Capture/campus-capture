@@ -15,6 +15,7 @@
     <string name="hello_placeholder">Hello</string>
     <string name="menu_rules">Rules</string>
     <string name="toolbar_action_logout">Log out</string>
+    <string name="toolbar_action_invite">Invite a friend!</string>
     <string name="scoreboard_title">Scores</string>
     <string name="menu_scoreboard">Scoreboard</string>
     <string name="permission_required_toast">Precise location is required</string>
