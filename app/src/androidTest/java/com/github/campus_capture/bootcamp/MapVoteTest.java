@@ -13,7 +13,6 @@ import static org.junit.Assert.assertEquals;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.room.Room;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.action.ViewActions;
@@ -21,17 +20,16 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.BackendInterface;
+import com.github.campus_capture.bootcamp.firebase.PlaceholderBackend;
 import com.github.campus_capture.bootcamp.fragments.MapsFragment;
 import com.github.campus_capture.bootcamp.map.MapScheduler;
 import com.github.campus_capture.bootcamp.map.ScheduleConstants;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
-import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.hamcrest.Matcher;
@@ -58,7 +56,7 @@ public class MapVoteTest {
     private static boolean hasAttacked;
     private static boolean voteReturnCode;
 
-    final BackendInterface mock = new BackendInterface() {
+    final BackendInterface mock = new PlaceholderBackend() {
 
         @Override
         public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
