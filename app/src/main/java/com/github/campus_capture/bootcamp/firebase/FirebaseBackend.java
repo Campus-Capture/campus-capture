@@ -36,7 +36,7 @@ public class FirebaseBackend implements BackendInterface{
 
             CompletableFuture<Boolean> futureResultVoteZone = new CompletableFuture<>();
 
-            if(had_already_voted == true){
+            if(had_already_voted){
                 futureResultVoteZone.complete(false);
             } else {
                 DatabaseReference zonesRef = db.getReference("Zones");
@@ -60,7 +60,7 @@ public class FirebaseBackend implements BackendInterface{
             //register that player has voted
             CompletableFuture<Boolean> futureResultUser = new CompletableFuture<>();
 
-            if(zone_vote_registered == false){
+            if(!zone_vote_registered){
                 futureResultUser.complete(false);
             } else {
                 DatabaseReference userRef = db.getReference("Users/"+ uid);
@@ -256,5 +256,15 @@ public class FirebaseBackend implements BackendInterface{
         });
 
         return futureResult;
+    }
+
+    @Override
+    public CompletableFuture<Map<Section, Integer>> getCurrentAttacks(String zoneName) {
+        // TODO placeholder until the back-end implementation is done
+        Map<Section, Integer> out = new HashMap<>();
+        out.put(Section.IN, 2);
+        out.put(Section.SC, 1);
+        out.put(Section.AR, 0); // This is just to make sure it doesn't get displayed
+        return CompletableFuture.completedFuture(out);
     }
 }
