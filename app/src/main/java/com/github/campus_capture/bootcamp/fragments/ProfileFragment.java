@@ -1,5 +1,6 @@
 package com.github.campus_capture.bootcamp.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,23 +17,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.activities.AuthenticationActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 
 public class ProfileFragment extends Fragment {
 
-    // The listener to open the sharing intent once the invite button is pressed
-    private final View.OnClickListener invite_listener = v -> {
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        String message = getString(R.string.invitation_text) + getString(R.string.invitation_link);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, message);
-        sendIntent.setType("text/plain");
 
-        // Use a chooser for better visuals (the default send intent is ugly)
-        Intent shareIntent = Intent.createChooser(sendIntent, null);
-        startActivity(shareIntent);
-    };
 
     AdapterView.OnItemSelectedListener sectionSpinnerListener = new AdapterView.OnItemSelectedListener() {
         @Override
@@ -46,14 +37,16 @@ public class ProfileFragment extends Fragment {
         }
     };
 
+    private final AuthenticationActivity currentActivity;
     private Section section;
     private final String emailText;
     private final String passwordText;
 
-    public ProfileFragment(String emailText, String passwordText) {
+    public ProfileFragment(AuthenticationActivity activity, String emailText, String passwordText) {
         // Required empty public constructor
         this.emailText = emailText;
         this.passwordText = passwordText;
+        currentActivity = activity;
     }
 
     @Override
@@ -67,10 +60,6 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        //TODO: put this in the ... of the action bar
-        Button invite_button = view.findViewById(R.id.invite_button);
-        invite_button.setOnClickListener(invite_listener);
 
         // Retrieve the views from the layout
         Spinner sectionSpinner = view.findViewById(R.id.profile_section_spinner);
@@ -95,21 +84,12 @@ public class ProfileFragment extends Fragment {
                     @Override
                      public void onClick(DialogInterface dialog, int which) {
                         User.setSection(section);
-                        goToSignInFragment();
+                        currentActivity.goToSignInFragment(emailText, passwordText, true);
                     }
                 })
                 .setNegativeButton("No", null)
                 .setMessage("Once selected, the selected section will be permanent ! Do you want to proceed ?")
                 .show();
-    }
-
-    private void goToSignInFragment() {
-        // Fragments are managed by transactions
-        FragmentManager fragmentManager = getParentFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(emailText, passwordText, true));
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit(); // Commit the transaction
     }
 
 }

@@ -13,6 +13,7 @@ import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
+import com.github.campus_capture.bootcamp.fragments.ProfileFragment;
 import com.github.campus_capture.bootcamp.fragments.RegisterFragment;
 import com.github.campus_capture.bootcamp.fragments.ResetPasswordFragment;
 import com.github.campus_capture.bootcamp.fragments.SignInFragment;
@@ -86,11 +87,11 @@ public class AuthenticationActivity extends AppCompatActivity {
     /**
      * Method which opens the sign in fragment
      */
-    public void goToSignInFragment(String email, String password){
+    public void goToSignInFragment(String email, String password, boolean firstLogin){
         // Fragments are managed by transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(this, email, password));
+        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(this, email, password, firstLogin));
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit(); // Commit the transaction
     }
@@ -104,6 +105,18 @@ public class AuthenticationActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new ResetPasswordFragment(this, email));
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit(); // Commit the transaction
+    }
+
+    /**
+     * Method which opens the profile fragment
+     */
+    public void goToProfileFragment(String email, String password){
+        // Fragments are managed by transactions
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new ProfileFragment(this, email, password));
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit(); // Commit the transaction
     }

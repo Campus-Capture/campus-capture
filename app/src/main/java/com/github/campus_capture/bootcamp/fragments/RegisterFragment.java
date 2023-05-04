@@ -130,7 +130,7 @@ public class RegisterFragment extends Fragment {
                     .addOnFailureListener(e -> Toast.makeText(getActivity(), "Verification email not sent", Toast.LENGTH_SHORT).show());
 
             //Go to sign in fragment
-            goToProfileFragment(emailText, passwordText);
+            currentActivity.goToProfileFragment(emailText, passwordText);
 
         } else {
             // If register fails, display a message to the user.
@@ -163,7 +163,7 @@ public class RegisterFragment extends Fragment {
      */
     private void setAlreadyRegisteredButtonListener() {
         setEditTextToString();
-        already_registered_button.setOnClickListener(view -> currentActivity.goToSignInFragment( "", ""));
+        already_registered_button.setOnClickListener(view -> currentActivity.goToSignInFragment( "", "", false));
     }
 
     /**
@@ -185,17 +185,5 @@ public class RegisterFragment extends Fragment {
     private void setEditTextToString(){
         emailText = email.getText().toString();
         passwordText = password.getText().toString();
-    }
-
-    /**
-     * Method which opens the profile fragment
-     */
-    private void goToProfileFragment(String email, String password){
-        // Fragments are managed by transactions
-        FragmentManager fragmentManager = getParentFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new ProfileFragment(email, password));
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit(); // Commit the transaction
     }
 }
