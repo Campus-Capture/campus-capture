@@ -84,6 +84,21 @@ public class MapVoteTest {
         public CompletableFuture<List<ScoreItem>> getScores() {
             return null;
         }
+
+        @Override
+        public CompletableFuture<Boolean> initUserInDB(String uid, Section section) {
+            return null;
+        }
+
+        @Override
+        public CompletableFuture<Boolean> setUserSection(String uid, Section section) {
+            return null;
+        }
+
+        @Override
+        public CompletableFuture<Section> getUserSection(String uid) {
+            return null;
+        }
     };
 
     @Rule
