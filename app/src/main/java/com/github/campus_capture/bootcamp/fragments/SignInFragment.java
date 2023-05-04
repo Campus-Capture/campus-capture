@@ -146,10 +146,9 @@ public class SignInFragment extends Fragment {
 
             if(user.isEmailVerified()) {
 
-                storeUserInfo(user.getUid());
-
-                // Goes to MainActivity
-                goToMainActivity();
+                // Store the users info and go to MainActivity
+                storeUserInfo(user.getUid())
+                        .thenRun(this::goToMainActivity);
             } else {
                 Toast.makeText(getActivity(), "Please, verify your email.", Toast.LENGTH_SHORT).show();
             }
@@ -214,7 +213,7 @@ public class SignInFragment extends Fragment {
         fragmentTransaction.commit(); // Commit the transaction
     }
 
-    private void storeUserInfo(String uid) {
+    private CompletableFuture<Void> storeUserInfo(String uid) {
         CompletableFuture<Section> futureSection = new CompletableFuture<>();
         if(firstLogin) {
             // Fetch section info from User class
@@ -231,13 +230,12 @@ public class SignInFragment extends Fragment {
         }
 
         // in both cases, we store on disk
-        futureSection.thenAccept(s -> storeUserOnDisk(uid, s));
-
+        return futureSection.thenAccept(s -> storeUserOnDisk(uid, s));
     }
 
     private void storeUserOnDB(String uid, Section section) {
         FirebaseBackend backend = new FirebaseBackend();
-        backend.setUserSection(uid, section);
+        backend.initUserInDB(uid, section);
     }
 
     private void storeUserOnDisk(String uid, Section section) {
