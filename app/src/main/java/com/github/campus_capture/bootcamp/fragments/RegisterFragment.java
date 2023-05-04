@@ -20,7 +20,9 @@ import androidx.fragment.app.FragmentTransaction;
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
+import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.TOS;
+import com.github.campus_capture.bootcamp.authentication.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -166,6 +168,7 @@ public class RegisterFragment extends Fragment {
      */
     private void setSpectatorButtonListener(){
         spectator_button.setOnClickListener(view -> {
+            User.setSection(Section.NONE);
 
             // Directly go to MainActivity
             Intent intent = new Intent(getActivity(), MainActivity.class);
