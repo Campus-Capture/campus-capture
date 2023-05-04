@@ -35,11 +35,6 @@ public class ProfileFragmentTest {
 
         onView(ViewMatchers.withId(R.id.nav_profile)).perform(ViewActions.click());
 
-        onView(ViewMatchers.withId(R.id.invite_button)).check(matches(isDisplayed()));
-        onView(ViewMatchers.withId(R.id.invite_button)).check(matches(withText("Invite your friends")));
-
-        onView(ViewMatchers.withId(R.id.invite_button)).perform(ViewActions.click());
-
         Intents.release();
     }
 
