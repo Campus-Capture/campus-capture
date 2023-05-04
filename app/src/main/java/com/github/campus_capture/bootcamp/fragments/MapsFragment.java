@@ -2,6 +2,7 @@ package com.github.campus_capture.bootcamp.fragments;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,10 +27,13 @@ import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
 import com.github.campus_capture.bootcamp.storage.dao.ZoneDAO;
 import com.github.campus_capture.bootcamp.storage.entities.Zone;
 import com.github.campus_capture.bootcamp.utils.PermissionUtils;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
@@ -79,6 +84,7 @@ public class MapsFragment extends Fragment{
             }
         }
     };
+
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     /**
      * Flag indicating whether a requested permission has been denied
@@ -88,8 +94,20 @@ public class MapsFragment extends Fragment{
         ZoneDAO zoneDAO = zoneDB.zoneDAO();
 
         map = googleMap;
+        UiSettings mapUiSettings = map.getUiSettings();
 
         enableMyLocation();
+
+        View compassButton = this.getView().findViewWithTag("GoogleMapCompass");
+        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) compassButton.getLayoutParams();
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP,0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+        int bottomMargin = Math.round((40 * this.getContext().getResources().getDisplayMetrics().density));
+        int leftMargin = Math.round((5 * this.getContext().getResources().getDisplayMetrics().density));
+        rlp.setMargins(leftMargin, 0, 0, bottomMargin);
 
         //Listener when user clicks on the "my position" button
         map.setOnMyLocationButtonClickListener(() -> {
