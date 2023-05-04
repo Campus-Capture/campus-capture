@@ -38,4 +38,14 @@ public interface BackendInterface {
      * @return an ordered list of score items
      */
     CompletableFuture<List<ScoreItem>> getScores();
+
+    /**
+     * Register the user with all initialized attributes in the DB
+     * @return boolean: success
+     */
+    CompletableFuture<Boolean> initUserInDB(String uid, Section section);
+
+    CompletableFuture<Boolean> setUserSection(String uid, Section section);
+
+    CompletableFuture<Section> getUserSection(String uid);
 }
