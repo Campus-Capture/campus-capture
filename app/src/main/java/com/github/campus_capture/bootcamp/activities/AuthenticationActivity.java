@@ -14,6 +14,8 @@ import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.fragments.RegisterFragment;
+import com.github.campus_capture.bootcamp.fragments.ResetPasswordFragment;
+import com.github.campus_capture.bootcamp.fragments.SignInFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -63,7 +65,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     /**
      * Directly go to main
      */
-    private void goToMainActivity(){
+    public void goToMainActivity(){
         Intent mainIntent = new Intent(AuthenticationActivity.this, MainActivity.class);
         startActivity(mainIntent);
     }
@@ -71,12 +73,37 @@ public class AuthenticationActivity extends AppCompatActivity {
     /**
      * Method which opens the register fragment
      */
-    private void goToRegisterFragment()
+    public void goToRegisterFragment()
     {
         // Fragments are managed by transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new RegisterFragment());
+        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new RegisterFragment(this));
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit(); // Commit the transaction
+    }
+
+    /**
+     * Method which opens the sign in fragment
+     */
+    public void goToSignInFragment(String email, String password){
+        // Fragments are managed by transactions
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(this, email, password));
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit(); // Commit the transaction
+    }
+
+    /**
+     * Method which opens the change password fragment
+     */
+    public void goToChangePasswordFragment(String email)
+    {
+        // Fragments are managed by transactions
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new ResetPasswordFragment(this, email));
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit(); // Commit the transaction
     }

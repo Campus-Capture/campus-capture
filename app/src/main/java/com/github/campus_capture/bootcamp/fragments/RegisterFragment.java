@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.activities.AuthenticationActivity;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.TOS;
@@ -34,6 +35,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class RegisterFragment extends Fragment {
 
 
+    private final AuthenticationActivity currentActivity;
     private Button already_registered_button;
     private Button register_button;
     private Button spectator_button;
@@ -44,7 +46,8 @@ public class RegisterFragment extends Fragment {
     private FirebaseAuth mAuth;
 
 
-    public RegisterFragment() {
+    public RegisterFragment(AuthenticationActivity activity) {
+        currentActivity = activity;
         // Required empty public constructor
     }
 
@@ -108,7 +111,7 @@ public class RegisterFragment extends Fragment {
      * Launch the register protocol: create a new user and go to sign in fragment.
      */
     private void register(){
-        //Create user in Fiebase
+        //Create user in Firebase
         mAuth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(this::onCompleteRegisterListenerContent);
     }
 
@@ -160,7 +163,7 @@ public class RegisterFragment extends Fragment {
      */
     private void setAlreadyRegisteredButtonListener() {
         setEditTextToString();
-        already_registered_button.setOnClickListener(view -> goToSignInFragment(emailText, passwordText));
+        already_registered_button.setOnClickListener(view -> currentActivity.goToSignInFragment( "", ""));
     }
 
     /**
@@ -182,18 +185,6 @@ public class RegisterFragment extends Fragment {
     private void setEditTextToString(){
         emailText = email.getText().toString();
         passwordText = password.getText().toString();
-    }
-
-    /**
-     * Method which opens the sign in fragment
-     */
-    private void goToSignInFragment(String email, String password){
-        // Fragments are managed by transactions
-        FragmentManager fragmentManager = getParentFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(email, password, false));
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit(); // Commit the transaction
     }
 
     /**

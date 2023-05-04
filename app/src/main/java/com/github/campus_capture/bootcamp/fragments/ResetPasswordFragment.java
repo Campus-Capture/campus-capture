@@ -9,24 +9,22 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.activities.AuthenticationActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ResetPasswordFragment extends Fragment {
 
-    private String iniEmailText;
+    private final AuthenticationActivity currentActivity;
     private EditText email;
-    private String emailText = "";
-    private Button sendMailButton;
+    private String emailText;
     private final FirebaseAuth mAuth;
 
-    public ResetPasswordFragment(String email) {
-        iniEmailText = email;
-
+    public ResetPasswordFragment(AuthenticationActivity activity, String email) {
+        emailText = email;
+        currentActivity = activity;
         mAuth = AppContext.getAppContext().getFirebaseAuth();
     }
 
@@ -43,9 +41,9 @@ public class ResetPasswordFragment extends Fragment {
 
         email = view.findViewById(R.id.change_password_email_address);
 
-        sendMailButton = view.findViewById(R.id.send_mail_button);
+        Button sendMailButton = view.findViewById(R.id.send_mail_button);
 
-        email.setText(iniEmailText);
+        email.setText(emailText);
 
         sendMailButton.setOnClickListener(view12 -> sendMailButtonListener());
 
@@ -58,18 +56,6 @@ public class ResetPasswordFragment extends Fragment {
 
         Toast.makeText(getActivity(), "You can change your password with the link you receive at "+emailText+".", Toast.LENGTH_LONG).show();
 
-        goToSignInFragment(emailText);
-    }
-
-    /**
-     * Method which opens the sign in fragment
-     */
-    private void goToSignInFragment(String email){
-        // Fragments are managed by transactions
-        FragmentManager fragmentManager = getParentFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(email, "", false));
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit(); // Commit the transaction
+        currentActivity.goToSignInFragment(emailText, "");
     }
 }
