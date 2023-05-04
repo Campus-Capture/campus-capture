@@ -22,9 +22,6 @@
             android:value="@string/MAP_API_KEY" />
 
         <activity
-            android:name=".activities.LoginActivity"
-            android:exported="false"/>
-        <activity
             android:name=".activities.NavigationDrawerActivity"
             android:exported="false"
             android:label="@string/title_activity_navigation_drawer"

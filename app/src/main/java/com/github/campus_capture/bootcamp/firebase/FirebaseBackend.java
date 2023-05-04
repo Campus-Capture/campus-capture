@@ -6,18 +6,15 @@ import androidx.annotation.NonNull;
 
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.authentication.Section;
-import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,8 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 public class FirebaseBackend implements BackendInterface{
@@ -172,6 +167,90 @@ public class FirebaseBackend implements BackendInterface{
                     Collections.sort(scores);
 
                     futureResult.complete(scores);
+                }
+            }
+        });
+
+        return futureResult;
+    }
+
+    @Override
+    public CompletableFuture<Boolean> initUserInDB(String uid, Section section){
+        AppContext context = AppContext.getAppContext();
+        FirebaseDatabase db = context.getFirebaseDB();
+
+        DatabaseReference userRef = db.getReference("Users/"+ uid);
+
+        Function<Boolean, CompletionStage<Boolean>> init_has_voted = (set_section_success) -> {
+
+            CompletableFuture<Boolean> futureRegisterUserResult = new CompletableFuture<>();
+
+            if(set_section_success) {
+                userRef.child("has_voted").setValue(false).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                futureRegisterUserResult.complete(true);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                futureRegisterUserResult.completeExceptionally(new Throwable("Could not init user has_voted"));
+                            }
+                        });
+            }
+            else{
+                futureRegisterUserResult.complete(false);
+            }
+
+            return futureRegisterUserResult;
+
+        };
+
+        return setUserSection(uid, section).thenCompose(init_has_voted);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setUserSection(String uid, Section section){
+
+        AppContext context = AppContext.getAppContext();
+        FirebaseDatabase db = context.getFirebaseDB();
+
+        DatabaseReference userRef = db.getReference("Users/"+ uid);
+        CompletableFuture<Boolean> futureSetUserSectionResult = new CompletableFuture<>();
+        userRef.child("section").setValue(section.toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        futureSetUserSectionResult.complete(true);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        futureSetUserSectionResult.completeExceptionally(new Throwable("Could not set user section"));
+                    }
+                });
+
+        return futureSetUserSectionResult;
+    }
+
+    @Override
+    public CompletableFuture<Section> getUserSection(String uid) {
+        CompletableFuture<Section> futureResult = new CompletableFuture<>();
+
+        AppContext context = AppContext.getAppContext();
+        FirebaseDatabase db = context.getFirebaseDB();
+
+        DatabaseReference userRef = db.getReference("Users/"+ uid);
+
+        userRef.child("section").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
+                }
+                else {
+                    futureResult.complete( Section.valueOf(String.valueOf(task.getResult().getValue())) );
                 }
             }
         });
