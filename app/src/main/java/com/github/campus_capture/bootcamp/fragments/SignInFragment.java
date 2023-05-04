@@ -29,6 +29,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -213,25 +215,24 @@ public class SignInFragment extends Fragment {
     }
 
     private void storeUserInfo(String uid) {
-        Section section;
-
+        CompletableFuture<Section> futureSection = new CompletableFuture<>();
         if(firstLogin) {
             // Fetch section info from User class
-            section = User.getSection();
+            Section section = User.getSection();
             storeUserOnDB(uid, section);
+            futureSection.complete(section);
         } else {
             // Fetch section info from database
-            try {
-                section = (new FirebaseBackend()).getUserSection(uid).get();
-            } catch (Exception e) {
-                section = Section.NONE;
-            }
-
-            initUser(uid, section);
+            futureSection = (new FirebaseBackend()).getUserSection(uid)
+                                                   .thenApply(s -> {
+                                                       initUser(uid, s);
+                                                       return s;
+                                                   });
         }
 
         // in both cases, we store on disk
-        storeUserOnDisk(uid, section);
+        futureSection.thenAccept(s -> storeUserOnDisk(uid, s));
+
     }
 
     private void storeUserOnDB(String uid, Section section) {
