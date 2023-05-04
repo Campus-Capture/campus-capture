@@ -35,7 +35,7 @@ import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
-    public static BackendInterface backendInterface;
+    public static BackendInterface backendInterface = new FirebaseBackend();
 
     /**
      * Required empty constructor, which will set the placeholder as the back-end
@@ -51,15 +51,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.menu_icon);
         setSupportActionBar(toolbar);
-
-        if(backendInterface == null)
-        {
-            backendInterface = new FirebaseBackend();
-        }
-        else
-        {
-            Log.i("MainActivity", "Back-end overridden");
-        }
 
         // Set the behavior of the navigation icon
         drawer = findViewById(R.id.drawer_layout);

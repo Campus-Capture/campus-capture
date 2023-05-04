@@ -72,7 +72,7 @@ public class MapsFragment extends Fragment{
                             }
                         }).exceptionally( e -> {
                             // TODO handle errors better ?
-                            Log.e("MapFragment", "Error ocurred when voting");
+                            Log.e("MapFragment", "Error occurred when voting");
                             return null;
                         });
             }
@@ -266,8 +266,17 @@ public class MapsFragment extends Fragment{
         }
     }
 
+    /**
+     * Method to refresh the colors of the zones of the map according to their owners
+     * @param zoneState The map from zone name to section
+     */
     public void refreshZoneColors(Map<String, Section> zoneState)
     {
+        if(zoneState == null)
+        {
+            Log.e("MapsFragment", "Error: empty zone state returned");
+            return;
+        }
         for(String name : zoneState.keySet())
         {
             Section s = zoneState.get(name);
@@ -283,16 +292,6 @@ public class MapsFragment extends Fragment{
             }
             p.setFillColor(SectionColors.getColor(s, getContext()));
         }
-    }
-
-    public int getColorOfPolygon(String poly)
-    {
-        Polygon p = polygonMap.get(poly);
-        if(p == null)
-        {
-            return -1;
-        }
-        return p.getFillColor();
     }
 
 }

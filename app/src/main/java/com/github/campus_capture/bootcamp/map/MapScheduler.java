@@ -98,7 +98,7 @@ public class MapScheduler {
                         upper.refreshZoneColors(zoneState);
                         Log.i("MapScheduler", "Refreshed the zone owners");
                     }).exceptionally( e -> {
-                        Log.e("MapScheduler", "Error ocurred when retrieving the zone owners:\n\t" + e.getMessage());
+                        Log.e("MapScheduler", "Error ocurred when retrieving the zone owners:\t" + e.getMessage());
                         return null;
                     });
         }

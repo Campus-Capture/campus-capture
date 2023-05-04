@@ -59,7 +59,6 @@ public class MapVoteTest {
     LatLng noLoc = new LatLng(0, 0);
 
     private static boolean hasAttacked;
-    private static boolean voteReturnCode;
 
     private final BackendInterface mock = new BackendInterface() {
 
@@ -284,7 +283,6 @@ public class MapVoteTest {
         MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
-        voteReturnCode = true;
 
         Intents.init();
 
@@ -352,7 +350,6 @@ public class MapVoteTest {
         MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
-        voteReturnCode = true;
 
         Intents.init();
 
@@ -622,7 +619,6 @@ public class MapVoteTest {
         MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
-        voteReturnCode = true;
 
         Intents.init();
 
@@ -674,7 +670,6 @@ public class MapVoteTest {
         MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
-        voteReturnCode = true;
 
         Intents.init();
 
@@ -707,7 +702,6 @@ public class MapVoteTest {
         MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
-        voteReturnCode = false;
 
         Intents.init();
 
