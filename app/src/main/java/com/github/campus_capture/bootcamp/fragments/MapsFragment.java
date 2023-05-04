@@ -132,12 +132,15 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
         // scheduler.startAll();
     };
 
-    //TODO Documentation
+    /**
+     * Creates a custom icon with a text
+     * @param text the text to be inserted
+     */
     public BitmapDescriptor createPureTextIcon(String text) {
 
         Paint textPaint = new Paint();
 
-        textPaint.setTextSize(30f); //TODO less arbitrary value (dynamic)
+        textPaint.setTextSize(30f); //TODO less arbitrary value (dynamic). To do in another issue
 
         float textWidth = textPaint.measureText(text);
         float textHeight = textPaint.getTextSize();
