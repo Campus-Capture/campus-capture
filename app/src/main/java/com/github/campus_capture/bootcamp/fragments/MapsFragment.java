@@ -34,6 +34,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -42,17 +43,20 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.PolyUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import kotlinx.coroutines.internal.Symbol;
 
-public class MapsFragment extends Fragment{
+public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveListener {
 
     private GoogleMap map;
     private ZoneDatabase zoneDB;
     private BackendInterface backendInterface;
     private MapScheduler scheduler;
+
+    private List<Marker> zoneLabels;
     public static boolean locationOverride = false;
     public static LatLng fixedLocation = null;
     private final View.OnClickListener attackListener = v ->
@@ -97,20 +101,23 @@ public class MapsFragment extends Fragment{
         ZoneDAO zoneDAO = zoneDB.zoneDAO();
 
         map = googleMap;
+        map.setOnCameraMoveListener(this);
 
         enableMyLocation();
 
         // Move the camera to the campus
         LatLng epfl = new LatLng(46.520536, 6.568318);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(epfl, 15));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(epfl, 17));
+
+        zoneLabels = new ArrayList<>();
 
         for (Zone zone : zoneDAO.getAll()){
             Polygon poly = map.addPolygon(new PolygonOptions().addAll(zone.getVertices()));
             poly.setStrokeWidth(0);
             poly.setFillColor(Color.argb(25, 255, 0, 0));
 
-            map.addMarker(new MarkerOptions().position(zone.getCenter())
-                    .icon(createPureTextIcon(zone.getName())));
+            zoneLabels.add(map.addMarker(new MarkerOptions().position(zone.getCenter())
+                    .icon(createPureTextIcon(zone.getName()))));
         }
 
         map.setOnPolygonClickListener(polygon ->{
@@ -124,7 +131,7 @@ public class MapsFragment extends Fragment{
 
         Paint textPaint = new Paint();
 
-        textPaint.setTextSize(20f); //TODO less arbitrary value (dynamic)
+        textPaint.setTextSize(30f); //TODO less arbitrary value (dynamic)
 
         float textWidth = textPaint.measureText(text);
         float textHeight = textPaint.getTextSize();
@@ -135,9 +142,6 @@ public class MapsFragment extends Fragment{
         Canvas canvas = new Canvas(image);
 
         canvas.translate(0, height);
-
-        // For development only: //TODO REMOVE
-        //canvas.drawColor(Color.LTGRAY);
 
         canvas.drawText(text, 0, 0, textPaint);
         return BitmapDescriptorFactory.fromBitmap(image);
@@ -282,4 +286,11 @@ public class MapsFragment extends Fragment{
         }
     }
 
+    @Override
+    public void onCameraMove() {
+        CameraPosition cp = map.getCameraPosition();
+        for (Marker label : zoneLabels){
+            label.setVisible(cp.zoom > 16);
+        }
+    }
 }
