@@ -29,6 +29,7 @@ import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.BackendInterface;
 import com.github.campus_capture.bootcamp.map.LabelInfoWindowAdapter;
 import com.github.campus_capture.bootcamp.map.MapScheduler;
+import com.github.campus_capture.bootcamp.map.SectionColors;
 import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
 import com.github.campus_capture.bootcamp.storage.dao.ZoneDAO;
 import com.github.campus_capture.bootcamp.storage.entities.Zone;
@@ -43,6 +44,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -92,7 +94,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
                             }
                         }).exceptionally( e -> {
                             // TODO handle errors better ?
-                            Log.e("MapFragment", "Error ocurred when voting");
+                            Log.e("MapFragment", "Error occurred when voting");
                             return null;
                         });
             }
@@ -108,6 +110,8 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
      * Flag indicating whether a requested permission has been denied
      */
     private boolean permissionDenied = false;
+
+    private Map<String, Polygon> polygonMap;
     @SuppressLint("PotentialBehaviorOverride")
     private final OnMapReadyCallback callback = googleMap -> {
         ZoneDAO zoneDAO = zoneDB.zoneDAO();
@@ -135,7 +139,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
         // Move the camera to the campus
         LatLng epfl = new LatLng(46.520536, 6.568318);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(epfl, 17));
-
+        polygonMap = new HashMap<>();
         map.setInfoWindowAdapter(new LabelInfoWindowAdapter(getContext()));
 
         zoneLabels = new HashMap<>();
@@ -143,7 +147,8 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
         for (Zone zone : zoneDAO.getAll()){
             Polygon poly = map.addPolygon(new PolygonOptions().addAll(zone.getVertices()));
             poly.setStrokeWidth(0);
-            poly.setFillColor(Color.argb(25, 255, 0, 0));
+            poly.setFillColor(getContext().getColor(R.color.none_color));
+            polygonMap.put(zone.getName(), poly);
             poly.setClickable(true);
 
             zoneLabels.put(
@@ -368,4 +373,32 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
             label.setVisible(cp.zoom > 15);
         }
     }
+    /**
+     * Method to refresh the colors of the zones of the map according to their owners
+     * @param zoneState The map from zone name to section
+     */
+    public void refreshZoneColors(Map<String, Section> zoneState)
+    {
+        if(zoneState == null)
+        {
+            Log.e("MapsFragment", "Error: empty zone state returned");
+            return;
+        }
+        for(String name : zoneState.keySet())
+        {
+            Section s = zoneState.get(name);
+            if(s == null)
+            {
+                s = Section.NONE;
+            }
+            Polygon p = polygonMap.get(name);
+            if(p == null)
+            {
+                Log.e("MapsFragment", "Error: zone with name " + name + " not found in map");
+                continue;
+            }
+            p.setFillColor(SectionColors.getColor(s, getContext()));
+        }
+    }
+
 }
