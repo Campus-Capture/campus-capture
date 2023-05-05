@@ -29,6 +29,7 @@ import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.BackendInterface;
+import com.github.campus_capture.bootcamp.firebase.PlaceholderBackend;
 import com.github.campus_capture.bootcamp.fragments.MapsFragment;
 import com.github.campus_capture.bootcamp.map.MapScheduler;
 import com.github.campus_capture.bootcamp.map.ScheduleConstants;
@@ -60,7 +61,7 @@ public class MapVoteTest {
 
     private static boolean hasAttacked;
 
-    private final BackendInterface mock = new BackendInterface() {
+    private final BackendInterface mock = new PlaceholderBackend() {
 
         @Override
         public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
@@ -78,26 +79,6 @@ public class MapVoteTest {
             Map<String, Section> out = new HashMap<>();
             out.put("BC", Section.IN);
             return CompletableFuture.completedFuture(out);
-        }
-
-        @Override
-        public CompletableFuture<List<ScoreItem>> getScores() {
-            return null;
-        }
-
-        @Override
-        public CompletableFuture<Boolean> initUserInDB(String uid, Section section) {
-            return null;
-        }
-
-        @Override
-        public CompletableFuture<Boolean> setUserSection(String uid, Section section) {
-            return null;
-        }
-
-        @Override
-        public CompletableFuture<Section> getUserSection(String uid) {
-            return null;
         }
     };
 

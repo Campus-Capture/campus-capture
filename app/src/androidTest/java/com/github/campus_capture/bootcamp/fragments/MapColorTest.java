@@ -30,6 +30,7 @@ import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.firebase.BackendInterface;
+import com.github.campus_capture.bootcamp.firebase.PlaceholderBackend;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 
 import org.junit.After;
@@ -45,12 +46,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class MapColorTest {
 
-    private final BackendInterface mockColor = new BackendInterface() {
-        @Override
-        public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
-            return null;
-        }
-
+    private final BackendInterface mockColor = new PlaceholderBackend() {
         @Override
         public CompletableFuture<Boolean> hasAttacked(String uid) {
             return CompletableFuture.completedFuture(false);
@@ -74,26 +70,6 @@ public class MapColorTest {
             out.put("SV AI", MT);
             out.put("Agora", NONE);
             return CompletableFuture.completedFuture(out);
-        }
-
-        @Override
-        public CompletableFuture<List<ScoreItem>> getScores() {
-            return null;
-        }
-
-        @Override
-        public CompletableFuture<Boolean> initUserInDB(String uid, Section section) {
-            return null;
-        }
-
-        @Override
-        public CompletableFuture<Boolean> setUserSection(String uid, Section section) {
-            return null;
-        }
-
-        @Override
-        public CompletableFuture<Section> getUserSection(String uid) {
-            return null;
         }
     };
 
