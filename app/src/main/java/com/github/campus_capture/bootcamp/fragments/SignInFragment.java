@@ -20,10 +20,13 @@ import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.activities.AuthenticationActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
+import com.github.campus_capture.bootcamp.firebase.FirebaseBackend;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,17 +43,18 @@ public class SignInFragment extends Fragment {
     private String passwordText;
     private FirebaseAuth mAuth;
     private SharedPreferences mSharedPreferences;
-
+    private final boolean firstLogin;
     /**
      * Constructor
      * @param email Email already entered
      * @param password Password already entered
      */
-    public SignInFragment(AuthenticationActivity currentActivity, String email, String password) {
+    public SignInFragment(AuthenticationActivity currentActivity, String email, String password, boolean firstLogin) {
         // Required empty public constructor
         this.currentActivity = currentActivity;
         emailText = email;
         passwordText = password;
+        this.firstLogin = firstLogin;
     }
 
     @Override
@@ -139,23 +143,11 @@ public class SignInFragment extends Fragment {
             // Sign in success, set the signed-in user's information and go to main
             FirebaseUser user = mAuth.getCurrentUser();
 
-
-
             if(user.isEmailVerified()) {
 
-                //TODO: Remove that and put an equivalent in the login screen!!!
-                SharedPreferences.Editor editor = mSharedPreferences.edit();
-                editor.putString("Section", "IN");
-                User.setSection(Section.IN);
-
-                // Puts the UID in the disk and in the user
-                editor.putString("UID", user.getUid());
-                User.setUid(user.getUid());
-
-                editor.apply();
-
-                // Goes to MainActivity
-                currentActivity.goToMainActivity();
+                // Store the users info and go to MainActivity
+                storeUserInfo(user.getUid())
+                        .thenRun(currentActivity::goToMainActivity);
             } else {
                 Toast.makeText(getActivity(), "Please, verify your email.", Toast.LENGTH_SHORT).show();
             }
@@ -185,5 +177,43 @@ public class SignInFragment extends Fragment {
         emailText = email.getText().toString();
         passwordText = password.getText().toString();
     }
+
+    private CompletableFuture<Void> storeUserInfo(String uid) {
+        CompletableFuture<Section> futureSection = new CompletableFuture<>();
+        if(firstLogin) {
+            // Fetch section info from User class
+            Section section = User.getSection();
+            storeUserOnDB(uid, section);
+            futureSection.complete(section);
+        } else {
+            // Fetch section info from database
+            futureSection = (new FirebaseBackend()).getUserSection(uid)
+                                                   .thenApply(s -> {
+                                                       initUser(uid, s);
+                                                       return s;
+                                                   });
+        }
+
+        // in both cases, we store on disk
+        return futureSection.thenAccept(s -> storeUserOnDisk(uid, s));
+    }
+
+    private void storeUserOnDB(String uid, Section section) {
+        FirebaseBackend backend = new FirebaseBackend();
+        backend.initUserInDB(uid, section);
+    }
+
+    private void storeUserOnDisk(String uid, Section section) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString("UID", uid);
+        editor.putString("Section", section.toString());
+        editor.apply();
+    }
+
+    private void initUser(String uid, Section section) {
+        User.setUid(uid);
+        User.setSection(section);
+    }
+
 
 }

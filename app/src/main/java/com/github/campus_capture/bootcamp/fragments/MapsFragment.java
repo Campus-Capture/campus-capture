@@ -2,7 +2,11 @@ package com.github.campus_capture.bootcamp.fragments;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,25 +37,35 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.PolyUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MapsFragment extends Fragment{
+import kotlinx.coroutines.internal.Symbol;
+
+public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveListener {
 
     private GoogleMap map;
     private ZoneDatabase zoneDB;
     private BackendInterface backendInterface;
     private MapScheduler scheduler;
+
+    private List<Marker> zoneLabels;
     public static boolean locationOverride = false;
     public static LatLng fixedLocation = null;
     private final View.OnClickListener attackListener = v ->
@@ -100,10 +114,12 @@ public class MapsFragment extends Fragment{
         ZoneDAO zoneDAO = zoneDB.zoneDAO();
 
         map = googleMap;
+        map.setOnCameraMoveListener(this);
         UiSettings mapUiSettings = map.getUiSettings();
 
-        enableMyLocation();
-
+        map.setMaxZoomPreference(18);
+        map.setMinZoomPreference(16);
+        map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.no_poi_style));
         View compassButton = this.getView().findViewWithTag("GoogleMapCompass");
         RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) compassButton.getLayoutParams();
         rlp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -115,22 +131,13 @@ public class MapsFragment extends Fragment{
         int leftMargin = Math.round((5 * this.getContext().getResources().getDisplayMetrics().density));
         rlp.setMargins(leftMargin, 0, 0, bottomMargin);
 
-        //Listener when user clicks on the "my position" button
-        map.setOnMyLocationButtonClickListener(() -> {
-            Toast.makeText(getActivity(), "MyLocation button clicked", Toast.LENGTH_SHORT).show();
-            return false;
-        });
+        enableMyLocation();
 
-        //Listener when user clicks on the "my position" blue dot
-        map.setOnMyLocationClickListener(location -> Toast.makeText(getActivity(), "Current location:\n" + location, Toast.LENGTH_LONG).show());
-
-        // Add a marker at Satellite and move the camera
+        // Move the camera to the campus
         LatLng epfl = new LatLng(46.520536, 6.568318);
-        LatLng satellite = new LatLng(46.520544, 6.567825);
-        map.addMarker(new MarkerOptions().position(satellite).title("Satellite").snippet("5 ⭐"));
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(epfl, 15));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(epfl, 17));
 
-        //map.setOnMarkerClickListener(marker -> false);
+        zoneLabels = new ArrayList<>();
         polygonMap = new HashMap<>();
 
         for (Zone zone : zoneDAO.getAll()){
@@ -138,6 +145,9 @@ public class MapsFragment extends Fragment{
             poly.setStrokeWidth(0);
             poly.setFillColor(getContext().getColor(R.color.none_color));
             polygonMap.put(zone.getName(), poly);
+
+            zoneLabels.add(map.addMarker(new MarkerOptions().position(zone.getCenter())
+                    .icon(createPureTextIcon(zone.getName()))));
         }
 
         map.setOnPolygonClickListener(polygon ->{
@@ -145,6 +155,30 @@ public class MapsFragment extends Fragment{
 
         // scheduler.startAll();
     };
+
+    /**
+     * Creates a custom icon with a text
+     * @param text the text to be inserted
+     */
+    public BitmapDescriptor createPureTextIcon(String text) {
+
+        Paint textPaint = new Paint();
+
+        textPaint.setTextSize(30f); //TODO less arbitrary value (dynamic). To do in another issue
+
+        float textWidth = textPaint.measureText(text);
+        float textHeight = textPaint.getTextSize();
+        int width = (int) (textWidth);
+        int height = (int) (textHeight);
+
+        Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(image);
+
+        canvas.translate(0, height);
+
+        canvas.drawText(text, 0, 0, textPaint);
+        return BitmapDescriptorFactory.fromBitmap(image);
+    }
 
     /**
      * Overloaded constructor to allow the fragment to use a specific back-end
@@ -196,6 +230,7 @@ public class MapsFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
@@ -284,6 +319,13 @@ public class MapsFragment extends Fragment{
         }
     }
 
+    @Override
+    public void onCameraMove() {
+        CameraPosition cp = map.getCameraPosition();
+        for (Marker label : zoneLabels){
+            label.setVisible(cp.zoom > 15);
+        }
+    }
     /**
      * Method to refresh the colors of the zones of the map according to their owners
      * @param zoneState The map from zone name to section
