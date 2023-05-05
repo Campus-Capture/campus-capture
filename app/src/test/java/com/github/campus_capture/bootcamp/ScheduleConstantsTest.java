@@ -21,7 +21,7 @@ public class ScheduleConstantsTest {
         assertEquals(MILLIS_PER_HOUR, 60 * 60 * 1000);
         assertEquals(ZONE_REFRESH_RATE, 10 * 1000);
         assertEquals(OWNER_REFRESH_DELAY, 5 * 1000);
-        assertEquals(TAKEOVER_DURATION, 15 * 60 * 1000);
+        assertEquals(TAKEOVER_DURATION, 30 * 60 * 1000);
         assertEquals(NO_POSITION_RETRY_DELAY, 1000);
     }
 
