@@ -1,6 +1,7 @@
 package com.github.campus_capture.bootcamp.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -23,8 +24,10 @@ import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
 import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.BackendInterface;
+import com.github.campus_capture.bootcamp.map.LabelInfoWindowAdapter;
 import com.github.campus_capture.bootcamp.map.MapScheduler;
 import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
 import com.github.campus_capture.bootcamp.storage.dao.ZoneDAO;
@@ -49,19 +52,21 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import kotlinx.coroutines.internal.Symbol;
 
 public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveListener {
 
+    private final int CAMERA_MOVE_DELAY = 350;
     private GoogleMap map;
     private ZoneDatabase zoneDB;
     private BackendInterface backendInterface;
     private MapScheduler scheduler;
 
-    private List<Marker> zoneLabels;
+    private Map<Polygon, Marker> zoneLabels;
     public static boolean locationOverride = false;
     public static LatLng fixedLocation = null;
     private final View.OnClickListener attackListener = v ->
@@ -103,6 +108,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
      * Flag indicating whether a requested permission has been denied
      */
     private boolean permissionDenied = false;
+    @SuppressLint("PotentialBehaviorOverride")
     private final OnMapReadyCallback callback = googleMap -> {
         ZoneDAO zoneDAO = zoneDB.zoneDAO();
 
@@ -130,18 +136,63 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
         LatLng epfl = new LatLng(46.520536, 6.568318);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(epfl, 17));
 
-        zoneLabels = new ArrayList<>();
+        map.setInfoWindowAdapter(new LabelInfoWindowAdapter(getContext()));
+
+        zoneLabels = new HashMap<>();
 
         for (Zone zone : zoneDAO.getAll()){
             Polygon poly = map.addPolygon(new PolygonOptions().addAll(zone.getVertices()));
             poly.setStrokeWidth(0);
             poly.setFillColor(Color.argb(25, 255, 0, 0));
+            poly.setClickable(true);
 
-            zoneLabels.add(map.addMarker(new MarkerOptions().position(zone.getCenter())
-                    .icon(createPureTextIcon(zone.getName()))));
+            zoneLabels.put(
+                    poly,
+                    map.addMarker(new MarkerOptions()
+                            .position(zone.getCenter())
+                            .icon(createPureTextIcon(zone.getName()))
+                            .title(zone.getName())
+                    ));
         }
 
         map.setOnPolygonClickListener(polygon ->{
+            Marker m = zoneLabels.get(polygon);
+            if(m != null)
+            {
+                if(scheduler.isTakeover())
+                {
+                    backendInterface.getCurrentAttacks(m.getTitle()).thenAccept(attacks -> {
+                        if(!attacks.isEmpty())
+                        {
+                            StringBuilder indicator = new StringBuilder("Current attacks:<br>");
+                            for (Map.Entry<Section, Integer> entry : attacks.entrySet())
+                            {
+                                if (entry.getValue() > 0) {
+                                    indicator.append(entry.getKey().toString())
+                                            .append(": ")
+                                            .append(entry.getValue())
+                                            .append("<br>");
+                                }
+                            }
+                            m.setSnippet(indicator.toString());
+                        }
+                    }).exceptionally(e -> {
+                        Log.e("MapsFragment", "Failed retrieving the current attacks for the zone " + m.getTitle());
+                        return null;
+                    });
+                }
+                else
+                {
+                    m.setSnippet("");
+                }
+                zoneLabels.replace(polygon, m);
+                m.showInfoWindow();
+                map.animateCamera(CameraUpdateFactory.newLatLng(m.getPosition()), CAMERA_MOVE_DELAY, null);
+            }
+            else
+            {
+                Log.e("MapsFragment", "null");
+            }
         });
 
         // scheduler.startAll();
@@ -313,7 +364,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
     @Override
     public void onCameraMove() {
         CameraPosition cp = map.getCameraPosition();
-        for (Marker label : zoneLabels){
+        for (Marker label : zoneLabels.values()){
             label.setVisible(cp.zoom > 15);
         }
     }
