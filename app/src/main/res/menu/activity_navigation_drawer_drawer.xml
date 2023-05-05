@@ -9,10 +9,6 @@
             android:icon="@drawable/map_icon"
             android:title="@string/menu_maps" />
         <item
-            android:id="@+id/nav_profile"
-            android:icon="@android:drawable/ic_menu_edit"
-            android:title="@string/menu_profile" />
-        <item
             android:id="@+id/nav_rules"
             android:icon="@drawable/rules_icon"
             android:title="@string/menu_rules" />

@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
@@ -111,10 +113,6 @@ public class RegisterFragment extends Fragment {
     private void register(){
         //Create user in Firebase
         mAuth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(this::onCompleteRegisterListenerContent);
-
-        currentActivity.goToRegisterFragment();
-        //Go to sign in fragment
-        currentActivity.goToSignInFragment(emailText, passwordText);
     }
 
     /**
@@ -130,6 +128,9 @@ public class RegisterFragment extends Fragment {
             user.sendEmailVerification()
                     .addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Verification email sent", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> Toast.makeText(getActivity(), "Verification email not sent", Toast.LENGTH_SHORT).show());
+
+            //Go to sign in fragment
+            currentActivity.goToProfileFragment(emailText, passwordText);
 
         } else {
             // If register fails, display a message to the user.
@@ -161,7 +162,8 @@ public class RegisterFragment extends Fragment {
      * Sets the Listener on the "already_registered_button"
      */
     private void setAlreadyRegisteredButtonListener() {
-        already_registered_button.setOnClickListener(view -> currentActivity.goToSignInFragment( "", ""));
+        setEditTextToString();
+        already_registered_button.setOnClickListener(view -> currentActivity.goToSignInFragment( "", "", false));
     }
 
     /**
@@ -169,6 +171,7 @@ public class RegisterFragment extends Fragment {
      */
     private void setSpectatorButtonListener(){
         spectator_button.setOnClickListener(view -> {
+            User.setSection(Section.NONE);
 
             // Directly go to MainActivity
             Intent intent = new Intent(getActivity(), MainActivity.class);
