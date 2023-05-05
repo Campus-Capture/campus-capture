@@ -10,6 +10,8 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,12 +22,13 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.BackendInterface;
-import com.github.campus_capture.bootcamp.firebase.PlaceholderBackend;
 import com.github.campus_capture.bootcamp.fragments.MapsFragment;
 import com.github.campus_capture.bootcamp.map.MapScheduler;
 import com.github.campus_capture.bootcamp.map.ScheduleConstants;
@@ -33,6 +36,8 @@ import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.hamcrest.Matcher;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,9 +59,8 @@ public class MapVoteTest {
     LatLng noLoc = new LatLng(0, 0);
 
     private static boolean hasAttacked;
-    private static boolean voteReturnCode;
 
-    final BackendInterface mock = new PlaceholderBackend() {
+    private final BackendInterface mock = new BackendInterface() {
 
         @Override
         public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
@@ -80,10 +84,34 @@ public class MapVoteTest {
         public CompletableFuture<List<ScoreItem>> getScores() {
             return null;
         }
+
+        @Override
+        public CompletableFuture<Boolean> initUserInDB(String uid, Section section) {
+            return null;
+        }
+
+        @Override
+        public CompletableFuture<Boolean> setUserSection(String uid, Section section) {
+            return null;
+        }
+
+        @Override
+        public CompletableFuture<Section> getUserSection(String uid) {
+            return null;
+        }
     };
 
     @Rule
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
+
+    @Rule
+    public GrantPermissionRule permissionLocation = GrantPermissionRule.grant("android.permission.ACCESS_FINE_LOCATION");
+
+    @After
+    public void close()
+    {
+        Intents.release();
+    }
 
     @Test
     public void correctDisplayWhenPositionIsUnknown() throws InterruptedException {
@@ -100,11 +128,12 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.currentZoneText)).check(matches(withText(containsString("Current zone:\nUnknown"))));
-
-        Intents.release();
     }
 
     @Test
@@ -122,11 +151,12 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.currentZoneText)).check(matches(withText(containsString("Current zone:\nNone"))));
-
-        Intents.release();
     }
 
     @Test
@@ -144,11 +174,12 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.currentZoneText)).check(matches(withText(containsString("Current zone:\nBC"))));
-
-        Intents.release();
     }
 
     @Test
@@ -172,11 +203,12 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.timerButton)).check(matches(withText(containsString("Next takeover in"))));
-
-        Intents.release();
     }
 
     @Test
@@ -200,6 +232,9 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         String comp1 = getText(ViewMatchers.withId(R.id.timerButton));
@@ -210,8 +245,6 @@ public class MapVoteTest {
         Thread.sleep(5000);
 
         onView(ViewMatchers.withId(R.id.timerButton)).check(matches(withText(containsString(comp2))));
-
-        Intents.release();
     }
 
     @Test
@@ -236,12 +269,13 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(isDisplayed()));
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(isClickable()));
-
-        Intents.release();
     }
 
     @Test
@@ -258,7 +292,6 @@ public class MapVoteTest {
         MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
-        voteReturnCode = true;
 
         Intents.init();
 
@@ -266,6 +299,9 @@ public class MapVoteTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
         Thread.sleep(1000);
 
@@ -276,8 +312,6 @@ public class MapVoteTest {
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
 
         onView(ViewMatchers.withId(R.id.timerButton)).check(matches(isDisplayed()));
-
-        Intents.release();
     }
 
     @Test
@@ -302,12 +336,13 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(isDisplayed()));
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(isClickable()));
-
-        Intents.release();
     }
 
     @Test
@@ -324,7 +359,6 @@ public class MapVoteTest {
         MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
-        voteReturnCode = true;
 
         Intents.init();
 
@@ -332,6 +366,9 @@ public class MapVoteTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
         Thread.sleep(1000);
 
@@ -342,8 +379,6 @@ public class MapVoteTest {
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
 
         onView(ViewMatchers.withId(R.id.timerButton)).check(matches(isDisplayed()));
-
-        Intents.release();
     }
 
     @Test
@@ -361,13 +396,14 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.timerButton)).check(matches(not(isDisplayed())));
-
-        Intents.release();
     }
 
     @Test
@@ -392,6 +428,9 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
@@ -403,8 +442,6 @@ public class MapVoteTest {
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(isDisplayed()));
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.timerButton)).check(matches(not(isDisplayed())));
-
-        Intents.release();
     }
 
     @Test
@@ -429,6 +466,9 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
@@ -440,8 +480,6 @@ public class MapVoteTest {
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(isDisplayed()));
         onView(ViewMatchers.withId(R.id.timerButton)).check(matches(not(isDisplayed())));
-
-        Intents.release();
     }
 
     @Test
@@ -466,6 +504,9 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(isDisplayed()));
@@ -477,8 +518,6 @@ public class MapVoteTest {
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.timerButton)).check(matches(isDisplayed()));
-
-        Intents.release();
     }
 
     @Test
@@ -503,6 +542,9 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
@@ -514,8 +556,6 @@ public class MapVoteTest {
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.timerButton)).check(matches(isDisplayed()));
-
-        Intents.release();
     }
 
     @Test
@@ -540,13 +580,14 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.timerButton)).check(matches(isDisplayed()));
-
-        Intents.release();
     }
 
     @Test
@@ -562,14 +603,15 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withContentDescription("Navigate up"))
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_rules)).perform(ViewActions.click());
-
-        Intents.release();
     }
 
     @Test
@@ -586,7 +628,6 @@ public class MapVoteTest {
         MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
-        voteReturnCode = true;
 
         Intents.init();
 
@@ -595,13 +636,14 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(2000);
 
         MapsFragment.fixedLocation = null;
 
         onView(ViewMatchers.withId(R.id.attackButton)).perform(ViewActions.click());
-
-        Intents.release();
     }
 
     @Test
@@ -617,9 +659,10 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
-        Thread.sleep(ScheduleConstants.ZONE_REFRESH_RATE + 3000);
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
-        Intents.release();
+        Thread.sleep(ScheduleConstants.ZONE_REFRESH_RATE + 3000);
     }
 
     @Test
@@ -636,7 +679,6 @@ public class MapVoteTest {
         MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
-        voteReturnCode = true;
 
         Intents.init();
 
@@ -645,13 +687,14 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         MapsFragment.fixedLocation = new LatLng(46.518541590052145, 6.56854108037592);
 
         onView(ViewMatchers.withId(R.id.attackButton)).perform(ViewActions.click());
-
-        Intents.release();
     }
 
     @Test
@@ -668,7 +711,6 @@ public class MapVoteTest {
         MapsFragment.fixedLocation = fixed;
         User.setUid("");
         hasAttacked = false;
-        voteReturnCode = false;
 
         Intents.init();
 
@@ -677,11 +719,12 @@ public class MapVoteTest {
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
         Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.attackButton)).perform(ViewActions.click());
-
-        Intents.release();
     }
 
     /**
