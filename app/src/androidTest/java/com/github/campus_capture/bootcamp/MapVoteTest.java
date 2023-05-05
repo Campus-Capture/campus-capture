@@ -127,6 +127,7 @@ public class MapVoteTest {
 
         Intents.init();
 
+
         onView(ViewMatchers.withContentDescription("Navigate up"))
                 .perform(ViewActions.click());
 
