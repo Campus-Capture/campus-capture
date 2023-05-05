@@ -278,4 +278,13 @@ public class MapScheduler {
             }
         };
     }
+
+    /**
+     * Getter to know if we're currently in a takeover
+     * @return boolean
+     */
+    public boolean isTakeover()
+    {
+        return isTakeover;
+    }
 }

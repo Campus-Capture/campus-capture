@@ -57,4 +57,9 @@ public class PlaceholderBackend implements BackendInterface {
     public CompletableFuture<Section> getUserSection(String uid) {
         return CompletableFuture.completedFuture(Section.IN);
     }
+
+    @Override
+    public CompletableFuture<Map<Section, Integer>> getCurrentAttacks(String zoneName) {
+        return null;
+    }
 }

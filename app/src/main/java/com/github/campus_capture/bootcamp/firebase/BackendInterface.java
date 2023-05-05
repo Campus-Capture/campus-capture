@@ -48,4 +48,11 @@ public interface BackendInterface {
     CompletableFuture<Boolean> setUserSection(String uid, Section section);
 
     CompletableFuture<Section> getUserSection(String uid);
+
+    /**
+     * Method to get the current attacks in a given zone, ordered by section
+     * @param zoneName the name of the zone
+     * @return map from section to attack number
+     */
+    CompletableFuture<Map<Section, Integer>> getCurrentAttacks(String zoneName);
 }
