@@ -1,6 +1,7 @@
 package com.github.campus_capture.bootcamp.activities;
 
 import static com.github.campus_capture.bootcamp.fragments.Fragments.MAPS_FRAGMENT;
+import static com.github.campus_capture.bootcamp.fragments.Fragments.POWER_UP_FRAGMENT;
 import static com.github.campus_capture.bootcamp.fragments.Fragments.RULES_FRAGMENT;
 import static com.github.campus_capture.bootcamp.fragments.Fragments.SCOREBOARD_FRAGMENT;
 
@@ -29,6 +30,7 @@ import com.github.campus_capture.bootcamp.fragments.Fragments;
 import com.github.campus_capture.bootcamp.fragments.MapsFragment;
 import com.github.campus_capture.bootcamp.fragments.RulesFragment;
 import com.github.campus_capture.bootcamp.fragments.ScoreboardFragment;
+import com.github.campus_capture.bootcamp.fragments.VotePowerUpFragment;
 import com.github.campus_capture.bootcamp.map.SectionColors;
 import com.google.android.material.navigation.NavigationView;
 
@@ -92,6 +94,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentTransaction.replace(R.id.fragmentContainerViewMain, new ScoreboardFragment(backendInterface));
                 break;
 
+            case POWER_UP_FRAGMENT:
+                fragmentTransaction.replace(R.id.fragmentContainerViewMain, new VotePowerUpFragment(backendInterface));
+                break;
+
             default:
                 return;
         }
@@ -143,6 +149,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_scoreboard:
                 openFragment(SCOREBOARD_FRAGMENT);
+                break;
+            case R.id.nav_power_up:
+                openFragment(POWER_UP_FRAGMENT);
                 break;
             default:
                 break;

@@ -2,6 +2,7 @@ package com.github.campus_capture.bootcamp.firebase;
 
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
+import com.github.campus_capture.bootcamp.shop.PowerUp;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -60,6 +61,16 @@ public class PlaceholderBackend implements BackendInterface {
 
     @Override
     public CompletableFuture<Map<Section, Integer>> getCurrentAttacks(String zoneName) {
+        return null;
+    }
+
+    @Override
+    public CompletableFuture<List<PowerUp>> getPowerUps() {
+        return null;
+    }
+
+    @Override
+    public CompletableFuture<Integer> getMoney() {
         return null;
     }
 }

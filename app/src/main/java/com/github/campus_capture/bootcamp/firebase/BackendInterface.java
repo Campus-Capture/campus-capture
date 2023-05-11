@@ -2,6 +2,7 @@ package com.github.campus_capture.bootcamp.firebase;
 
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
+import com.github.campus_capture.bootcamp.shop.PowerUp;
 
 import java.util.List;
 import java.util.Map;
@@ -55,4 +56,16 @@ public interface BackendInterface {
      * @return map from section to attack number
      */
     CompletableFuture<Map<Section, Integer>> getCurrentAttacks(String zoneName);
+
+    /**
+     * Method to get the current available powerUps
+     * @return map of the all power ups
+     */
+    CompletableFuture<List<PowerUp>> getPowerUps();
+
+    /**
+     * Method to get the money of the user
+     * @return The money of the user
+     */
+    CompletableFuture<Integer> getMoney();
 }
