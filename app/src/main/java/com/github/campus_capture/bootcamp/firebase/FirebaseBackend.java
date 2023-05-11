@@ -277,7 +277,7 @@ public class FirebaseBackend implements BackendInterface{
                     Map<Section, Integer> result = new HashMap<>();
                     for(DataSnapshot child : task.getResult().getChildren()){
                         try {
-                            result.put(Section.valueOf(child.getKey()), (Integer) child.getValue());
+                            result.put(Section.valueOf(child.getKey()), ((Long)child.getValue()).intValue() );
                         } catch (IllegalArgumentException e){
                             // expected exception for the "owner" child which is not a section
                             // TODO maybe cleaner to add a condition instead of a try catch ?
