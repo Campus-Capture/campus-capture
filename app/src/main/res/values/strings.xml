@@ -49,6 +49,7 @@ The rules are simple:\n
 &#8226; Follow the amount of points your section has under the scoreboard tab\n
 &#8226; If you need help, invite your friends to join you in your effort under the profile tab\n\n
 Have fun and good luck!</string>
+    <string name="TOS_text">By accepting those terms of service you agree that your data will be collected and used for non-legal activities such as DDoS-ing, Botting and…</string>
     <string name="invite_button">Invite your friends</string>
     <string name="invitation_text">Hey there, I need help defending our faculty\'s territory in Campus Capture!\nCome join me now: </string>
     <string name="invitation_link">&lt;App link here&gt;</string>
