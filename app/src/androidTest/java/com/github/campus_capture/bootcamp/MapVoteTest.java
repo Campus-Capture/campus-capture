@@ -616,6 +616,8 @@ public class MapVoteTest {
         onView(ViewMatchers.withContentDescription("Navigate up"))
                 .perform(ViewActions.click());
 
+        Thread.sleep(2000);
+
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
