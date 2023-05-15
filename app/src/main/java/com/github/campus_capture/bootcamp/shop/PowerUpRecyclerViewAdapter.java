@@ -5,13 +5,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.campus_capture.bootcamp.R;
-import com.github.campus_capture.bootcamp.databinding.FragmentVotePowerUpBinding;
 
 import java.util.List;
 import java.util.Locale;
@@ -45,7 +45,34 @@ public class PowerUpRecyclerViewAdapter extends RecyclerView.Adapter<PowerUpRecy
         holder.powerUpFund.setText(String.format(Locale.ENGLISH, "Teams fund: %d", fund));
         holder.powerUpProgressBar.setProgress(100*fund/value);
 
+        //TODO: Change the max to be the money the user have
+        holder.powerUpSeekBar.setMax(value);
+
+        holder.powerUpSeekBar.setProgress(0);
+        holder.powerUpSpendText.setText(String.format(Locale.ENGLISH, "I spend %d coins.", 0));
+
+        addSeekBarChangeListener(holder);
     }
+
+    private void addSeekBarChangeListener(ViewHolder holder){
+        holder.powerUpSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                holder.powerUpSpendText.setText(String.format(Locale.ENGLISH, "I spend %d coins.", i));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+    }
+
 
     @Override
     public int getItemCount() {
@@ -59,6 +86,8 @@ public class PowerUpRecyclerViewAdapter extends RecyclerView.Adapter<PowerUpRecy
         public final Button powerUpButton;
         public final ProgressBar powerUpProgressBar;
         public PowerUp mItem;
+        public final SeekBar powerUpSeekBar;
+        public final TextView powerUpSpendText;
 
         public ViewHolder(View view) {
             super(view);
@@ -67,6 +96,8 @@ public class PowerUpRecyclerViewAdapter extends RecyclerView.Adapter<PowerUpRecy
             powerUpFund = view.findViewById(R.id.power_up_fund);
             powerUpProgressBar = view.findViewById(R.id.power_up_progress_bar);
             powerUpButton = view.findViewById(R.id.power_up_button);
+            powerUpSeekBar = view.findViewById(R.id.power_up_seek_bar);
+            powerUpSpendText = view.findViewById(R.id.power_up_spend_text);
         }
     }
 }
