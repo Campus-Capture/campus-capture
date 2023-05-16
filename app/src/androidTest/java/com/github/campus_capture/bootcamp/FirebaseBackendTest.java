@@ -218,6 +218,23 @@ public class FirebaseBackendTest {
     }
 
     @Test
+    public void testCurrentOwnersNoZones()
+    {
+        // set database content
+
+        BackendInterface b = new FirebaseBackend();
+
+        try{
+            b.getCurrentZoneOwners().get();
+        }catch(Throwable e){
+            if(e.toString() != "Could not get result from the database"){
+                fail();
+            }
+
+        }
+    }
+
+    @Test
     public void testScoresAreWellOrdered()
     {
         // set database content
