@@ -156,6 +156,41 @@ public class FirebaseBackendTest {
     }
 
     @Test
+    public void testVoteZoneInexistantZone()
+    {
+        // set database content
+        database.getReference().child("Users").child("testUserId").child("has_voted").setValue(false);
+
+        BackendInterface b = new FirebaseBackend();
+
+        try{
+            b.voteZone("testUserId", Section.IN, "zoneasdfajsdf").get();
+        }catch(Throwable e){
+            if(e.toString() != "Could not get result from the database"){
+                fail();
+            }
+
+        }
+    }
+    @Test
+    public void testVoteZoneInexistantPlayer()
+    {
+        // set database content
+        database.getReference().child("Zones").child("BC").child("IN").setValue(4);
+
+        BackendInterface b = new FirebaseBackend();
+
+        try{
+            b.voteZone("playerIDylsdfjasdlfj", Section.IN, "zoneasdfajsdf").get();
+        }catch(Throwable e){
+            if(e.toString() != "Could not get result from the database"){
+                fail();
+            }
+
+        }
+    }
+
+    @Test
     public void testCurrentZoneOwners()
     {
         // set database content
@@ -206,6 +241,23 @@ public class FirebaseBackendTest {
         }catch(Exception e){
             Log.e("Error in test", e.toString());
             fail();
+        }
+    }
+
+    @Test
+    public void testScoreNoZones()
+    {
+        // set database content
+
+        BackendInterface b = new FirebaseBackend();
+
+        try{
+            b.getScores().get();
+        }catch(Throwable e){
+            if(e.toString() != "Could not get result from the database"){
+                fail();
+            }
+
         }
     }
 
@@ -325,6 +377,23 @@ public class FirebaseBackendTest {
     }
 
     @Test
+    public void testGetUserSectionInexistantPlayer()
+    {
+        // set database content
+
+        BackendInterface b = new FirebaseBackend();
+
+        try{
+            b.getUserSection("asdléfjasdf").get();
+        }catch(Throwable e){
+            if(e.toString() != "Could not get result from the database"){
+                fail();
+            }
+
+        }
+    }
+
+    @Test
     public void testGetCurrentAttacks() {
 
         database.getReference().child("Zones").child("testZone").child("owner").setValue("SIE");
@@ -344,4 +413,23 @@ public class FirebaseBackendTest {
             fail();
         }
     }
+
+    @Test
+    public void testGetUserSectionInexistantZone() {
+        // set database content
+
+        BackendInterface b = new FirebaseBackend();
+
+        try {
+            b.getCurrentAttacks("zoneasfasdfasd").get();
+        } catch (Throwable e) {
+            if (e.toString() != "Could not get result from the database") {
+                fail();
+            }
+
+        }
+    }
 }
+
+
+
