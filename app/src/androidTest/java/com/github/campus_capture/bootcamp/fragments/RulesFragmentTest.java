@@ -25,12 +25,13 @@ public class RulesFragmentTest {
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
 
     @Test
-    public void checkThatRulesAreCorrectlyDisplayed()
-    {
+    public void checkThatRulesAreCorrectlyDisplayed() throws InterruptedException {
         Intents.init();
 
         onView(ViewMatchers.withContentDescription("Navigate up"))
                 .perform(ViewActions.click());
+
+        Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.nav_rules)).perform(ViewActions.click());
 

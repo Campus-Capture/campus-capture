@@ -191,7 +191,7 @@ public class AuthenticationActivityTest {
     }
 
     @Test
-    public void AuthenticateWorks() throws InterruptedException {
+    public void AuthenticateWorks() {
 
         //Go to login screen
         onView(ViewMatchers.withId(R.id.register_already_registered_button)).perform(ViewActions.click());
@@ -271,7 +271,7 @@ public class AuthenticationActivityTest {
         assertThat(Intents.getIntents().isEmpty(), is(true));
     }
 
-
+    @Test
     public void AutomaticallyLoggedIfAlreadyIn() {
         //Go to login screen
         onView(ViewMatchers.withId(R.id.register_already_registered_button)).perform(ViewActions.click());
