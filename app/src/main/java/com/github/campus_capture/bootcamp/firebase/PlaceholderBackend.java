@@ -66,7 +66,9 @@ public class PlaceholderBackend implements BackendInterface {
 
     @Override
     public CompletableFuture<List<PowerUp>> getPowerUps() {
-        return null;
+        return CompletableFuture.completedFuture(
+                Collections.singletonList(new PowerUp("PowerUpTest", 70, 80))
+        );
     }
 
     @Override

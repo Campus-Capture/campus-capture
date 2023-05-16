@@ -49,7 +49,6 @@ public class PowerUpRecyclerViewAdapter extends RecyclerView.Adapter<PowerUpRecy
         holder.powerUpSeekBar.setMax(value);
 
         holder.powerUpSeekBar.setProgress(0);
-        holder.powerUpSpendText.setText(String.format(Locale.ENGLISH, "I spend %d coins.", 0));
 
         addSeekBarChangeListener(holder);
     }
@@ -58,7 +57,16 @@ public class PowerUpRecyclerViewAdapter extends RecyclerView.Adapter<PowerUpRecy
         holder.powerUpSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                holder.powerUpSpendText.setText(String.format(Locale.ENGLISH, "I spend %d coins.", i));
+                String format;
+                if(i>0) {
+                    format = String.format(Locale.ENGLISH, "I spend %d coins for my team.", i);
+
+                }
+                else
+                {
+                    format = "I spend literally nothing for my team.";
+                }
+                holder.powerUpSpendText.setText(format);
             }
 
             @Override
