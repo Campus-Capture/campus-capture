@@ -3,6 +3,7 @@ package com.github.campus_capture.bootcamp;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -65,7 +66,7 @@ public class FirebaseBackendTest {
             assertTrue(result);
         }catch(Exception e){
             Log.e("Error in test", e.toString());
-            assertTrue(false);
+            fail();
         }
 
         // check database content
@@ -116,7 +117,7 @@ public class FirebaseBackendTest {
             assertFalse(result);
         }catch(Exception e){
             Log.e("Error in test", e.toString());
-            assertTrue(false);
+            fail();
         }
 
         // check database content
@@ -204,7 +205,7 @@ public class FirebaseBackendTest {
             }
         }catch(Exception e){
             Log.e("Error in test", e.toString());
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -220,7 +221,7 @@ public class FirebaseBackendTest {
             assertFalse(b.hasAttacked("testUserId").get());
         }catch(Exception e){
             Log.e("Error in test", e.toString());
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -236,7 +237,7 @@ public class FirebaseBackendTest {
             assertTrue(b.hasAttacked("testUserId").get());
         }catch(Exception e){
             Log.e("Error in test", e.toString());
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -302,7 +303,7 @@ public class FirebaseBackendTest {
             assertEquals(result, Section.SC);
         }catch(Exception e){
             Log.e("Error in test", e.toString());
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -323,7 +324,7 @@ public class FirebaseBackendTest {
             assertFalse(result.containsKey("owner"));
         }catch(Exception e){
             Log.e("Error in test", e.toString());
-            assertTrue(false);
+            fail();
         }
     }
 }

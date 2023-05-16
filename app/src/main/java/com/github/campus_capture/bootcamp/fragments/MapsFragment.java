@@ -114,6 +114,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
     private Map<String, Polygon> polygonMap;
     @SuppressLint("PotentialBehaviorOverride")
     private final OnMapReadyCallback callback = googleMap -> {
+
         ZoneDAO zoneDAO = zoneDB.zoneDAO();
 
         map = googleMap;
@@ -161,12 +162,14 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
         }
 
         map.setOnPolygonClickListener(polygon ->{
+
             Marker m = zoneLabels.get(polygon);
             if(m != null)
             {
                 if(scheduler.isTakeover())
                 {
                     backendInterface.getCurrentAttacks(m.getTitle()).thenAccept(attacks -> {
+
                         if(!attacks.isEmpty())
                         {
                             StringBuilder indicator = new StringBuilder("Current attacks:<br>");

@@ -45,12 +45,6 @@ public class FirebaseBackend implements BackendInterface{
                             public void onSuccess(Void aVoid) {
                                 futureResultVoteZone.complete(true);
                             }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                futureResultVoteZone.completeExceptionally(new Throwable("Could not register the user vote"));
-                            }
                         });
             }
             return futureResultVoteZone;
@@ -68,12 +62,6 @@ public class FirebaseBackend implements BackendInterface{
                             @Override
                             public void onSuccess(Void aVoid) {
                                 futureResultUser.complete(true);
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                futureResultUser.completeExceptionally(new Throwable("Could not register that user did vote"));
                             }
                         });
             }
@@ -191,12 +179,6 @@ public class FirebaseBackend implements BackendInterface{
                             public void onSuccess(Void aVoid) {
                                 futureRegisterUserResult.complete(true);
                             }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                futureRegisterUserResult.completeExceptionally(new Throwable("Could not init user has_voted"));
-                            }
                         });
             }
             else{
@@ -222,12 +204,6 @@ public class FirebaseBackend implements BackendInterface{
                     @Override
                     public void onSuccess(Void aVoid) {
                         futureSetUserSectionResult.complete(true);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        futureSetUserSectionResult.completeExceptionally(new Throwable("Could not set user section"));
                     }
                 });
 
