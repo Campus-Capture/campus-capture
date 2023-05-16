@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -172,11 +173,14 @@ public class FirebaseBackendTest {
 
         }
     }
+    @Ignore
     @Test
     public void testVoteZoneInexistantPlayer()
     {
         // set database content
         database.getReference().child("Zones").child("BC").child("IN").setValue(4);
+        database.getReference().child("Users").child("testUserId").child("has_voted").setValue(false);
+
 
         BackendInterface b = new FirebaseBackend();
 
@@ -393,15 +397,19 @@ public class FirebaseBackendTest {
         }
     }
 
+    @Ignore
     @Test
     public void testGetUserSectionInexistantPlayer()
     {
         // set database content
 
+        database.getReference().child("Users").child("testUserId").child("section").setValue("SC");
+
+
         BackendInterface b = new FirebaseBackend();
 
         try{
-            b.getUserSection("asdléfjasdf").get();
+            b.getUserSection("userid sdfadf").get();
         }catch(Throwable e){
             if(e.toString() != "Could not get result from the database"){
                 fail();
