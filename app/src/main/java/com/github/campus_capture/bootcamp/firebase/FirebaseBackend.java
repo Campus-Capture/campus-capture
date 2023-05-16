@@ -260,11 +260,34 @@ public class FirebaseBackend implements BackendInterface{
 
     @Override
     public CompletableFuture<Map<Section, Integer>> getCurrentAttacks(String zoneName) {
-        // TODO placeholder until the back-end implementation is done
-        Map<Section, Integer> out = new HashMap<>();
-        out.put(Section.IN, 2);
-        out.put(Section.SC, 1);
-        out.put(Section.AR, 0); // This is just to make sure it doesn't get displayed
-        return CompletableFuture.completedFuture(out);
+        CompletableFuture<Map<Section, Integer>> futureResult = new CompletableFuture<>();
+
+        AppContext context = AppContext.getAppContext();
+        FirebaseDatabase db = context.getFirebaseDB();
+
+        DatabaseReference zoneRef = db.getReference("Zones/" + zoneName);
+
+        zoneRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
+                }
+                else {
+                    Map<Section, Integer> result = new HashMap<>();
+                    for(DataSnapshot child : task.getResult().getChildren()){
+                        try {
+                            result.put(Section.valueOf(child.getKey()), ((Long)child.getValue()).intValue() );
+                        } catch (IllegalArgumentException e){
+                            // expected exception for the "owner" child which is not a section
+                            // TODO maybe cleaner to add a condition instead of a try catch ?
+                        }
+                    }
+                    futureResult.complete( result );
+                }
+            }
+        });
+
+        return futureResult;
     }
 }

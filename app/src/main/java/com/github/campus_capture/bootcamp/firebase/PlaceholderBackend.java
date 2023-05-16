@@ -60,6 +60,10 @@ public class PlaceholderBackend implements BackendInterface {
 
     @Override
     public CompletableFuture<Map<Section, Integer>> getCurrentAttacks(String zoneName) {
-        return null;
+        Map<Section, Integer> out = new HashMap<>();
+        out.put(Section.IN, 2);
+        out.put(Section.SC, 1);
+        out.put(Section.AR, 0); // This is just to make sure it doesn't get displayed
+        return CompletableFuture.completedFuture(out);
     }
 }
