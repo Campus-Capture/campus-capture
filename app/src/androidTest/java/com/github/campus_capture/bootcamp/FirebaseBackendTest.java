@@ -242,6 +242,23 @@ public class FirebaseBackendTest {
     }
 
     @Test
+    public void testIfPlayerAlreadyAttackedInexistantPlayer()
+    {
+        // set database content
+
+        BackendInterface b = new FirebaseBackend();
+
+        try{
+            b.hasAttacked("inexistant Player").get();
+        }catch(Throwable e){
+            if(e.toString() != "Could not get result from the database"){
+                fail();
+            }
+
+        }
+    }
+
+    @Test
     public void testRegisterUserInDB() {
 
         BackendInterface b = new FirebaseBackend();
