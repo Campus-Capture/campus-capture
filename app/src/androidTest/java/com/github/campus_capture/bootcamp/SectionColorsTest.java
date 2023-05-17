@@ -1,24 +1,9 @@
 package com.github.campus_capture.bootcamp;
 
-import static com.github.campus_capture.bootcamp.authentication.Section.AR;
-import static com.github.campus_capture.bootcamp.authentication.Section.CGC;
-import static com.github.campus_capture.bootcamp.authentication.Section.EL;
-import static com.github.campus_capture.bootcamp.authentication.Section.GC;
-import static com.github.campus_capture.bootcamp.authentication.Section.GM;
-import static com.github.campus_capture.bootcamp.authentication.Section.IN;
-import static com.github.campus_capture.bootcamp.authentication.Section.MA;
-import static com.github.campus_capture.bootcamp.authentication.Section.MT;
-import static com.github.campus_capture.bootcamp.authentication.Section.MX;
-import static com.github.campus_capture.bootcamp.authentication.Section.NONE;
-import static com.github.campus_capture.bootcamp.authentication.Section.PH;
-import static com.github.campus_capture.bootcamp.authentication.Section.SC;
-import static com.github.campus_capture.bootcamp.authentication.Section.SIE;
-import static com.github.campus_capture.bootcamp.authentication.Section.SV;
-
+import static com.github.campus_capture.bootcamp.authentication.Section.*;
 import static org.junit.Assert.assertEquals;
 
 import android.content.Context;
-import android.content.ContextParams;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
