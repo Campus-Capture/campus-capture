@@ -14,15 +14,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.activities.AuthenticationActivity;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
-import com.github.campus_capture.bootcamp.authentication.TOS;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -44,6 +41,7 @@ public class RegisterFragment extends Fragment {
     private EditText password;
     private String passwordText;
     private FirebaseAuth mAuth;
+    private final String TOS_TEXT = AppContext.getAppContext().getString(R.string.TOS_text);
 
 
     public RegisterFragment(AuthenticationActivity activity) {
@@ -148,13 +146,11 @@ public class RegisterFragment extends Fragment {
         new AlertDialog.Builder(getActivity())
                 .setTitle("License agreement")
                 .setPositiveButton("I agree", (dialog, which) -> {
-                    TOS.asAgreed = true;
-
                     // Start the register protocol when "I agree" clicked
                     register();
                 })
                 .setNegativeButton("No", null)
-                .setMessage(TOS.TEXT)
+                .setMessage(TOS_TEXT)
                 .show();
     }
 

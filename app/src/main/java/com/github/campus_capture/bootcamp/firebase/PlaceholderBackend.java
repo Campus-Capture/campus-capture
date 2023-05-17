@@ -2,6 +2,7 @@ package com.github.campus_capture.bootcamp.firebase;
 
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
+import com.github.campus_capture.bootcamp.shop.PowerUp;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -65,5 +66,17 @@ public class PlaceholderBackend implements BackendInterface {
         out.put(Section.SC, 1);
         out.put(Section.AR, 0); // This is just to make sure it doesn't get displayed
         return CompletableFuture.completedFuture(out);
+    }
+
+    @Override
+    public CompletableFuture<List<PowerUp>> getPowerUps() {
+        return CompletableFuture.completedFuture(
+                Collections.singletonList(new PowerUp("PowerUpTest", 70, 80))
+        );
+    }
+
+    @Override
+    public CompletableFuture<Integer> getMoney() {
+        return null;
     }
 }

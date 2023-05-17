@@ -6,7 +6,9 @@ import androidx.annotation.NonNull;
 
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.authentication.Section;
+import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
+import com.github.campus_capture.bootcamp.shop.PowerUp;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -16,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -288,6 +291,59 @@ public class FirebaseBackend implements BackendInterface{
             }
         });
 
+        return futureResult;
+    }
+
+    @Override
+    public CompletableFuture<List<PowerUp>> getPowerUps() {
+        CompletableFuture<List<PowerUp>> futureResult = new CompletableFuture<>();
+
+        AppContext context = AppContext.getAppContext();
+        FirebaseDatabase db = context.getFirebaseDB();
+
+        DatabaseReference userRef = db.getReference("PowerUp");
+
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
+                }
+                else {
+                    List<PowerUp> powerUpList = new ArrayList<>();
+                    task.getResult().getChildren().forEach((powerUp) -> {
+                        String powerUpName = powerUp.getKey();
+                        int value = powerUp.child("value").getValue(Integer.class);
+                        int fund = powerUp.child("funds/"+ User.getSection()).getValue(Integer.class);
+                        powerUpList.add(new PowerUp(powerUpName, fund, value));
+                    });
+                    futureResult.complete(powerUpList);
+                }
+            }
+        });
+        return futureResult;
+    }
+
+    @Override
+    public CompletableFuture<Integer> getMoney() {
+        CompletableFuture<Integer> futureResult = new CompletableFuture<>();
+
+        AppContext context = AppContext.getAppContext();
+        FirebaseDatabase db = context.getFirebaseDB();
+
+        DatabaseReference userRef = db.getReference("Users/"+User.getUid()+"/money");
+
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
+                }
+                else {
+                    futureResult.complete(task.getResult().getValue(Integer.class));
+                }
+            }
+        });
         return futureResult;
     }
 }
