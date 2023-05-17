@@ -305,4 +305,25 @@ public class FirebaseBackendTest {
             assertTrue(false);
         }
     }
+
+    @Test
+    public void testGetCurrentAttacks() {
+
+        database.getReference().child("Zones").child("testZone").child("owner").setValue("SIE");
+        database.getReference().child("Zones").child("testZone").child("IN").setValue(45);
+        database.getReference().child("Zones").child("testZone").child("SC").setValue(0);
+
+
+        BackendInterface b = new FirebaseBackend();
+
+        try {
+            Map result = b.getCurrentAttacks("testZone").get();
+            assertEquals(result.get(Section.IN), 45);
+            assertEquals(result.get(Section.SC), 0);
+            assertFalse(result.containsKey("owner"));
+        }catch(Exception e){
+            Log.e("Error in test", e.toString());
+            assertTrue(false);
+        }
+    }
 }
