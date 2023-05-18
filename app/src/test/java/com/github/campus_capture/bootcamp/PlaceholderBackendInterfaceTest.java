@@ -34,11 +34,12 @@ public class PlaceholderBackendInterfaceTest {
 
         try{
             Map<String, Section> owners = t.getCurrentZoneOwners().get();
-            assertEquals(owners.get("campus"), Section.IN);
+            assertEquals(owners.get("CE"), Section.PH);
         }catch(Exception e){
             fail();
         }
     }
+
 
     @Test
     public void testScoresAreWellOrdered()
