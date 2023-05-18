@@ -68,4 +68,12 @@ public interface BackendInterface {
      * @return The money of the user
      */
     CompletableFuture<Integer> getMoney();
+
+    /**
+     * Method to signal to the back-end that a player has given some money for a given powerup
+     * @param name The name of the powerup
+     * @param money the amount of funds transferred
+     * @return boolean: success
+     */
+    CompletableFuture<Boolean> sendMoney(String name, int money);
 }
