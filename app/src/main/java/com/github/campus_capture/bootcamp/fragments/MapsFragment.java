@@ -177,7 +177,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
             }
         });
 
-        // scheduler.startAll();
+        scheduler.startColorRefresh();
     };
 
     /**
@@ -397,13 +397,15 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
      */
     public void refreshZoneColors(Map<String, Section> zoneState)
     {
-        if(zoneState == null)
+        Log.i("MapsFragment", "Refreshing zone colours");
+        if(zoneState == null || polygonMap == null)
         {
             Log.e("MapsFragment", "Error: empty zone state returned");
             return;
         }
         for(String name : zoneState.keySet())
         {
+            Log.i("MapsFragment", "Zone " + name);
             Section s = zoneState.get(name);
             if(s == null)
             {
