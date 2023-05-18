@@ -362,36 +362,27 @@ public class FirebaseBackend implements BackendInterface{
     }
 
     @Override
-    public void addMoney(int change) {
+    public CompletableFuture<Boolean> sendMoney(String name, int money) {
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
 
         AppContext context = AppContext.getAppContext();
         FirebaseDatabase db = context.getFirebaseDB();
 
-        DatabaseReference moneyRef = db.getReference("Users/"+User.getUid()+"/money");
+        DatabaseReference userMoneyRef = db.getReference("Users/"+User.getUid()+"/money");
+        DatabaseReference powerupMoneyRef = db.getReference("PowerUp/"+name+"/funds/"+User.getSection());
 
-        moneyRef.setValue(ServerValue.increment(change))
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("FirebaseBackend", "Could not set money");
-                    }
-                });
-    }
+        // Spend the money first, if something goes wrong, as such no new funds are created
+        userMoneyRef.setValue(ServerValue.increment(-money))
+                .addOnSuccessListener(
+                    unused ->
+                        powerupMoneyRef.setValue(ServerValue.increment(money))
+                            .addOnSuccessListener(unused1 -> result.complete(true))
+                            .addOnFailureListener(unused2 -> result.completeExceptionally(new Throwable("Failed to add the money to the powerup"))))
+                .addOnFailureListener(
+                    unused3 ->
+                        result.completeExceptionally(new Throwable("Failed to take the money out of the player's funds")));
 
-    @Override
-    public void addToTeamsFund(int change, String powerUpName) {
-        AppContext context = AppContext.getAppContext();
-        FirebaseDatabase db = context.getFirebaseDB();
-
-        DatabaseReference moneyRef = db.getReference("PowerUp/"+powerUpName+"/funds/"+User.getSection());
-
-        moneyRef.setValue(ServerValue.increment(change))
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("FirebaseBackend", "Could not add to teams fund");
-                    }
-                });
+        return result;
     }
 
 
