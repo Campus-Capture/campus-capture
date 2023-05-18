@@ -56,6 +56,7 @@ exports.resetVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
                 }
             })
         })
+
     })
 
     refUsers.once('value').then( (usersSnapshot) => {
@@ -73,7 +74,7 @@ exports.resetVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
 })
 
 //TODO set back to 15 * * * * once tested finished
-exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.schedule("* * * * *").onRun((context) => {
+exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.schedule("15 * * * *").onRun((context) => {
 
     console.log("It's minute 15!")
   
@@ -88,7 +89,7 @@ exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
     }
 
     refPowerUp.once('value').then( (PowerUpSnapshot) => {
-        var power_up_cost = PowerUpSnapshot.child("value")
+        var power_up_cost = PowerUpSnapshot.child("value").val()
 
         refZones.once('value').then( (zonesSnapshot) => {
 
@@ -113,11 +114,11 @@ exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
 
                         let val_section = zoneChildSnapshot.child(section).val()
 
-                        if(zoneChildSnapshot.child("funds").hasChild(section)){
-                            var section_power_up_funds = zoneChildSnapshot.child("funds").child(section).val()
+                        if(PowerUpSnapshot.child("funds").hasChild(section)){
+                            var section_power_up_funds = PowerUpSnapshot.child("funds").child(section).val()
+
                             if(section_power_up_funds >= power_up_cost){
                                 val_section *= 2
-                                console.log("section has double vote " + section)
                             }
                         }
 
@@ -150,6 +151,24 @@ exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
                     refSections.child(key).child("score").set(val, set_error_callback)
                 }
             })
+
+            //remove money of used power ups
+            const refPowerUp = db.ref('PowerUp/SuperBigMaxPower')
+            refPowerUp.once('value').then( (PowerUpSnapshot) => {
+            
+                var power_up_cost = PowerUpSnapshot.child("value").val()
+            
+                PowerUpSnapshot.child("funds").forEach( (fund_section_snapshot) => {
+                
+                    var section = fund_section_snapshot.key
+                
+                    if(fund_section_snapshot.val() >= power_up_cost){
+                    
+                        refPowerUp.child("funds").child(section).set(admin.database.ServerValue.increment(-power_up_cost), set_error_callback)
+                    }
+                })
+            })
+
 
         })
     })
