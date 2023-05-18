@@ -280,4 +280,14 @@ public class MapScheduler {
     {
         return isTakeover;
     }
+
+    /**
+     * Getter to retrieve the section owning the current zone
+     * @param name the name of the zone
+     * @return the section
+     */
+    public Section getCurrentZoneOwner(String name)
+    {
+        return zoneState.get(name);
+    }
 }
