@@ -28,6 +28,7 @@ public class PowerUpRecyclerViewAdapter extends RecyclerView.Adapter<PowerUpRecy
     private final TextView powerUpMoney;
 
     private int fund;
+    private int value;
 
     public PowerUpRecyclerViewAdapter(List<PowerUp> items, int userMoney, BackendInterface backendInterface, TextView moneyView) {
         mValues = items;
@@ -48,7 +49,7 @@ public class PowerUpRecyclerViewAdapter extends RecyclerView.Adapter<PowerUpRecy
 
     @Override
     public void onBindViewHolder(@NonNull PowerUpRecyclerViewAdapter.ViewHolder holder, int position) {
-        int value = mValues.get(position).getValue();
+        value = mValues.get(position).getValue();
         fund = mValues.get(position).getFund();
 
         holder.mItem = mValues.get(position);
@@ -57,7 +58,7 @@ public class PowerUpRecyclerViewAdapter extends RecyclerView.Adapter<PowerUpRecy
         holder.powerUpFund.setText(String.format(Locale.ENGLISH, "Teams fund: %d", fund));
         holder.powerUpProgressBar.setProgress(100*fund/value);
 
-        holder.powerUpSeekBar.setMax(value);
+        holder.powerUpSeekBar.setMax(userMoney);
 
         holder.powerUpSeekBar.setProgress(0);
 
@@ -78,7 +79,9 @@ public class PowerUpRecyclerViewAdapter extends RecyclerView.Adapter<PowerUpRecy
                 fund += spendValue;
                 holder.powerUpFund.setText(String.format(Locale.ENGLISH, "Teams fund: %d", fund));
 
-                holder.powerUpProgressBar.setProgress(fund);
+                holder.powerUpProgressBar.setProgress(100*fund/value);
+
+                holder.powerUpSeekBar.setMax(userMoney);
 
                 backendInterface.addMoney(-spendValue);
                 backendInterface.addToTeamsFund(spendValue, powerUpName);

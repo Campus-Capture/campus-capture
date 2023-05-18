@@ -62,12 +62,12 @@ public class VotePowerUpFragmentTest {
 
         //Check that if we click on the middle of the bar, we choose 40
         onView(ViewMatchers.withId(R.id.power_up_seek_bar)).perform(ViewActions.click());
-        onView(ViewMatchers.withId(R.id.power_up_spend_text)).check(matches(withText("I spend 40 coins for my team.")));
+        onView(ViewMatchers.withId(R.id.power_up_spend_text)).check(matches(withText("I spend 25 coins for my team.")));
 
 
         //Check that if we swipe on the bar, we choose 80
         onView(ViewMatchers.withId(R.id.power_up_seek_bar)).perform(ViewActions.swipeRight());
-        onView(ViewMatchers.withId(R.id.power_up_spend_text)).check(matches(withText("I spend 80 coins for my team.")));
+        onView(ViewMatchers.withId(R.id.power_up_spend_text)).check(matches(withText("I spend 50 coins for my team.")));
     }
 
     @Test
@@ -93,22 +93,7 @@ public class VotePowerUpFragmentTest {
 
         onView(ViewMatchers.withId(R.id.power_up_button)).perform(ViewActions.click());
 
-        onView(ViewMatchers.withId(R.id.power_up_money)).check(matches(withText("Money: 10")));
-        onView(ViewMatchers.withId(R.id.power_up_fund)).check(matches(withText("Teams fund: 110")));
-    }
-
-    @Test
-    public void CannotSpendMoneyIfNotEnough(){
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.nav_power_up)).perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.power_up_seek_bar)).perform(ViewActions.swipeRight());
-
-        onView(ViewMatchers.withId(R.id.power_up_button)).perform(ViewActions.click());
-
-        onView(ViewMatchers.withId(R.id.power_up_money)).check(matches(withText("Money: 50")));
-        onView(ViewMatchers.withId(R.id.power_up_fund)).check(matches(withText("Teams fund: 70")));
+        onView(ViewMatchers.withId(R.id.power_up_money)).check(matches(withText("Money: 25")));
+        onView(ViewMatchers.withId(R.id.power_up_fund)).check(matches(withText("Teams fund: 95")));
     }
 }
