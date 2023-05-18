@@ -6,8 +6,13 @@ import static com.adevinta.android.barista.assertion.BaristaVisibilityAssertions
 import static com.adevinta.android.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed;
 import static com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import android.view.View;
+
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -99,4 +104,39 @@ public class MainActivityTest {
 
         assertDisplayed(R.id.nav_rules);
     }
+
+    @Test
+    public void canClickOnLogout() throws InterruptedException {
+        Intents.init();
+
+        Thread.sleep(2000);
+        onView(ViewMatchers.withContentDescription("More options"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withText("Log out")).perform(ViewActions.click());
+
+        //Assert that an intent was launched
+        Intents.intended(IntentMatchers.hasComponent(AuthenticationActivity.class.getName()));
+
+        Intents.release();
+    }
+
+    @Test
+    public void canClickOnInvite() throws InterruptedException {
+
+        Intents.init();
+
+        Thread.sleep(2000);
+        onView(ViewMatchers.withContentDescription("More options"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withText("Invite a friend!")).perform(ViewActions.click());
+
+        //Assert that an intent was launched
+        Intents.intended(IntentMatchers.hasAction("android.intent.action.CHOOSER"));
+
+        Intents.release();
+    }
+
+
 }
