@@ -142,8 +142,7 @@ exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
     return null
 })
 
-// TODO change to 0 12 * * * once testing done
-exports.giveMoneyScheduledFunction = functions.region('europe-west1').pubsub.schedule("* * * * *").onRun((context) => {
+exports.giveMoneyScheduledFunction = functions.region('europe-west1').pubsub.schedule("0 12 * * *").onRun((context) => {
 
     console.log("It's noon!")
   
