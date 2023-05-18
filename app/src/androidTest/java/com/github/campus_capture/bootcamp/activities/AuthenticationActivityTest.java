@@ -21,11 +21,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,7 +60,16 @@ public class AuthenticationActivityTest {
     public static void setup() {
         //Set emulators
         AppContext context = ApplicationProvider.getApplicationContext();
+        FirebaseDatabase database = context.getFirebaseDB();
         context.getFirebaseAuth().useEmulator("10.0.2.2", 9099);
+
+        // TODO: Find a way to know when the emulator is active or not
+        //context.getFirebaseDB().useEmulator("10.0.2.2", 9000);
+
+        database.getReference().child("Users").child("pp5iYDmG4tRfoLKjWvRf0s1bVJc8").child("has_voted").setValue(false);
+        database.getReference().child("Users").child("pp5iYDmG4tRfoLKjWvRf0s1bVJc8").child("section").setValue("IN");
+
+
         context.getFirebaseAuth().signOut();
     }
 
@@ -181,9 +190,9 @@ public class AuthenticationActivityTest {
         assertThat(Intents.getIntents().isEmpty(), is(true));
     }
 
-    @Ignore("have to fix because of the Futures")
     @Test
     public void AuthenticateWorks() {
+
         //Go to login screen
         onView(ViewMatchers.withId(R.id.register_already_registered_button)).perform(ViewActions.click());
 
@@ -262,10 +271,7 @@ public class AuthenticationActivityTest {
         assertThat(Intents.getIntents().isEmpty(), is(true));
     }
 
-
-    //TODO : fix this
     @Test
-    @Ignore("Has to take in account the furtures")
     public void AutomaticallyLoggedIfAlreadyIn() {
         //Go to login screen
         onView(ViewMatchers.withId(R.id.register_already_registered_button)).perform(ViewActions.click());
@@ -286,9 +292,12 @@ public class AuthenticationActivityTest {
 
         //Assert that two MainActivity intents were launched
         List<Intent> theIntents = Intents.getIntents();
-        assertThat(theIntents.size(), is(1));
+        assertThat(theIntents.size(), is(3));
+        //Tests if the first login was successful
         assertThat(theIntents.get(0).getComponent().getClassName(), is(MainActivity.class.getName()));
+        //Tests if, after the closing, the AuthenticationActivity was relaunched
         assertThat(theIntents.get(1).getComponent().getClassName(), is(AuthenticationActivity.class.getName()));
+        //Tests if the user is automatically redirected to the MainActivity
         assertThat(theIntents.get(2).getComponent().getClassName(), is(MainActivity.class.getName()));
     }
 

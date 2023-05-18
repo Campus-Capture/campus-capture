@@ -1,23 +1,30 @@
 package com.github.campus_capture.bootcamp;
 
 import static com.github.campus_capture.bootcamp.authentication.Section.*;
-
 import static org.junit.Assert.assertEquals;
 
 import android.content.Context;
 
-import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.map.SectionColors;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(AndroidJUnit4.class)
 public class SectionColorsTest {
+
+    @Rule
+    public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
 
     @Test
     public void testColorsAreCorrect()
     {
-        Context c = InstrumentationRegistry.getInstrumentation().getContext();
+        Context c = AppContext.getAppContext();
 
         assertEquals(c.getColor(R.color.ar_color), SectionColors.getColor(AR, c));
         assertEquals(c.getColor(R.color.gc_color), SectionColors.getColor(GC, c));
@@ -34,5 +41,4 @@ public class SectionColorsTest {
         assertEquals(c.getColor(R.color.mt_color), SectionColors.getColor(MT, c));
         assertEquals(c.getColor(R.color.none_color), SectionColors.getColor(NONE, c));
     }
-
 }

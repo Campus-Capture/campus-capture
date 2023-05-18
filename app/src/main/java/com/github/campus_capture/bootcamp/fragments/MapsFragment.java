@@ -160,51 +160,69 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
                             .title(zone.getName())
                     ));
         }
+        map.setOnMarkerClickListener(marker -> {
+            refreshCurrentAttacks(marker, map);
+            return true;
+        });
 
         map.setOnPolygonClickListener(polygon ->{
 
             Marker m = zoneLabels.get(polygon);
             if(m != null)
             {
-                if(scheduler.isTakeover())
-                {
-                    backendInterface.getCurrentAttacks(m.getTitle()).thenAccept(attacks -> {
 
-                        if(!attacks.isEmpty())
-                        {
-                            StringBuilder indicator = new StringBuilder("Current attacks:<br>");
-                            for (Map.Entry<Section, Integer> entry : attacks.entrySet())
-                            {
-                                if (entry.getValue() > 0) {
-                                    indicator.append(entry.getKey().toString())
-                                            .append(": ")
-                                            .append(entry.getValue())
-                                            .append("<br>");
-                                }
-                            }
-                            m.setSnippet(indicator.toString());
-                        }
-                    }).exceptionally(e -> {
-                        Log.e("MapsFragment", "Failed retrieving the current attacks for the zone " + m.getTitle());
-                        return null;
-                    });
-                }
-                else
-                {
-                    m.setSnippet("");
-                }
+                refreshCurrentAttacks(m, map);
                 zoneLabels.replace(polygon, m);
-                m.showInfoWindow();
-                map.animateCamera(CameraUpdateFactory.newLatLng(m.getPosition()), CAMERA_MOVE_DELAY, null);
             }
             else
             {
-                Log.e("MapsFragment", "null");
+                Log.e("MapsFragment", "Marker not found!");
             }
         });
 
-        // scheduler.startAll();
+        scheduler.startColorRefresh();
     };
+
+    /**
+     * Private method to refresh the current attacks / owner on the label of any of the maps' markers
+     * @param m the marker to be affected
+     * @param map the google maps instance to move the camera
+     */
+    private void refreshCurrentAttacks(Marker m, GoogleMap map)
+    {
+        Section zoneOwner = scheduler.getCurrentZoneOwner(m.getTitle());
+        String displayOwner = (zoneOwner == null) ? "None" : zoneOwner.toString();
+        if(scheduler.isTakeover())
+        {
+            backendInterface.getCurrentAttacks(m.getTitle()).thenAccept(attacks -> {
+                if(!attacks.isEmpty())
+                {
+                    StringBuilder indicator = new StringBuilder("Current owner: ");
+                    indicator.append(displayOwner);
+                    indicator.append("<br>Current attacks:<br>");
+                    for (Map.Entry<Section, Integer> entry : attacks.entrySet())
+                    {
+                        if (entry.getValue() > 0) {
+                            indicator.append(entry.getKey().toString())
+                                    .append(": ")
+                                    .append(entry.getValue())
+                                    .append("<br>");
+                        }
+                    }
+                    m.setSnippet(indicator.toString());
+                }
+            }).exceptionally(e -> {
+                Log.e("MapsFragment", "Failed retrieving the current attacks for the zone " + m.getTitle());
+                return null;
+            });
+        }
+        else
+        {
+            m.setSnippet("Current owner: " + displayOwner);
+        }
+        m.showInfoWindow();
+        map.animateCamera(CameraUpdateFactory.newLatLng(m.getPosition()), CAMERA_MOVE_DELAY, null);
+    }
 
     /**
      * Creates a custom icon with a text
@@ -382,13 +400,15 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
      */
     public void refreshZoneColors(Map<String, Section> zoneState)
     {
-        if(zoneState == null)
+        Log.i("MapsFragment", "Refreshing zone colours");
+        if(zoneState == null || polygonMap == null)
         {
             Log.e("MapsFragment", "Error: empty zone state returned");
             return;
         }
         for(String name : zoneState.keySet())
         {
+            Log.i("MapsFragment", "Zone " + name);
             Section s = zoneState.get(name);
             if(s == null)
             {
