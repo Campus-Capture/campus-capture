@@ -54,6 +54,9 @@ public class PlaceholderBackend implements BackendInterface {
         out.put("ELL", GM);
         out.put("SV AI", MT);
         out.put("Agora", NONE);
+        out.put("CE", PH);
+        out.put("Sat Terrasse", SIE);
+        out.put("CM ME", MX);
         return CompletableFuture.completedFuture(out);
     }
 

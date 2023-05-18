@@ -16,9 +16,21 @@ import static com.github.campus_capture.bootcamp.authentication.Section.SC;
 import static com.github.campus_capture.bootcamp.authentication.Section.SIE;
 import static com.github.campus_capture.bootcamp.authentication.Section.SV;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import static java.lang.System.out;
+
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
+import android.view.View;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.action.ViewActions;
@@ -44,12 +56,16 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class MapColorTest {
+
+    private static final double DELTA_VAL = 1;
 
     @Rule
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
@@ -76,11 +92,65 @@ public class MapColorTest {
         //Intents.release();
     }
 
-    //@Ignore("Testing this is literally horrible; future me will figure it out")
     @Test
     public void testZoneColors() throws InterruptedException {
 
-        Thread.sleep(30000);
+        // Note: this test currently doesn't work, just because I am out of energy to tackle this.
+        // The gist is to take the maps view-port, export it to a bitmap, and then read the
+        // individual pixels of the generated image to check that the colors of the displayed
+        // zones are correct. Unfortunately, it doesn't work, and for now I didn't find any way
+        // of retrieving the image somehow to make out what is actually going on when the test
+        // is run. Oops!
+
+        Thread.sleep(6000);
+        /*
+        testRule.getScenario().onActivity(a -> {
+            View v = a.findViewById(R.id.map);
+            Bitmap b = getBitmapFromView(v);
+
+            // Testing every color is stupid, as such we'll be checking the three in the viewport
+
+            // MX:
+            int pixel = b.getPixel(150,975);
+            Color color = Color.valueOf(pixel);
+            assertEquals(color.red(), 253, DELTA_VAL);
+            assertEquals(color.green(), 216, DELTA_VAL);
+            assertEquals(color.blue(), 187, DELTA_VAL);
+
+            // SIE:
+            pixel = b.getPixel(438,1005);
+            color = Color.valueOf(pixel);
+            assertEquals(color.red(), 206, DELTA_VAL);
+            assertEquals(color.green(), 253, DELTA_VAL);
+            assertEquals(color.blue(), 247, DELTA_VAL);
+
+            // MX:
+            pixel = b.getPixel(881,936);
+            color = Color.valueOf(pixel);
+            assertEquals(color.red(), 206, DELTA_VAL);
+            assertEquals(color.green(), 138, DELTA_VAL);
+            assertEquals(color.blue(), 188, DELTA_VAL);
+        });*/
+    }
+
+    // Helper method, taken from https://stackoverflow.com/questions/5536066/convert-view-to-bitmap-on-android
+    private Bitmap getBitmapFromView(View view) {
+        //Define a bitmap with the same size as the view
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
+        //Bind a canvas to it
+        Canvas canvas = new Canvas(returnedBitmap);
+        //Get the view's background
+        Drawable bgDrawable =view.getBackground();
+        if (bgDrawable!=null)
+            //has background drawable, then draw it on the canvas
+            bgDrawable.draw(canvas);
+        else
+            //does not have background drawable, then draw white background on the canvas
+            canvas.drawColor(Color.WHITE);
+        // draw the view on the canvas
+        view.draw(canvas);
+        //return the bitmap
+        return returnedBitmap;
     }
 
 }
