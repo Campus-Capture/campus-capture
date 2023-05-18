@@ -5,17 +5,24 @@
     android:layout_height="match_parent"
     tools:context=".fragments.RulesFragment">
 
-    <TextView
-        android:id="@+id/rules_text"
-        android:layout_width="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
-        android:text="@string/rules_text"
-        android:textSize="17sp"
-        android:justificationMode="inter_word"
-        android:lineSpacingMultiplier="1.1"/>
+        android:scrollbars="vertical">
+
+        <TextView
+            android:id="@+id/rules_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:text="@string/rules_text"
+            android:textSize="17sp"
+            android:justificationMode="inter_word"
+            android:lineSpacingMultiplier="1.1"/>
+
+    </ScrollView>
 
 </FrameLayout>
