@@ -92,4 +92,5 @@ The rules are simple:
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="power_up_title">Store</string>
     <string name="menu_shop">Shop</string>
+    <string name="power_up_spend_button_text">Spend</string>
 </resources>

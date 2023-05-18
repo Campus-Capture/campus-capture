@@ -76,4 +76,22 @@ public interface BackendInterface {
      * @return boolean: success
      */
     CompletableFuture<Boolean> sendMoney(String name, int money);
+
+
+    /**
+     * Method to set the money of the user
+     * //TODO: Change this method for a more safe one!
+     *
+     * @param change The change of the user money
+     */
+    void addMoney(int change);
+
+    /**
+     * Add to team's fund
+     * //TODO: Change this method for a more safe one!
+     *
+     * @param change The participation of the user to the teams fund
+     * @param powerUpName The name of the powerUp
+     */
+    void addToTeamsFund(int change, String powerUpName);
 }
