@@ -81,4 +81,34 @@ public class VotePowerUpFragmentTest {
         onView(ViewMatchers.withId(R.id.power_up_seek_bar)).perform(ViewActions.swipeLeft());
         onView(ViewMatchers.withId(R.id.power_up_spend_text)).check(matches(withText("I spend literally nothing for my team.")));
     }
+
+    @Test
+    public void CanSpendMoney(){
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_power_up)).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.power_up_seek_bar)).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.power_up_button)).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.power_up_money)).check(matches(withText("Money: 10")));
+        onView(ViewMatchers.withId(R.id.power_up_fund)).check(matches(withText("Teams fund: 110")));
+    }
+
+    @Test
+    public void CannotSpendMoneyIfNotEnough(){
+        onView(ViewMatchers.withContentDescription("Navigate up"))
+                .perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_power_up)).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.power_up_seek_bar)).perform(ViewActions.swipeRight());
+
+        onView(ViewMatchers.withId(R.id.power_up_button)).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.power_up_money)).check(matches(withText("Money: 50")));
+        onView(ViewMatchers.withId(R.id.power_up_fund)).check(matches(withText("Teams fund: 70")));
+    }
 }

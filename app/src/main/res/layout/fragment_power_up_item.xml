@@ -79,9 +79,10 @@
             android:id="@+id/power_up_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Spend"
+            android:text="@string/power_up_spend_button_text"
             android:layout_margin="10dp"
             android:layout_weight="3"
+            android:enabled="false"
             />
 
 
