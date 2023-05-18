@@ -21,9 +21,10 @@ import com.github.campus_capture.bootcamp.activities.AuthenticationActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 
+/**
+ * This class represent the behaviour of the profil fragment.
+ */
 public class ProfileFragment extends Fragment {
-
-
 
     AdapterView.OnItemSelectedListener sectionSpinnerListener = new AdapterView.OnItemSelectedListener() {
         @Override
@@ -42,6 +43,14 @@ public class ProfileFragment extends Fragment {
     private final String emailText;
     private final String passwordText;
 
+    /**
+     *
+     * This fragment is displayed after the registration and before the
+     * login, thus it must keep track of what the given credentials was.
+     * @param activity The parent activity
+     * @param emailText User Mail
+     * @param passwordText User password
+     */
     public ProfileFragment(AuthenticationActivity activity, String emailText, String passwordText) {
         // Required empty public constructor
         this.emailText = emailText;
@@ -52,7 +61,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -77,9 +85,13 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Display on top of everything the warning for the section selection (it is permanent)
+     * @param view The view
+     */
     private void displayAlert(View view) {
         new AlertDialog.Builder(view.getContext())
-                .setTitle("Are you sure ?")
+                .setTitle(R.string.profile_alert_title)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                      public void onClick(DialogInterface dialog, int which) {
@@ -88,7 +100,7 @@ public class ProfileFragment extends Fragment {
                     }
                 })
                 .setNegativeButton("No", null)
-                .setMessage("Once selected, the selected section will be permanent ! Do you want to proceed ?")
+                .setMessage(R.string.profile_selection_warning)
                 .show();
     }
 
