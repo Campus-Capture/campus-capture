@@ -145,7 +145,7 @@ exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
 // TODO change to 0 12 * * * once testing done
 exports.giveMoneyScheduledFunction = functions.region('europe-west1').pubsub.schedule("* * * * *").onRun((context) => {
 
-    console.log("It's minute noon!")
+    console.log("It's noon!")
   
     const db = getDatabase()
     const refUsers = db.ref('Users')
@@ -162,7 +162,7 @@ exports.giveMoneyScheduledFunction = functions.region('europe-west1').pubsub.sch
         usersSnapshot.forEach((userSnapshot) => {
 
             let userSection = userSnapshot.child("section").val()
-            sectionsUserCount[userSection] = sectionsUserCount[userSection] + 1
+            sectionsUserCount.set(userSection, sectionsUserCount.get(userSection) + 1)
 
         })
 
@@ -182,22 +182,25 @@ exports.giveMoneyScheduledFunction = functions.region('europe-west1').pubsub.sch
                 var sectionName = sectionSnapshot.key
     
                 let sectionScore = sectionSnapshot.child("score").val()
-                moneyPerUserPerSection[sectionName] = floor(sectionScore / sectionsUserCount[sectionName]) + 1
+
+                if(sectionsUserCount[sectionName] != 0){
+                    moneyPerUserPerSection.set(sectionName, Math.floor(sectionScore / sectionsUserCount.get(sectionName)) + 1)
+                }
     
             })
 
-        })
+            //increment user money
+            usersSnapshot.forEach((userSnapshot) => {
 
-        //increment user money
-        usersSnapshot.forEach((userSnapshot) => {
+                var user_id = userSnapshot.key;
 
-            var user_id = userSnapshot.key;
+                let userSection = userSnapshot.child("section").val()
 
-            let userSection = userSnapshot.child("section").val()
+                var moneyToAdd = moneyPerUserPerSection.get(userSection)
 
-            var moneyToAdd = moneyPerUserPerSection[userSection]
+                refUsers.child(user_id).child("money").set(admin.database.ServerValue.increment(moneyToAdd), set_error_callback)
 
-            refUsers.child(user_id).child("money").set(admin.database.ServerValue.increment(moneyToAdd), set_error_callback)
+            })
 
         })
 
