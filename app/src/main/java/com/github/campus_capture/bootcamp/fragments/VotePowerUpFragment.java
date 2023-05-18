@@ -58,7 +58,6 @@ public class VotePowerUpFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         backendInterface.getPowerUps().thenAccept((powerUpList) -> recyclerView.setAdapter(new PowerUpRecyclerViewAdapter(powerUpList, userMoney, backendInterface, (TextView) view.findViewById(R.id.power_up_money)))).exceptionally(e -> {
-            // TODO handle errors better ?
             Log.e("VotePowerUpFragmennt", "Error ocurred when fetching power ups: "+e);
             return null;
         });
