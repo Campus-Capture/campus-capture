@@ -141,3 +141,67 @@ exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
 
     return null
 })
+
+// TODO change to 0 12 * * * once testing done
+exports.giveMoneyScheduledFunction = functions.region('europe-west1').pubsub.schedule("* * * * *").onRun((context) => {
+
+    console.log("It's minute noon!")
+  
+    const db = getDatabase()
+    const refUsers = db.ref('Users')
+
+    //take snapshot of Users
+    refUsers.once('value').then( (usersSnapshot) => {
+
+        //count number of user for each section
+        const sectionsUserCount = new Map()
+        for(var i = 0, size = sections.length; i < size ; i++){
+            sectionsUserCount.set(sections[i], 0);
+        }
+
+        usersSnapshot.forEach((userSnapshot) => {
+
+            let userSection = userSnapshot.child("section").val()
+            sectionsUserCount[userSection] = sectionsUserCount[userSection] + 1
+
+        })
+
+        //take snapshot of Sections (for scores)
+        //compute how much money each user of each section gets
+        const refSections = db.ref('Sections')
+
+        const moneyPerUserPerSection = new Map()
+        for(var i = 0, size = sections.length; i < size ; i++){
+            moneyPerUserPerSection.set(sections[i], 0);
+        }
+
+        refSections.once('value').then( (sectionsSnapshot) => {
+
+            sectionsSnapshot.forEach((sectionSnapshot) => {
+
+                var sectionName = sectionSnapshot.key
+    
+                let sectionScore = sectionSnapshot.child("score").val()
+                moneyPerUserPerSection[sectionName] = floor(sectionScore / sectionsUserCount[sectionName]) + 1
+    
+            })
+
+        })
+
+        //increment user money
+        usersSnapshot.forEach((userSnapshot) => {
+
+            var user_id = userSnapshot.key;
+
+            let userSection = userSnapshot.child("section").val()
+
+            var moneyToAdd = moneyPerUserPerSection[userSection]
+
+            refUsers.child(user_id).child("money").set(admin.database.ServerValue.increment(moneyToAdd), set_error_callback)
+
+        })
+
+    })
+
+    return null;
+})
