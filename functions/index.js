@@ -72,71 +72,86 @@ exports.resetVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
     return null
 })
 
-exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.schedule("15 * * * *").onRun((context) => {
+//TODO set back to 15 * * * * once tested finished
+exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.schedule("* * * * *").onRun((context) => {
 
     console.log("It's minute 15!")
   
     const db = getDatabase()
     const refZones = db.ref('Zones')
     const refSections = db.ref('Sections')
+    const refPowerUp = db.ref('PowerUp/SuperBigMaxPower')
 
     const sectionsScores = new Map()
     for(var i = 0, size = sections.length; i < size ; i++){
         sectionsScores.set(sections[i], 0);
     }
 
-    refZones.once('value').then( (zonesSnapshot) => {
+    refPowerUp.once('value').then( (PowerUpSnapshot) => {
+        var power_up_cost = PowerUpSnapshot.child("value")
 
-        // update for each zone
-        zonesSnapshot.forEach((zoneChildSnapshot) => {
+        refZones.once('value').then( (zonesSnapshot) => {
 
-            var zone_name = zoneChildSnapshot.key
 
-            var new_owner = "NONE"
-            var current_owner = zoneChildSnapshot.child("owner").val()
+            // update for each zone
+            zonesSnapshot.forEach((zoneChildSnapshot) => {
 
-            var max = 0
-            var second_max = 0
+                var zone_name = zoneChildSnapshot.key
 
-            // for each section
-            for(var i = 0, size = sections.length; i < size ; i++){
+                var new_owner = "NONE"
+                var current_owner = zoneChildSnapshot.child("owner").val()
 
-                var section = sections[i]
+                var max = 0
+                var second_max = 0
 
-                if(zoneChildSnapshot.hasChild(section)){
+                // for each section
+                for(var i = 0, size = sections.length; i < size ; i++){
 
-                    let val_section = zoneChildSnapshot.child(section).val()
+                    var section = sections[i]
 
-                    if(val_section > max){
-                        max = val_section
-                        new_owner = section
-                    } else if(val_section > second_max){
-                        second_max = val_section
+                    if(zoneChildSnapshot.hasChild(section)){
+
+                        let val_section = zoneChildSnapshot.child(section).val()
+
+                        if(zoneChildSnapshot.child("funds").hasChild(section)){
+                            var section_power_up_funds = zoneChildSnapshot.child("funds").child(section).val()
+                            if(section_power_up_funds >= power_up_cost){
+                                val_section *= 2
+                                console.log("section has double vote " + section)
+                            }
+                        }
+
+                        if(val_section > max){
+                            max = val_section
+                            new_owner = section
+                        } else if(val_section > second_max){
+                            second_max = val_section
+                        }
                     }
                 }
-            }
-        
+            
 
-            // no capture if equality
-            if(max != second_max){
+                // no capture if equality
+                if(max != second_max){
 
-                sectionsScores.set(new_owner, sectionsScores.get(new_owner) + 1)
-    
-                refZones.child(zone_name).child("owner").set(new_owner, set_error_callback)
-            } else {
+                    sectionsScores.set(new_owner, sectionsScores.get(new_owner) + 1)
+                
+                    refZones.child(zone_name).child("owner").set(new_owner, set_error_callback)
+                } else {
 
-                sectionsScores.set(current_owner, sectionsScores.get(current_owner) + 1)
+                    sectionsScores.set(current_owner, sectionsScores.get(current_owner) + 1)
 
-            }
+                }
+
+            })
+
+            sectionsScores.forEach( (val, key) => {
+                if(key != "NONE"){
+                    refSections.child(key).child("score").set(val, set_error_callback)
+                }
+            })
 
         })
-
-        sectionsScores.forEach( (val, key) => {
-            if(key != "NONE"){
-                refSections.child(key).child("score").set(val, set_error_callback)
-            }
-        })
-
     })
 
     return null
