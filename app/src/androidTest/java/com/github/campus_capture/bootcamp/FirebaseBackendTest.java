@@ -3,6 +3,7 @@ package com.github.campus_capture.bootcamp;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -23,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -65,7 +67,7 @@ public class FirebaseBackendTest {
             assertTrue(result);
         }catch(Exception e){
             Log.e("Error in test", e.toString());
-            assertTrue(false);
+            fail();
         }
 
         // check database content
@@ -116,7 +118,7 @@ public class FirebaseBackendTest {
             assertFalse(result);
         }catch(Exception e){
             Log.e("Error in test", e.toString());
-            assertTrue(false);
+            fail();
         }
 
         // check database content
@@ -155,6 +157,44 @@ public class FirebaseBackendTest {
     }
 
     @Test
+    public void testVoteZoneInexistantZone()
+    {
+        // set database content
+        database.getReference().child("Users").child("testUserId").child("has_voted").setValue(false);
+
+        BackendInterface b = new FirebaseBackend();
+
+        try{
+            b.voteZone("testUserId", Section.IN, "zoneasdfajsdf").get();
+        }catch(Throwable e){
+            if(e.toString() != "Could not get result from the database"){
+                fail();
+            }
+
+        }
+    }
+    @Ignore
+    @Test
+    public void testVoteZoneInexistantPlayer()
+    {
+        // set database content
+        database.getReference().child("Zones").child("BC").child("IN").setValue(4);
+        database.getReference().child("Users").child("testUserId").child("has_voted").setValue(false);
+
+
+        BackendInterface b = new FirebaseBackend();
+
+        try{
+            b.voteZone("playerIDylsdfjasdlfj", Section.IN, "zoneasdfajsdf").get();
+        }catch(Throwable e){
+            if(e.toString() != "Could not get result from the database"){
+                fail();
+            }
+
+        }
+    }
+
+    @Test
     public void testCurrentZoneOwners()
     {
         // set database content
@@ -182,6 +222,23 @@ public class FirebaseBackendTest {
     }
 
     @Test
+    public void testCurrentOwnersNoZones()
+    {
+        // set database content
+
+        BackendInterface b = new FirebaseBackend();
+
+        try{
+            b.getCurrentZoneOwners().get();
+        }catch(Throwable e){
+            if(e.toString() != "Could not get result from the database"){
+                fail();
+            }
+
+        }
+    }
+
+    @Test
     public void testScoresAreWellOrdered()
     {
         // set database content
@@ -204,7 +261,24 @@ public class FirebaseBackendTest {
             }
         }catch(Exception e){
             Log.e("Error in test", e.toString());
-            assertTrue(false);
+            fail();
+        }
+    }
+
+    @Test
+    public void testScoreNoZones()
+    {
+        // set database content
+
+        BackendInterface b = new FirebaseBackend();
+
+        try{
+            b.getScores().get();
+        }catch(Throwable e){
+            if(e.toString() != "Could not get result from the database"){
+                fail();
+            }
+
         }
     }
 
@@ -220,7 +294,7 @@ public class FirebaseBackendTest {
             assertFalse(b.hasAttacked("testUserId").get());
         }catch(Exception e){
             Log.e("Error in test", e.toString());
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -236,7 +310,24 @@ public class FirebaseBackendTest {
             assertTrue(b.hasAttacked("testUserId").get());
         }catch(Exception e){
             Log.e("Error in test", e.toString());
-            assertTrue(false);
+            fail();
+        }
+    }
+
+    @Test
+    public void testIfPlayerAlreadyAttackedInexistantPlayer()
+    {
+        // set database content
+
+        BackendInterface b = new FirebaseBackend();
+
+        try{
+            b.hasAttacked("inexistant Player").get();
+        }catch(Throwable e){
+            if(e.toString() != "Could not get result from the database"){
+                fail();
+            }
+
         }
     }
 
@@ -302,7 +393,28 @@ public class FirebaseBackendTest {
             assertEquals(result, Section.SC);
         }catch(Exception e){
             Log.e("Error in test", e.toString());
-            assertTrue(false);
+            fail();
+        }
+    }
+
+    @Ignore
+    @Test
+    public void testGetUserSectionInexistantPlayer()
+    {
+        // set database content
+
+        database.getReference().child("Users").child("testUserId").child("section").setValue("SC");
+
+
+        BackendInterface b = new FirebaseBackend();
+
+        try{
+            b.getUserSection("userid sdfadf").get();
+        }catch(Throwable e){
+            if(e.toString() != "Could not get result from the database"){
+                fail();
+            }
+
         }
     }
 
@@ -323,7 +435,26 @@ public class FirebaseBackendTest {
             assertFalse(result.containsKey("owner"));
         }catch(Exception e){
             Log.e("Error in test", e.toString());
-            assertTrue(false);
+            fail();
+        }
+    }
+
+    @Test
+    public void testGetUserSectionInexistantZone() {
+        // set database content
+
+        BackendInterface b = new FirebaseBackend();
+
+        try {
+            b.getCurrentAttacks("zoneasfasdfasd").get();
+        } catch (Throwable e) {
+            if (e.toString() != "Could not get result from the database") {
+                fail();
+            }
+
         }
     }
 }
+
+
+

@@ -114,6 +114,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
     private Map<String, Polygon> polygonMap;
     @SuppressLint("PotentialBehaviorOverride")
     private final OnMapReadyCallback callback = googleMap -> {
+
         ZoneDAO zoneDAO = zoneDB.zoneDAO();
 
         map = googleMap;
@@ -165,9 +166,11 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
         });
 
         map.setOnPolygonClickListener(polygon ->{
+
             Marker m = zoneLabels.get(polygon);
             if(m != null)
             {
+
                 refreshCurrentAttacks(m, map);
                 zoneLabels.replace(polygon, m);
             }
