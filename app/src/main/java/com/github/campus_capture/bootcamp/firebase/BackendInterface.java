@@ -71,27 +71,11 @@ public interface BackendInterface {
 
     /**
      * Method to signal to the back-end that a player has given some money for a given powerup
+     * This wraps the two previous unsafe methods from #149 into one, but pushes the logic for
+     * determining the success of transmission and so on behind the interface
      * @param name The name of the powerup
      * @param money the amount of funds transferred
      * @return boolean: success
      */
     CompletableFuture<Boolean> sendMoney(String name, int money);
-
-
-    /**
-     * Method to set the money of the user
-     * //TODO: Change this method for a more safe one!
-     *
-     * @param change The change of the user money
-     */
-    void addMoney(int change);
-
-    /**
-     * Add to team's fund
-     * //TODO: Change this method for a more safe one!
-     *
-     * @param change The participation of the user to the teams fund
-     * @param powerUpName The name of the powerUp
-     */
-    void addToTeamsFund(int change, String powerUpName);
 }
