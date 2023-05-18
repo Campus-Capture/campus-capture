@@ -1,20 +1,8 @@
 package com.github.campus_capture.bootcamp.fragments;
 
 import static androidx.test.espresso.Espresso.onView;
-import static com.github.campus_capture.bootcamp.authentication.Section.AR;
-import static com.github.campus_capture.bootcamp.authentication.Section.CGC;
-import static com.github.campus_capture.bootcamp.authentication.Section.EL;
-import static com.github.campus_capture.bootcamp.authentication.Section.GC;
-import static com.github.campus_capture.bootcamp.authentication.Section.GM;
-import static com.github.campus_capture.bootcamp.authentication.Section.IN;
-import static com.github.campus_capture.bootcamp.authentication.Section.MA;
-import static com.github.campus_capture.bootcamp.authentication.Section.MT;
-import static com.github.campus_capture.bootcamp.authentication.Section.MX;
-import static com.github.campus_capture.bootcamp.authentication.Section.NONE;
-import static com.github.campus_capture.bootcamp.authentication.Section.PH;
-import static com.github.campus_capture.bootcamp.authentication.Section.SC;
-import static com.github.campus_capture.bootcamp.authentication.Section.SIE;
-import static com.github.campus_capture.bootcamp.authentication.Section.SV;
+import static com.github.campus_capture.bootcamp.authentication.Section.*;
+
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -92,6 +80,8 @@ public class MapColorTest {
         //Intents.release();
     }
 
+    //TODO: Revolve in issue #153
+    @Ignore("To be (maybe) tested in issue #153")
     @Test
     public void testZoneColors() throws InterruptedException {
 
@@ -102,7 +92,7 @@ public class MapColorTest {
         // of retrieving the image somehow to make out what is actually going on when the test
         // is run. Oops!
 
-        Thread.sleep(6000);
+        //Thread.sleep(6000);
         /*
         testRule.getScenario().onActivity(a -> {
             View v = a.findViewById(R.id.map);
