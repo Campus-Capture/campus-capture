@@ -114,6 +114,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
     private Map<String, Polygon> polygonMap;
     @SuppressLint("PotentialBehaviorOverride")
     private final OnMapReadyCallback callback = googleMap -> {
+
         ZoneDAO zoneDAO = zoneDB.zoneDAO();
 
         map = googleMap;
@@ -165,9 +166,11 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
         });
 
         map.setOnPolygonClickListener(polygon ->{
+
             Marker m = zoneLabels.get(polygon);
             if(m != null)
             {
+
                 refreshCurrentAttacks(m, map);
                 zoneLabels.replace(polygon, m);
             }
@@ -177,7 +180,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
             }
         });
 
-        // scheduler.startAll();
+        scheduler.startColorRefresh();
     };
 
     /**
@@ -397,13 +400,15 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
      */
     public void refreshZoneColors(Map<String, Section> zoneState)
     {
-        if(zoneState == null)
+        Log.i("MapsFragment", "Refreshing zone colours");
+        if(zoneState == null || polygonMap == null)
         {
             Log.e("MapsFragment", "Error: empty zone state returned");
             return;
         }
         for(String name : zoneState.keySet())
         {
+            Log.i("MapsFragment", "Zone " + name);
             Section s = zoneState.get(name);
             if(s == null)
             {
