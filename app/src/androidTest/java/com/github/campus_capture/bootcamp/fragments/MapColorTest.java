@@ -1,24 +1,26 @@
 package com.github.campus_capture.bootcamp.fragments;
 
 import static androidx.test.espresso.Espresso.onView;
-import static com.github.campus_capture.bootcamp.authentication.Section.AR;
-import static com.github.campus_capture.bootcamp.authentication.Section.CGC;
-import static com.github.campus_capture.bootcamp.authentication.Section.EL;
-import static com.github.campus_capture.bootcamp.authentication.Section.GC;
-import static com.github.campus_capture.bootcamp.authentication.Section.GM;
-import static com.github.campus_capture.bootcamp.authentication.Section.IN;
-import static com.github.campus_capture.bootcamp.authentication.Section.MA;
-import static com.github.campus_capture.bootcamp.authentication.Section.MT;
-import static com.github.campus_capture.bootcamp.authentication.Section.MX;
-import static com.github.campus_capture.bootcamp.authentication.Section.NONE;
-import static com.github.campus_capture.bootcamp.authentication.Section.PH;
-import static com.github.campus_capture.bootcamp.authentication.Section.SC;
-import static com.github.campus_capture.bootcamp.authentication.Section.SIE;
-import static com.github.campus_capture.bootcamp.authentication.Section.SV;
+import static com.github.campus_capture.bootcamp.authentication.Section.*;
+
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import static java.lang.System.out;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
+import android.view.View;
 
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -30,15 +32,20 @@ import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.firebase.BackendInterface;
+import com.github.campus_capture.bootcamp.firebase.FirebaseBackend;
 import com.github.campus_capture.bootcamp.firebase.PlaceholderBackend;
+import com.github.campus_capture.bootcamp.map.MapScheduler;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,38 +53,19 @@ import java.util.concurrent.CompletableFuture;
 
 public class MapColorTest {
 
-    private final BackendInterface mockColor = new PlaceholderBackend() {
-        @Override
-        public CompletableFuture<Boolean> hasAttacked(String uid) {
-            return CompletableFuture.completedFuture(false);
-        }
-
-        @Override
-        public CompletableFuture<Map<String, Section>> getCurrentZoneOwners() {
-            Map<String, Section> out = new HashMap<>();
-            out.put("SG1", AR);
-            out.put("CO Est", GC);
-            out.put("CO Ouest", SIE);
-            out.put("BC", IN);
-            out.put("INM INR Terasse", SC);
-            out.put("INM", CGC);
-            out.put("INF INJ", MA);
-            out.put("MXC MXD", PH);
-            out.put("MXG Terrasse", EL);
-            out.put("MXE MXH", SV);
-            out.put("ELA ELB", MX);
-            out.put("ELL", GM);
-            out.put("SV AI", MT);
-            out.put("Agora", NONE);
-            return CompletableFuture.completedFuture(out);
-        }
-    };
+    private static final double DELTA_VAL = 1;
 
     @Rule
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
 
     @Rule
     public GrantPermissionRule permissionLocation = GrantPermissionRule.grant("android.permission.ACCESS_FINE_LOCATION");
+
+    @BeforeClass
+    public static void initClass()
+    {
+        MainActivity.backendInterface = new PlaceholderBackend();
+    }
 
     @Before
     public void init()
@@ -89,27 +77,70 @@ public class MapColorTest {
     @After
     public void close()
     {
-        Intents.release();
+        //Intents.release();
     }
 
-    @Ignore("Testing this is literally horrible; future me will figure it out")
+    //TODO: Revolve in issue #153
+    @Ignore("To be (maybe) tested in issue #153")
     @Test
     public void testZoneColors() throws InterruptedException {
-        // TODO write some actual tests
-        // Meanwhile: don't touch my spaghet
 
-        MainActivity.backendInterface = mockColor;
+        // Note: this test currently doesn't work, just because I am out of energy to tackle this.
+        // The gist is to take the maps view-port, export it to a bitmap, and then read the
+        // individual pixels of the generated image to check that the colors of the displayed
+        // zones are correct. Unfortunately, it doesn't work, and for now I didn't find any way
+        // of retrieving the image somehow to make out what is actually going on when the test
+        // is run. Oops!
 
-        Intents.init();
+        //Thread.sleep(6000);
+        /*
+        testRule.getScenario().onActivity(a -> {
+            View v = a.findViewById(R.id.map);
+            Bitmap b = getBitmapFromView(v);
 
-        Thread.sleep(5000);
+            // Testing every color is stupid, as such we'll be checking the three in the viewport
 
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
+            // MX:
+            int pixel = b.getPixel(150,975);
+            Color color = Color.valueOf(pixel);
+            assertEquals(color.red(), 253, DELTA_VAL);
+            assertEquals(color.green(), 216, DELTA_VAL);
+            assertEquals(color.blue(), 187, DELTA_VAL);
 
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+            // SIE:
+            pixel = b.getPixel(438,1005);
+            color = Color.valueOf(pixel);
+            assertEquals(color.red(), 206, DELTA_VAL);
+            assertEquals(color.green(), 253, DELTA_VAL);
+            assertEquals(color.blue(), 247, DELTA_VAL);
 
-        Thread.sleep(5000);
+            // MX:
+            pixel = b.getPixel(881,936);
+            color = Color.valueOf(pixel);
+            assertEquals(color.red(), 206, DELTA_VAL);
+            assertEquals(color.green(), 138, DELTA_VAL);
+            assertEquals(color.blue(), 188, DELTA_VAL);
+        });*/
+    }
+
+    // Helper method, taken from https://stackoverflow.com/questions/5536066/convert-view-to-bitmap-on-android
+    private Bitmap getBitmapFromView(View view) {
+        //Define a bitmap with the same size as the view
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
+        //Bind a canvas to it
+        Canvas canvas = new Canvas(returnedBitmap);
+        //Get the view's background
+        Drawable bgDrawable =view.getBackground();
+        if (bgDrawable!=null)
+            //has background drawable, then draw it on the canvas
+            bgDrawable.draw(canvas);
+        else
+            //does not have background drawable, then draw white background on the canvas
+            canvas.drawColor(Color.WHITE);
+        // draw the view on the canvas
+        view.draw(canvas);
+        //return the bitmap
+        return returnedBitmap;
     }
 
 }

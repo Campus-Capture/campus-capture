@@ -56,6 +56,7 @@ exports.resetVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
                 }
             })
         })
+
     })
 
     refUsers.once('value').then( (usersSnapshot) => {
@@ -72,6 +73,7 @@ exports.resetVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
     return null
 })
 
+//TODO set back to 15 * * * * once tested finished
 exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.schedule("15 * * * *").onRun((context) => {
 
     console.log("It's minute 15!")
@@ -79,65 +81,163 @@ exports.countVotesScheduledFunction = functions.region('europe-west1').pubsub.sc
     const db = getDatabase()
     const refZones = db.ref('Zones')
     const refSections = db.ref('Sections')
+    const refPowerUp = db.ref('PowerUp/SuperBigMaxPower')
 
     const sectionsScores = new Map()
     for(var i = 0, size = sections.length; i < size ; i++){
         sectionsScores.set(sections[i], 0);
     }
 
-    refZones.once('value').then( (zonesSnapshot) => {
+    refPowerUp.once('value').then( (PowerUpSnapshot) => {
+        var power_up_cost = PowerUpSnapshot.child("value").val()
 
-        // update for each zone
-        zonesSnapshot.forEach((zoneChildSnapshot) => {
+        refZones.once('value').then( (zonesSnapshot) => {
 
-            var zone_name = zoneChildSnapshot.key
 
-            var new_owner = "NONE"
-            var current_owner = zoneChildSnapshot.child("owner").val()
+            // update for each zone
+            zonesSnapshot.forEach((zoneChildSnapshot) => {
 
-            var max = 0
-            var second_max = 0
+                var zone_name = zoneChildSnapshot.key
 
-            // for each section
-            for(var i = 0, size = sections.length; i < size ; i++){
+                var new_owner = "NONE"
+                var current_owner = zoneChildSnapshot.child("owner").val()
 
-                var section = sections[i]
+                var max = 0
+                var second_max = 0
 
-                if(zoneChildSnapshot.hasChild(section)){
+                // for each section
+                for(var i = 0, size = sections.length; i < size ; i++){
 
-                    let val_section = zoneChildSnapshot.child(section).val()
+                    var section = sections[i]
 
-                    if(val_section > max){
-                        max = val_section
-                        new_owner = section
-                    } else if(val_section > second_max){
-                        second_max = val_section
+                    if(zoneChildSnapshot.hasChild(section)){
+
+                        let val_section = zoneChildSnapshot.child(section).val()
+
+                        if(PowerUpSnapshot.child("funds").hasChild(section)){
+                            var section_power_up_funds = PowerUpSnapshot.child("funds").child(section).val()
+
+                            if(section_power_up_funds >= power_up_cost){
+                                val_section *= 2
+                            }
+                        }
+
+                        if(val_section > max){
+                            max = val_section
+                            new_owner = section
+                        } else if(val_section > second_max){
+                            second_max = val_section
+                        }
                     }
                 }
-            }
-        
+            
 
-            // no capture if equality
-            if(max != second_max){
+                // no capture if equality
+                if(max != second_max){
 
-                sectionsScores.set(new_owner, sectionsScores.get(new_owner) + 1)
-    
-                refZones.child(zone_name).child("owner").set(new_owner, set_error_callback)
-            } else {
+                    sectionsScores.set(new_owner, sectionsScores.get(new_owner) + 1)
+                
+                    refZones.child(zone_name).child("owner").set(new_owner, set_error_callback)
+                } else {
 
-                sectionsScores.set(current_owner, sectionsScores.get(current_owner) + 1)
+                    sectionsScores.set(current_owner, sectionsScores.get(current_owner) + 1)
 
-            }
+                }
+
+            })
+
+            sectionsScores.forEach( (val, key) => {
+                if(key != "NONE"){
+                    refSections.child(key).child("score").set(val, set_error_callback)
+                }
+            })
+
+            //remove money of used power ups
+            const refPowerUp = db.ref('PowerUp/SuperBigMaxPower')
+            refPowerUp.once('value').then( (PowerUpSnapshot) => {
+            
+                var power_up_cost = PowerUpSnapshot.child("value").val()
+            
+                PowerUpSnapshot.child("funds").forEach( (fund_section_snapshot) => {
+                
+                    var section = fund_section_snapshot.key
+                
+                    if(fund_section_snapshot.val() >= power_up_cost){
+                    
+                        refPowerUp.child("funds").child(section).set(admin.database.ServerValue.increment(-power_up_cost), set_error_callback)
+                    }
+                })
+            })
+
+
+        })
+    })
+
+    return null
+})
+
+exports.giveMoneyScheduledFunction = functions.region('europe-west1').pubsub.schedule("0 12 * * *").onRun((context) => {
+
+    console.log("It's noon!")
+  
+    const db = getDatabase()
+    const refUsers = db.ref('Users')
+
+    //take snapshot of Users
+    refUsers.once('value').then( (usersSnapshot) => {
+
+        //count number of user for each section
+        const sectionsUserCount = new Map()
+        for(var i = 0, size = sections.length; i < size ; i++){
+            sectionsUserCount.set(sections[i], 0);
+        }
+
+        usersSnapshot.forEach((userSnapshot) => {
+
+            let userSection = userSnapshot.child("section").val()
+            sectionsUserCount.set(userSection, sectionsUserCount.get(userSection) + 1)
 
         })
 
-        sectionsScores.forEach( (val, key) => {
-            if(key != "NONE"){
-                refSections.child(key).child("score").set(val, set_error_callback)
-            }
+        //take snapshot of Sections (for scores)
+        //compute how much money each user of each section gets
+        const refSections = db.ref('Sections')
+
+        const moneyPerUserPerSection = new Map()
+        for(var i = 0, size = sections.length; i < size ; i++){
+            moneyPerUserPerSection.set(sections[i], 0);
+        }
+
+        refSections.once('value').then( (sectionsSnapshot) => {
+
+            sectionsSnapshot.forEach((sectionSnapshot) => {
+
+                var sectionName = sectionSnapshot.key
+    
+                let sectionScore = sectionSnapshot.child("score").val()
+
+                if(sectionsUserCount[sectionName] != 0){
+                    moneyPerUserPerSection.set(sectionName, Math.floor(sectionScore / sectionsUserCount.get(sectionName)) + 1)
+                }
+    
+            })
+
+            //increment user money
+            usersSnapshot.forEach((userSnapshot) => {
+
+                var user_id = userSnapshot.key;
+
+                let userSection = userSnapshot.child("section").val()
+
+                var moneyToAdd = moneyPerUserPerSection.get(userSection)
+
+                refUsers.child(user_id).child("money").set(admin.database.ServerValue.increment(moneyToAdd), set_error_callback)
+
+            })
+
         })
 
     })
 
-    return null
+    return null;
 })

@@ -141,7 +141,6 @@ public class MapScheduler {
         attackButton = view.findViewById(R.id.attackButton);
         defendButton = view.findViewById(R.id.defendButton);
         timerButton = view.findViewById(R.id.timerButton);
-        refreshZoneState.run();
 
         if(!overrideTime)
         {
@@ -159,7 +158,7 @@ public class MapScheduler {
     }
 
     /**
-     * Method to start the processes
+     * Method to start the processes, except the zone color refresh (needs to wait for the map)
      */
     public void startAll() {
         long millisSinceHour = time.get(Calendar.MINUTE) * MILLIS_PER_MIN
@@ -199,6 +198,14 @@ public class MapScheduler {
         });
 
         zoneRefreshTask.run();
+    }
+
+    /**
+     * Method to start the color refreshes
+     */
+    public void startColorRefresh()
+    {
+        refreshZoneState.run();
     }
 
     /**
@@ -279,5 +286,15 @@ public class MapScheduler {
     public boolean isTakeover()
     {
         return isTakeover;
+    }
+
+    /**
+     * Getter to retrieve the section owning the current zone
+     * @param name the name of the zone
+     * @return the section
+     */
+    public Section getCurrentZoneOwner(String name)
+    {
+        return zoneState.get(name);
     }
 }

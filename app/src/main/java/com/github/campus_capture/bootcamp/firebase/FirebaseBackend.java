@@ -48,12 +48,6 @@ public class FirebaseBackend implements BackendInterface{
                             public void onSuccess(Void aVoid) {
                                 futureResultVoteZone.complete(true);
                             }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                futureResultVoteZone.completeExceptionally(new Throwable("Could not register the user vote"));
-                            }
                         });
             }
             return futureResultVoteZone;
@@ -71,12 +65,6 @@ public class FirebaseBackend implements BackendInterface{
                             @Override
                             public void onSuccess(Void aVoid) {
                                 futureResultUser.complete(true);
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                futureResultUser.completeExceptionally(new Throwable("Could not register that user did vote"));
                             }
                         });
             }
@@ -194,11 +182,18 @@ public class FirebaseBackend implements BackendInterface{
                             public void onSuccess(Void aVoid) {
                                 futureRegisterUserResult.complete(true);
                             }
+                        });
+
+                userRef.child("money").setValue(0).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                futureRegisterUserResult.complete(true);
+                            }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                futureRegisterUserResult.completeExceptionally(new Throwable("Could not init user has_voted"));
+                                futureRegisterUserResult.completeExceptionally(new Throwable("Could not init user money"));
                             }
                         });
             }
@@ -225,12 +220,6 @@ public class FirebaseBackend implements BackendInterface{
                     @Override
                     public void onSuccess(Void aVoid) {
                         futureSetUserSectionResult.complete(true);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        futureSetUserSectionResult.completeExceptionally(new Throwable("Could not set user section"));
                     }
                 });
 
@@ -311,10 +300,11 @@ public class FirebaseBackend implements BackendInterface{
                 }
                 else {
                     List<PowerUp> powerUpList = new ArrayList<>();
+
                     task.getResult().getChildren().forEach((powerUp) -> {
                         String powerUpName = powerUp.getKey();
                         int value = powerUp.child("value").getValue(Integer.class);
-                        int fund = powerUp.child("funds/"+ User.getSection()).getValue(Integer.class);
+                        int fund = powerUp.child("funds/" + User.getSection()).getValue(Integer.class);
                         powerUpList.add(new PowerUp(powerUpName, fund, value));
                     });
                     futureResult.complete(powerUpList);
@@ -346,4 +336,39 @@ public class FirebaseBackend implements BackendInterface{
         });
         return futureResult;
     }
+
+    @Override
+    public void addMoney(int change) {
+
+        AppContext context = AppContext.getAppContext();
+        FirebaseDatabase db = context.getFirebaseDB();
+
+        DatabaseReference moneyRef = db.getReference("Users/"+User.getUid()+"/money");
+
+        moneyRef.setValue(ServerValue.increment(change))
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("FirebaseBackend", "Could not set money");
+                    }
+                });
+    }
+
+    @Override
+    public void addToTeamsFund(int change, String powerUpName) {
+        AppContext context = AppContext.getAppContext();
+        FirebaseDatabase db = context.getFirebaseDB();
+
+        DatabaseReference moneyRef = db.getReference("PowerUp/"+powerUpName+"/funds/"+User.getSection());
+
+        moneyRef.setValue(ServerValue.increment(change))
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("FirebaseBackend", "Could not add to teams fund");
+                    }
+                });
+    }
+
+
 }
