@@ -1,5 +1,6 @@
 package com.github.campus_capture.bootcamp.shop;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,18 +74,28 @@ public class PowerUpRecyclerViewAdapter extends RecyclerView.Adapter<PowerUpRecy
             if(spendValue > userMoney){
                 Toast.makeText(powerUpMoney.getContext(), "Well... you are too broke.", Toast.LENGTH_LONG).show();
             } else {
-                userMoney -= spendValue;
-                powerUpMoney.setText(String.format(Locale.ENGLISH, "Money: %d", userMoney));
+                backendInterface.sendMoney(powerUpName, spendValue).thenAccept(b -> {
+                        if(b)
+                        {
+                            userMoney -= spendValue;
+                            powerUpMoney.setText(String.format(Locale.ENGLISH, "Money: %d", userMoney));
 
-                fund += spendValue;
-                holder.powerUpFund.setText(String.format(Locale.ENGLISH, "Teams fund: %d", fund));
+                            fund += spendValue;
+                            holder.powerUpFund.setText(String.format(Locale.ENGLISH, "Teams fund: %d", fund));
 
-                holder.powerUpProgressBar.setProgress(100*fund/value);
+                            holder.powerUpProgressBar.setProgress(100*fund/value);
 
-                holder.powerUpSeekBar.setMax(userMoney);
-
-                backendInterface.addMoney(-spendValue);
-                backendInterface.addToTeamsFund(spendValue, powerUpName);
+                            holder.powerUpSeekBar.setMax(userMoney);
+                        }
+                        else
+                        {
+                            Toast.makeText(powerUpMoney.getContext(), "Server refused", Toast.LENGTH_LONG).show();
+                        }
+                }).exceptionally(e -> {
+                    Toast.makeText(powerUpMoney.getContext(), "Failed to buy item", Toast.LENGTH_LONG).show();
+                    Log.e("Shop_Screen", "Failed to buy item: " + e.getMessage());
+                    return null;
+                });
             }
         });
     }
