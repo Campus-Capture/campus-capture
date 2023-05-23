@@ -181,6 +181,8 @@ public class SignInFragment extends Fragment {
     private CompletableFuture<Void> storeUserInfo(String uid) {
         CompletableFuture<Section> futureSection = new CompletableFuture<>();
         if(firstLogin) {
+            // Set uid
+            User.setUid(uid);
             // Fetch section info from User class
             Section section = User.getSection();
             storeUserOnDB(uid, section);
