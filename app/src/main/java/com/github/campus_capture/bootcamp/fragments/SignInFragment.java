@@ -2,9 +2,13 @@ package com.github.campus_capture.bootcamp.fragments;
 
 import static android.content.ContentValues.TAG;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +38,7 @@ import java.util.concurrent.CompletableFuture;
 public class SignInFragment extends Fragment {
 
     private final AuthenticationActivity currentActivity;
+    private Button resend_button;
     private Button actually_no_button;
     private Button login_button;
     private Button password_forgotten_button;
@@ -71,6 +76,7 @@ public class SignInFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_sign_in, container, false);
 
         // Init buttons
+        resend_button = view.findViewById(R.id.login_resend_button);
         actually_no_button = view.findViewById(R.id.login_actually_no_button);
         login_button = view.findViewById(R.id.login_button);
         password_forgotten_button = view.findViewById(R.id.login_password_forgotten_button);
@@ -91,8 +97,31 @@ public class SignInFragment extends Fragment {
         setActuallyNoButtonListener();
         setLoginButtonListener();
         setPasswordForgottenListener();
+
+        setResendButtonListener();
+        if(firstLogin){
+            resendVisibilityDelay();
+        }
+
         // Inflate the layout for this fragment
         return view;
+    }
+
+    private void resendVisibilityDelay(){
+        final Handler handler = new Handler(Looper.getMainLooper());
+        resend_button.setVisibility(View.INVISIBLE);
+        handler.postDelayed(() -> resend_button.setVisibility(View.VISIBLE), SECONDS.toMillis(10));
+    }
+
+    /**
+     * Sets the OnClickListener on the "resend button"
+     */
+    private void setResendButtonListener(){
+        resend_button.setOnClickListener(view -> {
+            resendVisibilityDelay();
+            mAuth.getCurrentUser().sendEmailVerification();
+
+        });
     }
 
     /**
@@ -149,6 +178,8 @@ public class SignInFragment extends Fragment {
                 storeUserInfo(user.getUid())
                         .thenRun(currentActivity::goToMainActivity);
             } else {
+                //Make the resend button visible
+                resend_button.setVisibility(View.VISIBLE);
                 Toast.makeText(getActivity(), "Please, verify your email.", Toast.LENGTH_SHORT).show();
             }
         } else {
