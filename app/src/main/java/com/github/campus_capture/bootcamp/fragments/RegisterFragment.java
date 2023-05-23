@@ -1,11 +1,8 @@
 package com.github.campus_capture.bootcamp.fragments;
 
-import static android.content.ContentValues.TAG;
-
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +18,6 @@ import com.github.campus_capture.bootcamp.activities.AuthenticationActivity;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,7 +33,6 @@ public class RegisterFragment extends Fragment {
     private String emailText;
     private EditText password;
     private String passwordText;
-    private FirebaseAuth mAuth;
     private final String TOS_TEXT = AppContext.getAppContext().getString(R.string.TOS_text);
 
 
@@ -72,10 +64,6 @@ public class RegisterFragment extends Fragment {
         email = view.findViewById(R.id.register_email_address);
         password = view.findViewById(R.id.register_password);
 
-        // Init Auth (Authenticater)
-        AppContext context = AppContext.getAppContext();
-        mAuth = context.getFirebaseAuth();
-
         // Init listeners on the buttons
         setAlreadyRegisteredButtonListener();
         setRegisterButtonListener();
@@ -106,39 +94,6 @@ public class RegisterFragment extends Fragment {
     }
 
     /**
-     * Launch the register protocol: create a new user and go to sign in fragment.
-     */
-    private void register(){
-        //Create user in Firebase
-        mAuth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(this::onCompleteRegisterListenerContent);
-    }
-
-    /**
-     * CompleteListener of the user creation on Firebase
-     * @param task Result of the action
-     */
-    private void onCompleteRegisterListenerContent(Task<AuthResult> task){
-        if (task.isSuccessful()) {
-            // Register success, send verification mail.
-            FirebaseUser user = mAuth.getCurrentUser();
-
-            // Send the verification mail
-            user.sendEmailVerification()
-                    .addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Verification email sent", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e -> Toast.makeText(getActivity(), "Verification email not sent", Toast.LENGTH_SHORT).show());
-
-            //Go to sign in fragment
-            currentActivity.goToProfileFragment(emailText, passwordText);
-
-        } else {
-            // If register fails, display a message to the user.
-            Log.w(TAG, "signInWithEmail:failure", task.getException());
-            Toast.makeText(getActivity(), "Register failed",
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
      * Display the TOS
      */
     private void displayTos() {
@@ -146,8 +101,8 @@ public class RegisterFragment extends Fragment {
         new AlertDialog.Builder(getActivity())
                 .setTitle("License agreement")
                 .setPositiveButton("I agree", (dialog, which) -> {
-                    // Start the register protocol when "I agree" clicked
-                    register();
+                    //Go to sign in fragment when the "I agree" button is clicked
+                    currentActivity.goToProfileFragment(emailText, passwordText);
                 })
                 .setNegativeButton("No", null)
                 .setMessage(TOS_TEXT)
