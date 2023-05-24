@@ -22,7 +22,8 @@
     </style>
 
     <style name="edit_text">
-        <item name="android:backgroundTint">@color/grey</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textColorHint">@color/grey</item>
     </style>
 
     <style name="background_image" parent="Theme.CampusCapture">

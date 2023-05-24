@@ -21,11 +21,12 @@
     </style>
 
     <style name="edit_text">
-        <item name="android:backgroundTint">@color/teal_200</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textColorHint">@color/grey</item>
     </style>
 
     <style name="background_image" parent="Theme.CampusCapture">
-        <item name="android:background">@drawable/background_light</item>
+        <item name="android:background">@drawable/background_dark</item>
     </style>
 
     <style name="NoActionBar" parent="Theme.CampusCapture">
