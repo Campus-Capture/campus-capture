@@ -13,9 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.github.campus_capture.bootcamp.authentication.Section;
+import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.BackendInterface;
 import com.github.campus_capture.bootcamp.firebase.FirebaseBackend;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
+import com.github.campus_capture.bootcamp.shop.PowerUp;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -173,7 +175,7 @@ public class FirebaseBackendTest {
 
         }
     }
-    @Ignore
+
     @Test
     public void testVoteZoneInexistantPlayer()
     {
@@ -185,7 +187,7 @@ public class FirebaseBackendTest {
         BackendInterface b = new FirebaseBackend();
 
         try{
-            b.voteZone("playerIDylsdfjasdlfj", Section.IN, "zoneasdfajsdf").get();
+            b.voteZone("playerIDylsdfjasdlfj", Section.IN, "BC").get();
         }catch(Throwable e){
             if(e.toString() != "Could not get result from the database"){
                 fail();
@@ -397,7 +399,7 @@ public class FirebaseBackendTest {
         }
     }
 
-    @Ignore
+
     @Test
     public void testGetUserSectionInexistantPlayer()
     {
@@ -409,7 +411,7 @@ public class FirebaseBackendTest {
         BackendInterface b = new FirebaseBackend();
 
         try{
-            b.getUserSection("userid sdfadf").get();
+            b.getUserSection("useridsdfadf").get();
         }catch(Throwable e){
             if(e.toString() != "Could not get result from the database"){
                 fail();
@@ -440,8 +442,12 @@ public class FirebaseBackendTest {
     }
 
     @Test
-    public void testGetUserSectionInexistantZone() {
+    public void testGetCurrentAttacksInexistantZone() {
+
         // set database content
+        database.getReference().child("Zones").child("testZone").child("owner").setValue("SIE");
+        database.getReference().child("Zones").child("testZone").child("IN").setValue(45);
+        database.getReference().child("Zones").child("testZone").child("SC").setValue(0);
 
         BackendInterface b = new FirebaseBackend();
 
@@ -454,6 +460,143 @@ public class FirebaseBackendTest {
 
         }
     }
+
+    @Test
+    public void testGetPowerUps(){
+
+        // set database content
+        database.getReference().child("PowerUp").child("PU1").child("funds").child("IN").setValue(40);
+        database.getReference().child("PowerUp").child("PU1").child("value").setValue(60);
+        database.getReference().child("PowerUp").child("PU2").child("funds").child("IN").setValue(20);
+        database.getReference().child("PowerUp").child("PU2").child("funds").setValue(324);
+
+        BackendInterface b = new FirebaseBackend();
+
+        try {
+            List<PowerUp> result = b.getPowerUps().get();
+
+            assertEquals(2, result.size());
+
+            assertEquals("PU1", result.get(0).getName();
+            assertEquals(40, result.get(0).getFund());
+            assertEquals(60, result.get(0).getValue());
+
+            assertEquals("PU2", result.get(0).getName();
+            assertEquals(20, result.get(1).getFund());
+            assertEquals(324, result.get(1).getValue());
+
+
+        } catch(Exception e){
+            Log.e("Error in test", e.toString());
+            fail();
+        }
+    }
+
+    @Test
+    public void testGetPowerUpsNoPowerUp(){
+        // set database content
+
+        BackendInterface b = new FirebaseBackend();
+
+        try {
+            b.getPowerUps().get();
+        } catch (Throwable e) {
+            if (e.toString() != "Could not get result from the database") {
+                fail();
+            }
+
+        }
+    }
+
+    @Test
+    public void testGetMoney(){
+
+        // set database content
+        database.getReference().child("Users").child("testUserId").child("money").setValue("42");
+
+        BackendInterface b = new FirebaseBackend();
+
+        try {
+            int result = b.getMoney().get();
+
+            assertEquals(42, result);
+
+        } catch(Exception e){
+            Log.e("Error in test", e.toString());
+            fail();
+        }
+    }
+
+    @Test
+    public void testGetMoneyInvalidPlayer(){
+        // set database content
+        database.getReference().child("Users").child("testUserId").child("money").setValue("42");
+
+        User.setUid("asfadf");
+
+        BackendInterface b = new FirebaseBackend();
+
+        try {
+            b.getMoney().get();
+        } catch (Throwable e) {
+            if (e.toString() != "Could not get result from the database") {
+                fail();
+            }
+
+        }
+    }
+
+    @Test
+    public void testGetMoneyPlayerNoMoney(){
+        // set database content
+        database.getReference().child("Users").child("testUserId").child("section").setValue(Section.IN);
+
+        User.setUid("testUserId");
+
+        BackendInterface b = new FirebaseBackend();
+
+        try {
+            b.getMoney().get();
+        } catch (Throwable e) {
+            if (e.toString() != "Could not get result from the database") {
+                fail();
+            }
+
+        }
+    }
+
+    @Ignore
+    @Test
+    public void testSendMoney(){
+        //TODO
+    }
+
+    @Ignore
+    @Test
+    public void testSendMoneyInexistantPowerUp(){
+        //TODO
+    }
+
+    @Ignore
+    @Test
+    public void testSendMoneyNegativeAmount(){
+        //TODO
+    }
+
+    @Ignore
+    @Test
+    public void testSendMoneyInvalidPlayer(){
+        //TODO
+    }
+
+    @Ignore
+    @Test
+    public void testSendMoneyInvalidPowerUp(){
+        //TODO
+    }
+
+
+
 }
 
 
