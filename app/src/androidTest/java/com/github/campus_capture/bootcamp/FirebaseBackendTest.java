@@ -477,11 +477,11 @@ public class FirebaseBackendTest {
 
             assertEquals(2, result.size());
 
-            assertEquals("PU1", result.get(0).getName();
+            assertEquals("PU1", result.get(0).getName());
             assertEquals(40, result.get(0).getFund());
             assertEquals(60, result.get(0).getValue());
 
-            assertEquals("PU2", result.get(0).getName();
+            assertEquals("PU2", result.get(0).getName());
             assertEquals(20, result.get(1).getFund());
             assertEquals(324, result.get(1).getValue());
 
