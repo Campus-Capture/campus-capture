@@ -94,7 +94,7 @@ public class AuthenticationActivityTest {
     @Test
     public void cannotAuthenticateWithNotEPFLEmail() {
         //Go to login screen
-        clickOn(R.id.register_already_registered_button);
+        onView(ViewMatchers.withId(R.id.register_already_registered_button)).perform(ViewActions.click());
         //Fill email and password
         onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(FALSE_EMAIL));
         onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(PASSWORD));
@@ -103,7 +103,7 @@ public class AuthenticationActivityTest {
         Espresso.closeSoftKeyboard();
 
         //Click the sign in button
-        clickOn(R.id.login_button);
+        onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
 
         //Assert that no intent was launched
         assertThat(Intents.getIntents().isEmpty(), is(true));
@@ -114,7 +114,7 @@ public class AuthenticationActivityTest {
     @Test
     public void cannotAuthenticateIfNotYetRegistered() {
         //Go to login screen
-        clickOn(R.string.register_already_registered_text);
+        onView(ViewMatchers.withId(R.id.register_already_registered_button)).perform(ViewActions.click());
 
         //Fill email and password
         onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(UNREG_EMAIL));
@@ -124,7 +124,7 @@ public class AuthenticationActivityTest {
         Espresso.closeSoftKeyboard();
 
         //Click the sign in button
-        clickOn(R.string.login_string);
+        onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
 
         //Assert that no intent was launched
         assertThat(Intents.getIntents().isEmpty(), is(true));
@@ -142,9 +142,7 @@ public class AuthenticationActivityTest {
 
 
         //Click the register button
-        onView(ViewMatchers.withId(R.id.register_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.register_button)).perform(ViewActions.click());
 
         //Agree the TOS
         clickOn("I agree");
@@ -164,9 +162,7 @@ public class AuthenticationActivityTest {
         Espresso.closeSoftKeyboard();
 
         //Click the register button
-        onView(ViewMatchers.withId(R.id.register_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.register_button)).perform(ViewActions.click());
 
         //Assert that no intent was launched
         assertThat(Intents.getIntents().isEmpty(), is(true));
@@ -186,9 +182,7 @@ public class AuthenticationActivityTest {
         Espresso.closeSoftKeyboard();
 
         //Click the sign in button
-        onView(ViewMatchers.withId(R.id.register_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.register_button)).perform(ViewActions.click());
 
         clickOn("I agree");
 
@@ -200,9 +194,7 @@ public class AuthenticationActivityTest {
     public void AuthenticateWorks() {
 
         //Go to login screen
-        onView(ViewMatchers.withId(R.id.register_already_registered_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.register_already_registered_button)).perform(ViewActions.click());
 
         //Fill email and password
         onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(ALREADY_IN_EMAIL_VER));
@@ -212,9 +204,7 @@ public class AuthenticationActivityTest {
         Espresso.closeSoftKeyboard();
 
         //Click the sign in button
-        onView(ViewMatchers.withId(R.id.login_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
 
         //Assert that an intent was launched
         Intents.intended(IntentMatchers.hasComponent(MainActivity.class.getName()));
@@ -224,11 +214,7 @@ public class AuthenticationActivityTest {
     @Test
     public void AuthenticateDoesNotWorksIfEmailNotVerified() {
         //Go to login screen
-        onView(ViewMatchers.withId(R.id.register_already_registered_button))
-                .perform(ViewActions.scrollTo())
-                
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.register_already_registered_button)).perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(ALREADY_IN_EMAIL));
         onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(ALREADY_IN_PASSWORD));
@@ -237,9 +223,7 @@ public class AuthenticationActivityTest {
         Espresso.closeSoftKeyboard();
 
         //Click the sign in button
-        onView(ViewMatchers.withId(R.id.login_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
 
         //Assert that no intent was launched
         assertThat(Intents.getIntents().isEmpty(), is(true));
@@ -249,9 +233,7 @@ public class AuthenticationActivityTest {
     @Test
     public void SpectatorWorks() {
         //Click the sign in button
-        onView(ViewMatchers.withId(R.id.register_spectator_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.register_spectator_button)).perform(ViewActions.click());
 
         //Assert that an intent was launched
         Intents.intended(IntentMatchers.hasComponent(MainActivity.class.getName()));
@@ -266,9 +248,7 @@ public class AuthenticationActivityTest {
         Espresso.closeSoftKeyboard();
 
         //Click the sign in button
-        onView(ViewMatchers.withId(R.id.register_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.register_button)).perform(ViewActions.click());
 
         clickOn("No");
 
@@ -285,9 +265,7 @@ public class AuthenticationActivityTest {
         Espresso.closeSoftKeyboard();
 
         //Click the sign in button
-        onView(ViewMatchers.withId(R.id.register_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.register_button)).perform(ViewActions.click());
 
         //Assert that no intent was launched
         assertThat(Intents.getIntents().isEmpty(), is(true));
@@ -296,9 +274,7 @@ public class AuthenticationActivityTest {
     @Test
     public void AutomaticallyLoggedIfAlreadyIn() {
         //Go to login screen
-        onView(ViewMatchers.withId(R.id.register_already_registered_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.register_already_registered_button)).perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(ALREADY_IN_EMAIL_VER));
         onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(ALREADY_IN_PASSWORD_VER));
@@ -307,9 +283,7 @@ public class AuthenticationActivityTest {
         Espresso.closeSoftKeyboard();
 
         //Click the sign in button
-        onView(ViewMatchers.withId(R.id.login_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
 
         //Relaunch the activity
         Espresso.pressBack();
@@ -330,14 +304,10 @@ public class AuthenticationActivityTest {
     @Test
     public void CanGoToLoginAndThenComeBackToRegister(){
         //Go to login screen
-        onView(ViewMatchers.withId(R.id.register_already_registered_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.register_already_registered_button)).perform(ViewActions.click());
 
         //Come back to register screen
-        onView(ViewMatchers.withId(R.id.login_actually_no_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.login_actually_no_button)).perform(ViewActions.click());
 
         //Assert that no intent was launched
         assertThat(Intents.getIntents().isEmpty(), is(true));
@@ -349,14 +319,10 @@ public class AuthenticationActivityTest {
     @Test
     public void CanChangePassword(){
         //Go to login screen
-        onView(ViewMatchers.withId(R.id.register_already_registered_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.register_already_registered_button)).perform(ViewActions.click());
 
         //Come back to register screen
-        onView(ViewMatchers.withId(R.id.login_password_forgotten_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.login_password_forgotten_button)).perform(ViewActions.click());
 
         //Enter mail
         onView(ViewMatchers.withId(R.id.change_password_email_address)).perform(ViewActions.typeText(DUMB_USER));
@@ -365,9 +331,7 @@ public class AuthenticationActivityTest {
         Espresso.closeSoftKeyboard();
 
         //Click on the send mail button
-        onView(ViewMatchers.withId(R.id.send_mail_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        onView(ViewMatchers.withId(R.id.send_mail_button)).perform(ViewActions.click());
 
         //Assert that the state is still working and we did not launch any intent
         assertTrue(testRule.getScenario().getState().isAtLeast(Lifecycle.State.STARTED));
