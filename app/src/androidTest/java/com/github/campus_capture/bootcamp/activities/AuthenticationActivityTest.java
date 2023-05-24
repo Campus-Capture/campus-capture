@@ -94,9 +94,7 @@ public class AuthenticationActivityTest {
     @Test
     public void cannotAuthenticateWithNotEPFLEmail() {
         //Go to login screen
-        onView(ViewMatchers.withId(R.id.register_already_registered_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        clickOn(R.id.register_already_registered_button);
         //Fill email and password
         onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(FALSE_EMAIL));
         onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(PASSWORD));
@@ -105,9 +103,7 @@ public class AuthenticationActivityTest {
         Espresso.closeSoftKeyboard();
 
         //Click the sign in button
-        onView(ViewMatchers.withId(R.id.login_button))
-                .perform(ViewActions.scrollTo())
-                .perform(ViewActions.click());
+        clickOn(R.id.login_button);
 
         //Assert that no intent was launched
         assertThat(Intents.getIntents().isEmpty(), is(true));
