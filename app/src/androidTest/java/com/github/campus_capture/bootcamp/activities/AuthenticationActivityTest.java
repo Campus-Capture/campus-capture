@@ -114,7 +114,7 @@ public class AuthenticationActivityTest {
     @Test
     public void cannotAuthenticateIfNotYetRegistered() {
         //Go to login screen
-        clickOn(R.id.register_already_registered_button);
+        clickOn(R.string.register_already_registered_text);
 
         //Fill email and password
         onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(UNREG_EMAIL));
@@ -124,7 +124,7 @@ public class AuthenticationActivityTest {
         Espresso.closeSoftKeyboard();
 
         //Click the sign in button
-        clickOn(R.id.login_button);
+        clickOn(R.string.login_string);
 
         //Assert that no intent was launched
         assertThat(Intents.getIntents().isEmpty(), is(true));
