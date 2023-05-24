@@ -112,12 +112,9 @@ public class PlaceholderBackend implements BackendInterface {
     }
 
     @Override
-    public void addMoney(int change) {
-
-    }
-
-    @Override
-    public void addToTeamsFund(int change, String powerUpName) {
+    public CompletableFuture<Boolean> sendMoney(String name, int money)
+    {
+        return CompletableFuture.completedFuture(true);
 
     }
 }

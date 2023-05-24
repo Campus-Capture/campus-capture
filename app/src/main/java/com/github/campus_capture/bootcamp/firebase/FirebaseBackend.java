@@ -196,6 +196,19 @@ public class FirebaseBackend implements BackendInterface{
                                 futureRegisterUserResult.completeExceptionally(new Throwable("Could not init user money"));
                             }
                         });
+
+                userRef.child("money").setValue(0).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                futureRegisterUserResult.complete(true);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                futureRegisterUserResult.completeExceptionally(new Throwable("Could not init user money"));
+                            }
+                        });
             }
             else{
                 futureRegisterUserResult.complete(false);
@@ -338,36 +351,27 @@ public class FirebaseBackend implements BackendInterface{
     }
 
     @Override
-    public void addMoney(int change) {
+    public CompletableFuture<Boolean> sendMoney(String name, int money) {
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
 
         AppContext context = AppContext.getAppContext();
         FirebaseDatabase db = context.getFirebaseDB();
+        DatabaseReference userMoneyRef = db.getReference("Users/"+User.getUid()+"/money");
+        DatabaseReference powerupMoneyRef = db.getReference("PowerUp/"+name+"/funds/"+User.getSection());
 
-        DatabaseReference moneyRef = db.getReference("Users/"+User.getUid()+"/money");
+        // Spend the money first, if something goes wrong, as such no new funds are created
+        userMoneyRef.setValue(ServerValue.increment(-money))
+                .addOnSuccessListener(
+                    unused ->
+                        powerupMoneyRef.setValue(ServerValue.increment(money))
+                            .addOnSuccessListener(unused1 -> result.complete(true))
+                            .addOnFailureListener(unused2 -> result.completeExceptionally(new Throwable("Failed to add the money to the powerup"))))
+                .addOnFailureListener(
+                    unused3 ->
+                        result.completeExceptionally(new Throwable("Failed to take the money out of the player's funds")));
 
-        moneyRef.setValue(ServerValue.increment(change))
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("FirebaseBackend", "Could not set money");
-                    }
-                });
-    }
+        return result;
 
-    @Override
-    public void addToTeamsFund(int change, String powerUpName) {
-        AppContext context = AppContext.getAppContext();
-        FirebaseDatabase db = context.getFirebaseDB();
-
-        DatabaseReference moneyRef = db.getReference("PowerUp/"+powerUpName+"/funds/"+User.getSection());
-
-        moneyRef.setValue(ServerValue.increment(change))
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("FirebaseBackend", "Could not add to teams fund");
-                    }
-                });
     }
 
 
