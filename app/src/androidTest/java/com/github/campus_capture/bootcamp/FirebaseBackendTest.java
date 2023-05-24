@@ -468,7 +468,7 @@ public class FirebaseBackendTest {
         database.getReference().child("PowerUp").child("PU1").child("funds").child("IN").setValue(40);
         database.getReference().child("PowerUp").child("PU1").child("value").setValue(60);
         database.getReference().child("PowerUp").child("PU2").child("funds").child("IN").setValue(20);
-        database.getReference().child("PowerUp").child("PU2").child("funds").setValue(324);
+        database.getReference().child("PowerUp").child("PU2").child("value").setValue(324);
 
         User.setSection(Section.IN);
 
