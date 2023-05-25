@@ -115,6 +115,5 @@ public class PlaceholderBackend implements BackendInterface {
     public CompletableFuture<Boolean> sendMoney(String name, int money)
     {
         return CompletableFuture.completedFuture(true);
-
     }
 }
