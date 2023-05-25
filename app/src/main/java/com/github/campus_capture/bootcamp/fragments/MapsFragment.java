@@ -5,8 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Location;
 import android.os.Bundle;
@@ -34,7 +32,6 @@ import com.github.campus_capture.bootcamp.storage.ZoneDatabase;
 import com.github.campus_capture.bootcamp.storage.dao.ZoneDAO;
 import com.github.campus_capture.bootcamp.storage.entities.Zone;
 import com.github.campus_capture.bootcamp.utils.PermissionUtils;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,24 +42,21 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.PolyUtil;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 
 public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveListener {
 
     private final int CAMERA_MOVE_DELAY = 350;
+    private View localView;
     private GoogleMap map;
     private ZoneDatabase zoneDB;
     private BackendInterface backendInterface;
@@ -84,7 +78,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
 
             if(currentZone != null) {
 
-                backendInterface.voteZone(User.getUid(), User.getSection(), currentZone.getName())
+                backendInterface.attackZone(User.getUid(), User.getSection(), currentZone.getName())
                         .thenAccept(result -> {
                             if (result) {
                                 Toast.makeText(v.getContext(), getString(R.string.vote_zone_toast), Toast.LENGTH_SHORT).show();
@@ -130,6 +124,12 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
         rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP,0);
         rlp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
         rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        /*View locationButton = ((View) this.getView().findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+        rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+// position on right bottom
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+        rlp.setMargins(0, 180, 180, 0);*/
 
         int bottomMargin = Math.round((40 * this.getContext().getResources().getDisplayMetrics().density));
         int leftMargin = Math.round((5 * this.getContext().getResources().getDisplayMetrics().density));
@@ -321,6 +321,8 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
 
         view.findViewById(R.id.attackButton).setOnClickListener(attackListener);
         view.findViewById(R.id.defendButton).setOnClickListener(attackListener);
+
+        localView = view;
 
         scheduler.startAll();
     }

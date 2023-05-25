@@ -64,7 +64,7 @@ public class MapVoteTest {
     private final BackendInterface mock = new PlaceholderBackend() {
 
         @Override
-        public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
+        public CompletableFuture<Boolean> attackZone(String uid, Section s, String zonename) {
             recordedZoneName = zonename;
             return CompletableFuture.completedFuture(true);
         }

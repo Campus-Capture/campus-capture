@@ -20,7 +20,7 @@ public interface BackendInterface {
      * @param zonename the name of the zone
      * @return boolean: success
      */
-    CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename);
+    CompletableFuture<Boolean> attackZone(String uid, Section s, String zonename);
 
     /**
      * Method to check if a player has attacked during the current take-over or not
@@ -78,4 +78,18 @@ public interface BackendInterface {
      * @return boolean: success
      */
     CompletableFuture<Boolean> sendMoney(String name, int money);
+
+    /**
+     * Method to retrieve the section's votes on the zones (not attacks but planning)
+     * @param s the section
+     * @return a list of strings of the names of the zones
+     */
+    CompletableFuture<List<String>> getSectionVotes(Section s);
+
+    /**
+     * Method for a player to vote for a zone for their team planning
+     * @param name
+     * @return
+     */
+    CompletableFuture<Boolean> voteZone(String name);
 }

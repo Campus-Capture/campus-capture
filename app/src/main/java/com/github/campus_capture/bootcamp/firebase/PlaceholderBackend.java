@@ -28,7 +28,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class PlaceholderBackend implements BackendInterface {
     @Override
-    public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
+    public CompletableFuture<Boolean> attackZone(String uid, Section s, String zonename) {
         return CompletableFuture.completedFuture(true);
     }
 
@@ -116,5 +116,15 @@ public class PlaceholderBackend implements BackendInterface {
     {
         return CompletableFuture.completedFuture(true);
 
+    }
+
+    @Override
+    public CompletableFuture<List<String>> getSectionVotes(Section s) {
+        return null;
+    }
+
+    @Override
+    public CompletableFuture<Boolean> voteZone(String name) {
+        return null;
     }
 }

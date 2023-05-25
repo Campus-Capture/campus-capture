@@ -63,7 +63,7 @@ public class FirebaseBackendTest {
         BackendInterface b = new FirebaseBackend();
 
         try {
-            Boolean result = b.voteZone("testUserId", Section.IN, "BC").get();
+            Boolean result = b.attackZone("testUserId", Section.IN, "BC").get();
             assertTrue(result);
         }catch(Exception e){
             Log.e("Error in test", e.toString());
@@ -114,7 +114,7 @@ public class FirebaseBackendTest {
         BackendInterface b = new FirebaseBackend();
 
         try {
-            Boolean result = b.voteZone("testUserId", Section.IN, "BC").get();
+            Boolean result = b.attackZone("testUserId", Section.IN, "BC").get();
             assertFalse(result);
         }catch(Exception e){
             Log.e("Error in test", e.toString());
@@ -165,7 +165,7 @@ public class FirebaseBackendTest {
         BackendInterface b = new FirebaseBackend();
 
         try{
-            b.voteZone("testUserId", Section.IN, "zoneasdfajsdf").get();
+            b.attackZone("testUserId", Section.IN, "zoneasdfajsdf").get();
         }catch(Throwable e){
             if(e.toString() != "Could not get result from the database"){
                 fail();
@@ -185,7 +185,7 @@ public class FirebaseBackendTest {
         BackendInterface b = new FirebaseBackend();
 
         try{
-            b.voteZone("playerIDylsdfjasdlfj", Section.IN, "zoneasdfajsdf").get();
+            b.attackZone("playerIDylsdfjasdlfj", Section.IN, "zoneasdfajsdf").get();
         }catch(Throwable e){
             if(e.toString() != "Could not get result from the database"){
                 fail();

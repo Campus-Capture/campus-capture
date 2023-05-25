@@ -21,7 +21,7 @@ public class PlaceholderBackendInterfaceTest {
         PlaceholderBackend t = new PlaceholderBackend();
 
         try {
-            assertTrue(t.voteZone("", Section.IN, "").get());
+            assertTrue(t.attackZone("", Section.IN, "").get());
         }catch(Exception e){
             fail();
         }

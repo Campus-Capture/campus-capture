@@ -30,7 +30,7 @@ import java.util.function.Function;
 
 public class FirebaseBackend implements BackendInterface{
     @Override
-    public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
+    public CompletableFuture<Boolean> attackZone(String uid, Section s, String zonename) {
 
         AppContext context = AppContext.getAppContext();
         FirebaseDatabase db = context.getFirebaseDB();
@@ -118,7 +118,8 @@ public class FirebaseBackend implements BackendInterface{
                     Map<String, Section> result = new HashMap<>();
                     task.getResult().getChildren().forEach((zone) -> {
                         String zoneName = zone.getKey();
-                        Section owner = Section.valueOf(String.valueOf(zone.child("owner").getValue()));
+                        String owner_string = String.valueOf(zone.child("owner"));
+                        Section owner = (owner_string.equals("")) ? Section.NONE : Section.valueOf(owner_string);
                         result.put(zoneName, owner);
                     });
                     futureResult.complete(result);
@@ -372,6 +373,16 @@ public class FirebaseBackend implements BackendInterface{
 
         return result;
 
+    }
+
+    @Override
+    public CompletableFuture<List<String>> getSectionVotes(Section s) {
+        return null;
+    }
+
+    @Override
+    public CompletableFuture<Boolean> voteZone(String name) {
+        return null;
     }
 
 

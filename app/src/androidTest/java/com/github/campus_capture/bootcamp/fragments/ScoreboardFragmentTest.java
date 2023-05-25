@@ -38,7 +38,7 @@ public class ScoreboardFragmentTest {
 
     final BackendInterface mock = new PlaceholderBackend() {
         @Override
-        public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
+        public CompletableFuture<Boolean> attackZone(String uid, Section s, String zonename) {
             return CompletableFuture.completedFuture(false);
         }
 
