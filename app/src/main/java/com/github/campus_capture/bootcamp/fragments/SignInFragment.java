@@ -1,7 +1,6 @@
 package com.github.campus_capture.bootcamp.fragments;
 
 import static android.content.ContentValues.TAG;
-
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 import android.content.Context;
@@ -22,15 +21,12 @@ import androidx.fragment.app.Fragment;
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.activities.AuthenticationActivity;
-import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.FirebaseBackend;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.concurrent.CompletableFuture;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -174,9 +170,21 @@ public class SignInFragment extends Fragment {
 
             if(user.isEmailVerified()) {
 
-                // Store the users info and go to MainActivity
-                storeUserInfo(user.getUid())
-                        .thenRun(currentActivity::goToMainActivity);
+                FirebaseBackend database = new FirebaseBackend();
+
+                User.setUid(user.getUid());
+
+                database.isUserInDB(user.getUid()).thenAccept((isIn) -> {
+
+                    //Check if the user is in the DB, if yes, store in the memory and go to the MainActivity, otw
+                    if(isIn){
+                        database.getUserSection(user.getUid()).thenAccept((section -> mSharedPreferences.edit().putString("Section", section.name()).apply()));
+                        mSharedPreferences.edit().putString("UID", user.getUid()).apply();
+                        currentActivity.goToMainActivity();
+                    } else {
+                        currentActivity.goToProfileFragment();
+                    }
+                });
             } else {
                 //Make the resend button visible
                 resend_button.setVisibility(View.VISIBLE);
@@ -209,42 +217,7 @@ public class SignInFragment extends Fragment {
         passwordText = password.getText().toString();
     }
 
-    private CompletableFuture<Void> storeUserInfo(String uid) {
-        CompletableFuture<Section> futureSection = new CompletableFuture<>();
-        if(firstLogin) {
-            // Fetch section info from User class
-            Section section = User.getSection();
-            storeUserOnDB(uid, section);
-            futureSection.complete(section);
-        } else {
-            // Fetch section info from database
-            futureSection = (new FirebaseBackend()).getUserSection(uid)
-                                                   .thenApply(s -> {
-                                                       initUser(uid, s);
-                                                       return s;
-                                                   });
-        }
 
-        // in both cases, we store on disk
-        return futureSection.thenAccept(s -> storeUserOnDisk(uid, s));
-    }
-
-    private void storeUserOnDB(String uid, Section section) {
-        FirebaseBackend backend = new FirebaseBackend();
-        backend.initUserInDB(uid, section);
-    }
-
-    private void storeUserOnDisk(String uid, Section section) {
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putString("UID", uid);
-        editor.putString("Section", section.toString());
-        editor.apply();
-    }
-
-    private void initUser(String uid, Section section) {
-        User.setUid(uid);
-        User.setSection(section);
-    }
 
 
 }

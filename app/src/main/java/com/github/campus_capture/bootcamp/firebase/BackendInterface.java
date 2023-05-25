@@ -78,4 +78,11 @@ public interface BackendInterface {
      * @return boolean: success
      */
     CompletableFuture<Boolean> sendMoney(String name, int money);
+
+    /**
+     * Tests if the user is in the realtime database
+     * @param uid The user's uid
+     * @return true if the user is in the database, false otherwise
+     */
+    CompletableFuture<Boolean> isUserInDB(String uid);
 }
