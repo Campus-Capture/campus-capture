@@ -28,6 +28,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
+import kotlinx.coroutines.CompletedExceptionally;
+
 public class FirebaseBackend implements BackendInterface{
     @Override
     public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
@@ -361,7 +363,14 @@ public class FirebaseBackend implements BackendInterface{
 
     @Override
     public CompletableFuture<Boolean> sendMoney(String name, int money) {
+
+
         CompletableFuture<Boolean> result = new CompletableFuture<>();
+
+        if(money <= 0){
+            result.completeExceptionally(new Throwable("Can't send money <= 0"));
+            return result;
+        }
 
         AppContext context = AppContext.getAppContext();
         FirebaseDatabase db = context.getFirebaseDB();

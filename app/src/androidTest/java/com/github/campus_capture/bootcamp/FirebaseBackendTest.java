@@ -582,34 +582,125 @@ public class FirebaseBackendTest {
         }
     }
 
-    @Ignore
     @Test
     public void testSendMoney(){
-        //TODO
+        // set database content
+        database.getReference().child("Users").child("testUserId").child("money").setValue(40);
+        database.getReference().child("PowerUp").child("PU1").child("funds").child("IN").setValue(50);
+
+        //Set User params
+        User.setUid("testUserId");
+        User.setSection(Section.IN);
+
+
+        BackendInterface b = new FirebaseBackend();
+
+        try {
+            Boolean result = b.sendMoney("PU1", 30).get();
+        }catch(Exception e){
+            Log.e("Error in test", e.toString());
+            fail();
+        }
+
+        // check database content
+        CompletableFuture<Long> futureResultUserMoney = new CompletableFuture<>();
+        database.getReference().child("Users").child("testUserId").child("money").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    fail();
+                }
+                else {
+                    futureResultUserMoney.complete( (Long)task.getResult().getValue() );
+                }
+            }
+        });
+
+        CompletableFuture<Long> futureResultINFunds = new CompletableFuture<>();
+        database.getReference().child("PowerUp").child("PU1").child("funds").child("IN").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    fail();
+                }
+                else {
+                    futureResultINFunds.complete( (Long)task.getResult().getValue() );
+                }
+            }
+        });
+
+        try{
+            assertEquals(10, futureResultUserMoney.get().longValue());
+            assertEquals(80, futureResultINFunds.get().longValue());
+
+        }catch (Exception e){
+            fail();
+        }
     }
 
-    @Ignore
     @Test
     public void testSendMoneyInexistantPowerUp(){
-        //TODO
+        // set database content
+        database.getReference().child("Users").child("testUserId").child("money").setValue(40);
+        database.getReference().child("PowerUp").child("PU1").child("funds").child("IN").setValue(50);
+
+        //Set User params
+        User.setUid("testUserId");
+        User.setSection(Section.IN);
+
+
+        BackendInterface b = new FirebaseBackend();
+
+        try {
+            Boolean result = b.sendMoney("PU1sddsdf", 30).get();
+        }catch (Throwable e) {
+            if ( !e.toString().contains("Failed to add the money to the powerup") ) {
+                fail();
+            }
+        }
     }
 
-    @Ignore
     @Test
     public void testSendMoneyNegativeAmount(){
-        //TODO
+        // set database content
+        database.getReference().child("Users").child("testUserId").child("money").setValue(40);
+        database.getReference().child("PowerUp").child("PU1").child("funds").child("IN").setValue(50);
+
+        //Set User params
+        User.setUid("testUserId");
+        User.setSection(Section.IN);
+
+        BackendInterface b = new FirebaseBackend();
+
+        try {
+            Boolean result = b.sendMoney("PU1", 30).get();
+        }catch (Throwable e) {
+            if ( !e.toString().contains("Can't send money <= 0") ) {
+                fail();
+            }
+        }
     }
 
-    @Ignore
     @Test
     public void testSendMoneyInvalidPlayer(){
-        //TODO
-    }
+        // set database content
+        database.getReference().child("Users").child("testUserId").child("money").setValue(40);
+        database.getReference().child("PowerUp").child("PU1").child("funds").child("IN").setValue(50);
 
-    @Ignore
-    @Test
-    public void testSendMoneyInvalidPowerUp(){
-        //TODO
+        //Set User params
+        User.setUid("testUserIdasdfasf");
+        User.setSection(Section.IN);
+
+
+        BackendInterface b = new FirebaseBackend();
+
+        try {
+            Boolean result = b.sendMoney("PU1", 30).get();
+        }catch (Throwable e) {
+            if ( !e.toString().contains("Failed to take the money out of the player's funds") ) {
+                fail();
+            }
+        }
     }
 
 
