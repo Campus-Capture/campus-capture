@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.github.campus_capture.bootcamp.AppContext;
+import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
@@ -27,8 +28,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
-
-import kotlinx.coroutines.CompletedExceptionally;
 
 public class FirebaseBackend implements BackendInterface{
     @Override
@@ -326,7 +325,7 @@ public class FirebaseBackend implements BackendInterface{
                     List<PowerUp> powerUpList = new ArrayList<>();
 
                     task.getResult().getChildren().forEach((powerUp) -> {
-                        String powerUpName = powerUp.getKey();
+                        String powerUpName = context.getString(R.string.PowerUp1Name);
                         int value = powerUp.child("value").getValue(Integer.class);
                         int fund = powerUp.child("funds/" + User.getSection()).getValue(Integer.class);
                         powerUpList.add(new PowerUp(powerUpName, fund, value));
