@@ -33,13 +33,10 @@ import com.github.campus_capture.bootcamp.firebase.PlaceholderBackend;
 import com.github.campus_capture.bootcamp.fragments.MapsFragment;
 import com.github.campus_capture.bootcamp.map.MapScheduler;
 import com.github.campus_capture.bootcamp.map.ScheduleConstants;
-import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.hamcrest.Matcher;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +46,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
