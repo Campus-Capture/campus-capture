@@ -81,7 +81,10 @@ public class MapScheduler {
                 {
                     String zoneName = currentZone.getName();
                     label += zoneName;
-                    isZoneOwned = zoneState.get(zoneName) == User.getSection();
+                    if(zoneState != null)
+                    {
+                        isZoneOwned = zoneState.get(zoneName) == User.getSection();
+                    }
                     showButtons();
                 }
                 scheduledTaskHandler.postDelayed(zoneRefreshTask, ZONE_REFRESH_RATE);
