@@ -28,6 +28,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
+import kotlinx.coroutines.CompletedExceptionally;
+
 public class FirebaseBackend implements BackendInterface{
     @Override
     public CompletableFuture<Boolean> attackZone(String uid, Section s, String zonename) {
@@ -91,7 +93,11 @@ public class FirebaseBackend implements BackendInterface{
                     futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
                 }
                 else {
-                    futureResult.complete((Boolean) task.getResult().getValue());
+                    if(task.getResult().getValue() == null){
+                        futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
+                    } else{
+                        futureResult.complete((Boolean) task.getResult().getValue());
+                    }
                 }
             }
         });
@@ -255,7 +261,12 @@ public class FirebaseBackend implements BackendInterface{
                     futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
                 }
                 else {
-                    futureResult.complete( Section.valueOf(String.valueOf(task.getResult().getValue())) );
+                    String result = String.valueOf(task.getResult().getValue());
+                    if(result == "null"){
+                        futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
+                    } else{
+                        futureResult.complete( Section.valueOf(result) );
+                    }
                 }
             }
         });
@@ -352,7 +363,14 @@ public class FirebaseBackend implements BackendInterface{
 
     @Override
     public CompletableFuture<Boolean> sendMoney(String name, int money) {
+
+
         CompletableFuture<Boolean> result = new CompletableFuture<>();
+
+        if(money <= 0){
+            result.completeExceptionally(new Throwable("Can't send money <= 0"));
+            return result;
+        }
 
         AppContext context = AppContext.getAppContext();
         FirebaseDatabase db = context.getFirebaseDB();
@@ -372,6 +390,27 @@ public class FirebaseBackend implements BackendInterface{
 
         return result;
 
+    }
+
+    @Override
+    public CompletableFuture<Boolean> isUserInDB(String uid) {
+        CompletableFuture<Boolean> futureResult = new CompletableFuture<>();
+
+        AppContext context = AppContext.getAppContext();
+        FirebaseDatabase db = context.getFirebaseDB();
+        DatabaseReference userRef = db.getReference("Users");
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    futureResult.complete(task.getResult().hasChild(uid));
+                } else {
+                    futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
+                }
+            }
+        });
+
+        return futureResult;
     }
 
 
