@@ -374,15 +374,5 @@ public class FirebaseBackend implements BackendInterface{
 
     }
 
-    @Override
-    public CompletableFuture<List<String>> getSectionVotes(Section s) {
-        return null;
-    }
-
-    @Override
-    public CompletableFuture<Boolean> voteZone(String name) {
-        return null;
-    }
-
 
 }

@@ -78,18 +78,4 @@ public interface BackendInterface {
      * @return boolean: success
      */
     CompletableFuture<Boolean> sendMoney(String name, int money);
-
-    /**
-     * Method to retrieve the section's votes on the zones (not attacks but planning)
-     * @param s the section
-     * @return a list of strings of the names of the zones
-     */
-    CompletableFuture<List<String>> getSectionVotes(Section s);
-
-    /**
-     * Method for a player to vote for a zone for their team planning
-     * @param name
-     * @return
-     */
-    CompletableFuture<Boolean> voteZone(String name);
 }

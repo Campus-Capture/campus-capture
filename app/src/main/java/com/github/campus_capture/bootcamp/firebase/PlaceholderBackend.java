@@ -117,14 +117,4 @@ public class PlaceholderBackend implements BackendInterface {
         return CompletableFuture.completedFuture(true);
 
     }
-
-    @Override
-    public CompletableFuture<List<String>> getSectionVotes(Section s) {
-        return null;
-    }
-
-    @Override
-    public CompletableFuture<Boolean> voteZone(String name) {
-        return null;
-    }
 }
