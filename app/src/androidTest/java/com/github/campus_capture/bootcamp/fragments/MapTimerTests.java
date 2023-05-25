@@ -27,7 +27,12 @@ import androidx.test.rule.GrantPermissionRule;
 
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.activities.MainActivity;
+import com.github.campus_capture.bootcamp.authentication.Section;
+import com.github.campus_capture.bootcamp.authentication.User;
+import com.github.campus_capture.bootcamp.firebase.BackendInterface;
+import com.github.campus_capture.bootcamp.firebase.PlaceholderBackend;
 import com.github.campus_capture.bootcamp.map.MapScheduler;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.hamcrest.Matcher;
 import org.junit.After;
@@ -39,9 +44,25 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @RunWith(AndroidJUnit4.class)
 public class MapTimerTests {
+
+    private final LatLng campusLocation = new LatLng(46.520040, 6.564556);
+
+    private final BackendInterface mock = new PlaceholderBackend()
+    {
+        @Override
+        public CompletableFuture<Map<String, Section>> getCurrentZoneOwners()
+        {
+            Map<String, Section> out = new HashMap<>();
+            out.put("CO Ouest", Section.IN);
+            return CompletableFuture.completedFuture(out);
+        }
+    };
 
     @Rule
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
@@ -156,6 +177,274 @@ public class MapTimerTests {
 
         onView(ViewMatchers.withId(R.id.takeoverBannerText)).check(matches(withText(containsString(comp2))));
     }
+
+    @Test
+    public void planningBannerSwitchesAtBeginningOfTakeover() throws InterruptedException {
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 59);
+        time.set(Calendar.SECOND, 57);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+
+        onView(ViewMatchers.withContentDescription("Navigate up")).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+        onView(ViewMatchers.withId(R.id.planningPhaseBanner)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.takeoverPhaseBanner)).check(matches(not(isDisplayed())));
+
+        Thread.sleep(5000);
+
+        onView(ViewMatchers.withId(R.id.planningPhaseBanner)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.takeoverPhaseBanner)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void takeoverBannerSwitchesAtEndOfTakeover() throws InterruptedException {
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 14);
+        time.set(Calendar.SECOND, 57);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+
+        onView(ViewMatchers.withContentDescription("Navigate up")).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+        onView(ViewMatchers.withId(R.id.planningPhaseBanner)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.takeoverPhaseBanner)).check(matches(isDisplayed()));
+
+        Thread.sleep(5000);
+
+        onView(ViewMatchers.withId(R.id.planningPhaseBanner)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.takeoverPhaseBanner)).check(matches(not(isDisplayed())));
+    }
+
+    @Test
+    public void noButtonsDisplayedOutsideOfTakeover() {
+        MainActivity.backendInterface = mock;
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 30);
+        time.set(Calendar.SECOND, 0);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = campusLocation;
+        User.setUid("Jotanus, the trusty hole rimmer");
+        User.setSection(Section.SC);
+
+        Intents.init();
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+        onView(ViewMatchers.withContentDescription("Navigate up")).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
+    }
+
+    @Test
+    public void attackButtonDisplayedDuringTakeover() {
+        MainActivity.backendInterface = mock;
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 10);
+        time.set(Calendar.SECOND, 0);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = campusLocation;
+        User.setUid("Jotanus, the trusty hole rimmer");
+        User.setSection(Section.SC);
+
+        Intents.init();
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+        onView(ViewMatchers.withContentDescription("Navigate up")).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
+    }
+
+    @Test
+    public void defendButtonDisplayedDuringTakeover() {
+        MainActivity.backendInterface = mock;
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 10);
+        time.set(Calendar.SECOND, 0);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = campusLocation;
+        User.setUid("Jotanus, the trusty hole rimmer");
+        User.setSection(Section.IN);
+
+        Intents.init();
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+        onView(ViewMatchers.withContentDescription("Navigate up")).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void attackButtonDisplayedAtStartOfTakeover() throws InterruptedException {
+        MainActivity.backendInterface = mock;
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 59);
+        time.set(Calendar.SECOND, 56);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = campusLocation;
+        User.setUid("Jotanus, the trusty hole rimmer");
+        User.setSection(Section.SC);
+
+        Intents.init();
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+        onView(ViewMatchers.withContentDescription("Navigate up")).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(2000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
+
+        Thread.sleep(5000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
+    }
+
+    @Test
+    public void defendButtonDisplayedAtStartOfTakeover() throws InterruptedException {
+        MainActivity.backendInterface = mock;
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 59);
+        time.set(Calendar.SECOND, 56);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = campusLocation;
+        User.setUid("Jotanus, the trusty hole rimmer");
+        User.setSection(Section.IN);
+
+        Intents.init();
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+        onView(ViewMatchers.withContentDescription("Navigate up")).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(2000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
+
+        Thread.sleep(5000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void attackButtonHiddenAtEndOfTakeover() throws InterruptedException {
+        MainActivity.backendInterface = mock;
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 14);
+        time.set(Calendar.SECOND, 56);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = campusLocation;
+        User.setUid("Jotanus, the trusty hole rimmer");
+        User.setSection(Section.SC);
+
+        Intents.init();
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+        onView(ViewMatchers.withContentDescription("Navigate up")).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(2000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
+
+        Thread.sleep(5000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
+    }
+
+    @Test
+    public void defendButtonHiddenAtEndOfTakeover() throws InterruptedException {
+        MainActivity.backendInterface = mock;
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 14);
+        time.set(Calendar.SECOND, 56);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = campusLocation;
+        User.setUid("Jotanus, the trusty hole rimmer");
+        User.setSection(Section.IN);
+
+        Intents.init();
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+        onView(ViewMatchers.withContentDescription("Navigate up")).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(2000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(isDisplayed()));
+
+        Thread.sleep(5000);
+
+        onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
+    }
+
 
     /**
      * Helper method to retrieve the text from a text view, since the time between opening the UI
