@@ -187,7 +187,7 @@ public class FirebaseBackendTest {
         BackendInterface b = new FirebaseBackend();
 
         try{
-            b.voteZone("playerIDylsdfjasdlfj", Section.IN, "BC").get();
+            b.attackZone("playerIDylsdfjasdlfj", Section.IN, "BC").get();
         }catch(Throwable e){
             if( !e.toString().contains("Could not get result from the database") ){
                 Log.d("MY", e.toString());
