@@ -187,6 +187,8 @@ public class MapTimerTests {
         MapScheduler.overrideTime = true;
         MapScheduler.time = time;
 
+        Intents.init();
+
         onView(ViewMatchers.withContentDescription("Navigate up")).perform(ViewActions.click());
 
         onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
@@ -211,6 +213,8 @@ public class MapTimerTests {
         time.set(Calendar.MILLISECOND, 0);
         MapScheduler.overrideTime = true;
         MapScheduler.time = time;
+
+        Intents.init();
 
         onView(ViewMatchers.withContentDescription("Navigate up")).perform(ViewActions.click());
 
