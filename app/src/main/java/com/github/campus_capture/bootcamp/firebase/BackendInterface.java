@@ -86,3 +86,4 @@ public interface BackendInterface {
      */
     CompletableFuture<Boolean> isUserInDB(String uid);
 }
+
