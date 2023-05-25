@@ -120,6 +120,6 @@ public class PlaceholderBackend implements BackendInterface {
 
     @Override
     public CompletableFuture<Boolean> isUserInDB(String uid) {
-        return null;
+        return CompletableFuture.completedFuture(true);
     }
 }

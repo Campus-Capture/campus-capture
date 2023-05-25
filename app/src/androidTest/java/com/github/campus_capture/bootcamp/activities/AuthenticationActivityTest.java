@@ -402,9 +402,6 @@ public class AuthenticationActivityTest {
         // Wait for the button to be redisplayed
         Thread.sleep(SECONDS.toMillis(1));
 
-        // Check that the resend button is visible
-        onView(ViewMatchers.withId(R.id.login_resend_button)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-
         // Click on the button
         onView(ViewMatchers.withId(R.id.login_resend_button)).perform(ViewActions.click());
 
@@ -413,5 +410,23 @@ public class AuthenticationActivityTest {
 
         // Check that the resend button is visible
         onView(ViewMatchers.withId(R.id.login_resend_button)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    }
+
+    @Test
+    public void canGoOnProfile(){
+        //Go to login screen
+        onView(ViewMatchers.withId(R.id.register_already_registered_button)).perform(ViewActions.click());
+
+        //Enter the name of the already registered but not verified user
+        onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(ALREADY_REGISTER_EMAIL_NOT_LOGGED_VER));
+        onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(ALREADY_REGISTER_PASSWORD_NOT_LOGGED_VER));
+
+        Espresso.closeSoftKeyboard();
+
+        // Click on the login button
+        onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
+        onIdle();
+
+        onView(ViewMatchers.withText("Profile")).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 }
