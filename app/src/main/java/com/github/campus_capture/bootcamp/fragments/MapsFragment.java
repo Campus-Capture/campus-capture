@@ -56,7 +56,6 @@ import java.util.Map;
 public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveListener {
 
     private final int CAMERA_MOVE_DELAY = 350;
-    private View localView;
     private GoogleMap map;
     private ZoneDatabase zoneDB;
     private BackendInterface backendInterface;
@@ -124,16 +123,21 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
         rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP,0);
         rlp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
         rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        /*View locationButton = ((View) this.getView().findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
-        rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
-// position on right bottom
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
-        rlp.setMargins(0, 180, 180, 0);*/
 
         int bottomMargin = Math.round((40 * this.getContext().getResources().getDisplayMetrics().density));
         int leftMargin = Math.round((5 * this.getContext().getResources().getDisplayMetrics().density));
         rlp.setMargins(leftMargin, 0, 0, bottomMargin);
+
+        View locationButton = ((View) this.getView().findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+        rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
+
+        int topMargin = Math.round((40 * this.getContext().getResources().getDisplayMetrics().density));
+        leftMargin = Math.round((2 * this.getContext().getResources().getDisplayMetrics().density));
+        rlp.setMargins(leftMargin, topMargin, 0, 0);
 
         enableMyLocation();
 
@@ -322,8 +326,6 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
         view.findViewById(R.id.attackButton).setOnClickListener(attackListener);
         view.findViewById(R.id.defendButton).setOnClickListener(attackListener);
 
-        localView = view;
-
         scheduler.startAll();
     }
 
@@ -410,7 +412,6 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
         }
         for(String name : zoneState.keySet())
         {
-            Log.i("MapsFragment", "Zone " + name);
             Section s = zoneState.get(name);
             if(s == null)
             {

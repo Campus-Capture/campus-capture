@@ -118,9 +118,8 @@ public class FirebaseBackend implements BackendInterface{
                     Map<String, Section> result = new HashMap<>();
                     task.getResult().getChildren().forEach((zone) -> {
                         String zoneName = zone.getKey();
-                        String owner_string = String.valueOf(zone.child("owner"));
-                        Section owner = (owner_string.equals("")) ? Section.NONE : Section.valueOf(owner_string);
-                        result.put(zoneName, owner);
+                        String owner = String.valueOf(zone.child("owner").getValue());
+                        result.put(zoneName, (owner.equals("null")) ? Section.NONE : Section.valueOf(owner));
                     });
                     futureResult.complete(result);
                 }
