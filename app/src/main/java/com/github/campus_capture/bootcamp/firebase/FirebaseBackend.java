@@ -121,12 +121,7 @@ public class FirebaseBackend implements BackendInterface{
                         String zoneName = zone.getKey();
                         String s_owner = String.valueOf(zone.child("owner").getValue());
 
-                        Section owner;
-                        if (s_owner.equals("null")) {
-                            owner = Section.NONE;
-                        } else {
-                            owner = Section.valueOf(s_owner);
-                        }
+                        Section owner = s_owner.equals("null") ? Section.NONE : Section.valueOf(s_owner);
                         result.put(zoneName, owner);
                     });
                     futureResult.complete(result);
