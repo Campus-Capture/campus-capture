@@ -1,7 +1,5 @@
 package com.github.campus_capture.bootcamp.firebase;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.github.campus_capture.bootcamp.AppContext;
@@ -27,8 +25,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
-
-import kotlinx.coroutines.CompletedExceptionally;
 
 public class FirebaseBackend implements BackendInterface{
     @Override
@@ -412,6 +408,5 @@ public class FirebaseBackend implements BackendInterface{
 
         return futureResult;
     }
-
 
 }
