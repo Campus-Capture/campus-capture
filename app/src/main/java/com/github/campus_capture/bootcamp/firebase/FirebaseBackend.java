@@ -374,5 +374,26 @@ public class FirebaseBackend implements BackendInterface{
 
     }
 
+    @Override
+    public CompletableFuture<Boolean> isUserInDB(String uid) {
+        CompletableFuture<Boolean> futureResult = new CompletableFuture<>();
+
+        AppContext context = AppContext.getAppContext();
+        FirebaseDatabase db = context.getFirebaseDB();
+        DatabaseReference userRef = db.getReference("Users");
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    futureResult.complete(task.getResult().hasChild(uid));
+                } else {
+                    futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
+                }
+            }
+        });
+
+        return futureResult;
+    }
+
 
 }
