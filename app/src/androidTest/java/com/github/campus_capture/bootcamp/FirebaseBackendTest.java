@@ -169,7 +169,7 @@ public class FirebaseBackendTest {
         try{
             b.voteZone("testUserId", Section.IN, "zoneasdfajsdf").get();
         }catch(Throwable e){
-            if(e.toString() != "Could not get result from the database"){
+            if( !e.toString().contains("Could not get result from the database") ){
                 fail();
             }
 
@@ -177,7 +177,6 @@ public class FirebaseBackendTest {
     }
 
     @Test
-    @Ignore
     public void testVoteZoneInexistantPlayer()
     {
         // set database content
@@ -190,7 +189,8 @@ public class FirebaseBackendTest {
         try{
             b.voteZone("playerIDylsdfjasdlfj", Section.IN, "BC").get();
         }catch(Throwable e){
-            if(e.toString() != "Could not get result from the database"){
+            if( !e.toString().contains("Could not get result from the database") ){
+                Log.d("MY", e.toString());
                 fail();
             }
 
@@ -234,7 +234,7 @@ public class FirebaseBackendTest {
         try{
             b.getCurrentZoneOwners().get();
         }catch(Throwable e){
-            if(e.toString() != "Could not get result from the database"){
+            if( !e.toString().contains("Could not get result from the database") ){
                 fail();
             }
 
@@ -278,7 +278,7 @@ public class FirebaseBackendTest {
         try{
             b.getScores().get();
         }catch(Throwable e){
-            if(e.toString() != "Could not get result from the database"){
+            if( !e.toString().contains("Could not get result from the database") ){
                 fail();
             }
 
@@ -327,7 +327,7 @@ public class FirebaseBackendTest {
         try{
             b.hasAttacked("inexistant Player").get();
         }catch(Throwable e){
-            if(e.toString() != "Could not get result from the database"){
+            if( !e.toString().contains("Could not get result from the database") ){
                 fail();
             }
 
@@ -402,7 +402,7 @@ public class FirebaseBackendTest {
 
 
     @Test
-    @Ignore
+    //@Ignore
     public void testGetUserSectionInexistantPlayer()
     {
         // set database content
@@ -415,7 +415,7 @@ public class FirebaseBackendTest {
         try{
             b.getUserSection("useridsdfadf").get();
         }catch(Throwable e){
-            if(e.toString() != "Could not get result from the database"){
+            if( !e.toString().contains("Could not get result from the database") ){
                 fail();
             }
 
@@ -456,7 +456,7 @@ public class FirebaseBackendTest {
         try {
             b.getCurrentAttacks("zoneasfasdfasd").get();
         } catch (Throwable e) {
-            if (e.toString() != "Could not get result from the database") {
+            if ( !e.toString().contains("Could not get result from the database") ) {
                 fail();
             }
 
@@ -516,7 +516,7 @@ public class FirebaseBackendTest {
         try {
             b.getPowerUps().get();
         } catch (Throwable e) {
-            if (e.toString() != "Could not get result from the database") {
+            if ( !e.toString().contains("Could not get result from the database") ) {
                 fail();
             }
 
@@ -556,7 +556,7 @@ public class FirebaseBackendTest {
         try {
             b.getMoney().get();
         } catch (Throwable e) {
-            if (e.toString() != "Could not get result from the database") {
+            if ( !e.toString().contains("Could not get result from the database") ) {
                 fail();
             }
 
@@ -575,7 +575,7 @@ public class FirebaseBackendTest {
         try {
             b.getMoney().get();
         } catch (Throwable e) {
-            if (e.toString() != "Could not get result from the database") {
+            if ( !e.toString().contains("Could not get result from the database") ) {
                 fail();
             }
 

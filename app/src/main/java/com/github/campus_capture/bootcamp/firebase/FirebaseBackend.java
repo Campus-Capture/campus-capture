@@ -91,7 +91,11 @@ public class FirebaseBackend implements BackendInterface{
                     futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
                 }
                 else {
-                    futureResult.complete((Boolean) task.getResult().getValue());
+                    if(task.getResult().getValue() == null){
+                        futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
+                    } else{
+                        futureResult.complete((Boolean) task.getResult().getValue());
+                    }
                 }
             }
         });
@@ -255,7 +259,12 @@ public class FirebaseBackend implements BackendInterface{
                     futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
                 }
                 else {
-                    futureResult.complete( Section.valueOf(String.valueOf(task.getResult().getValue())) );
+                    String result = String.valueOf(task.getResult().getValue());
+                    if(result == "null"){
+                        futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
+                    } else{
+                        futureResult.complete( Section.valueOf(result) );
+                    }
                 }
             }
         });
