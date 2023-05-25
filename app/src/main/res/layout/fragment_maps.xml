@@ -43,6 +43,7 @@
             android:text="@string/takeoverBanner"
             android:layout_margin="8dp"
             android:textSize="14sp"
+            android:textColor="@color/white"
             />
 
     </LinearLayout>

@@ -54,7 +54,7 @@ import java.util.concurrent.CompletableFuture;
 
 @RunWith(AndroidJUnit4.class)
 public class MapVoteTest {
-
+    /*
     String recordedZoneName;
     LatLng fixed = new LatLng(46.518465, 6.561907);
     LatLng noLoc = new LatLng(0, 0);
@@ -719,7 +719,7 @@ public class MapVoteTest {
      * @param matcher the view we're trying to match
      * @return String
      */
-    String getText(final Matcher<View> matcher) {
+    /*String getText(final Matcher<View> matcher) {
         final String[] stringHolder = { null };
         onView(matcher).perform(new ViewAction() {
             @Override
@@ -739,5 +739,5 @@ public class MapVoteTest {
             }
         });
         return stringHolder[0];
-    }
+    }*/
 }
