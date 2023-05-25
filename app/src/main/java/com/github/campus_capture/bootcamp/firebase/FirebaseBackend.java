@@ -28,6 +28,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
+import kotlinx.coroutines.CompletedExceptionally;
+
 public class FirebaseBackend implements BackendInterface{
     @Override
     public CompletableFuture<Boolean> voteZone(String uid, Section s, String zonename) {
@@ -91,7 +93,11 @@ public class FirebaseBackend implements BackendInterface{
                     futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
                 }
                 else {
-                    futureResult.complete((Boolean) task.getResult().getValue());
+                    if(task.getResult().getValue() == null){
+                        futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
+                    } else{
+                        futureResult.complete((Boolean) task.getResult().getValue());
+                    }
                 }
             }
         });
@@ -255,7 +261,12 @@ public class FirebaseBackend implements BackendInterface{
                     futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
                 }
                 else {
-                    futureResult.complete( Section.valueOf(String.valueOf(task.getResult().getValue())) );
+                    String result = String.valueOf(task.getResult().getValue());
+                    if(result == "null"){
+                        futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
+                    } else{
+                        futureResult.complete( Section.valueOf(result) );
+                    }
                 }
             }
         });
@@ -352,7 +363,14 @@ public class FirebaseBackend implements BackendInterface{
 
     @Override
     public CompletableFuture<Boolean> sendMoney(String name, int money) {
+
+
         CompletableFuture<Boolean> result = new CompletableFuture<>();
+
+        if(money <= 0){
+            result.completeExceptionally(new Throwable("Can't send money <= 0"));
+            return result;
+        }
 
         AppContext context = AppContext.getAppContext();
         FirebaseDatabase db = context.getFirebaseDB();
