@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
@@ -118,7 +119,14 @@ public class FirebaseBackend implements BackendInterface{
                     Map<String, Section> result = new HashMap<>();
                     task.getResult().getChildren().forEach((zone) -> {
                         String zoneName = zone.getKey();
-                        Section owner = Section.valueOf(String.valueOf(zone.child("owner").getValue()));
+                        String s_owner = String.valueOf(zone.child("owner").getValue());
+
+                        Section owner;
+                        if (s_owner.equals("null")) {
+                            owner = Section.NONE;
+                        } else {
+                            owner = Section.valueOf(s_owner);
+                        }
                         result.put(zoneName, owner);
                     });
                     futureResult.complete(result);
