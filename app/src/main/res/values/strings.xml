@@ -59,7 +59,7 @@ The rules are simple:
     <string name="TOS_text">By accepting those terms of service you agree that your data will be collected and used for non-legal activities such as DDoS-ing, Botting and…</string>
     <string name="invite_button">Invite your friends</string>
     <string name="invitation_text">Hey there, I need help defending our faculty\'s territory in Campus Capture!\nCome join me now:\u00A0</string>
-    <string name="invitation_link">&lt;App link here&gt;</string>
+    <string name="invitation_link">https://github.com/Campus-Capture/campus-capture/releases</string>
     <string name="login_actually_no_text">Actually no</string>
     <string name="login_string">Login</string>
     <string name="register_welcome_text">Register</string>
