@@ -68,6 +68,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Add a listener for the navigation drawer
         NavigationView navView = findViewById(R.id.nav_view);
         navView.setNavigationItemSelectedListener(this);
+
+        //If the user is not registered, the shop button will be made invisible
+        if(User.getUid() == null){
+            navView.getMenu().findItem(R.id.nav_power_up).setVisible(false);
+        }
     }
 
     /**
