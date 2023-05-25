@@ -93,4 +93,6 @@ The rules are simple:
     <string name="power_up_title">Store</string>
     <string name="menu_shop">Shop</string>
     <string name="power_up_spend_button_text">Spend</string>
+    <string name="planningBanner">Planning phase - remaining time:</string>
+    <string name="takeoverBanner">Takeover phase - remaining time:</string>
 </resources>

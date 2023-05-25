@@ -37,7 +37,10 @@ public class MapScheduler {
     private final TextView zoneText;
     private final Button attackButton;
     private final Button defendButton;
-    private final Button timerButton;
+    private final View planningBanner;
+    private final View takeoverBanner;
+    private final TextView planningBannerText;
+    private final TextView takeoverBannerText;
     private final BackendInterface backendInterface;
     private final MapsFragment upper;
     private final Handler scheduledTaskHandler;
@@ -45,7 +48,8 @@ public class MapScheduler {
     private boolean isTakeover;
     private boolean hasAttacked;
     private Map<String, Section> zoneState;
-    private CountDownTimer buttonTimer;
+    private CountDownTimer planningTimer;
+    private CountDownTimer takeoverTimer;
     public static boolean overrideTime = false;
     public static Calendar time;
 
@@ -140,7 +144,10 @@ public class MapScheduler {
         zoneText = view.findViewById(R.id.currentZoneText);
         attackButton = view.findViewById(R.id.attackButton);
         defendButton = view.findViewById(R.id.defendButton);
-        timerButton = view.findViewById(R.id.timerButton);
+        planningBanner = view.findViewById(R.id.planningPhaseBanner);
+        takeoverBanner = view.findViewById(R.id.takeoverPhaseBanner);
+        planningBannerText = view.findViewById(R.id.planningBannerText);
+        takeoverBannerText = view.findViewById(R.id.takeoverBannerText);
 
         if(!overrideTime)
         {
@@ -167,20 +174,28 @@ public class MapScheduler {
 
         Log.i("MapsFragment", "Millis since hour: " + millisSinceHour);
 
-        buttonTimer = createTimer(timerButton, millisSinceHour);
-        buttonTimer.start();
+        // buttonTimer = createTimer(timerButton, millisSinceHour);
+        // buttonTimer.start();
+        planningTimer = createPlanningTimer(millisSinceHour);
+        planningTimer.start();
+        takeoverTimer = createTakeoverTimer(millisSinceHour);
+        takeoverTimer.start();
 
         if(millisSinceHour < TAKEOVER_DURATION)
         {
             Log.i("MapsFragment", "Started in takeover");
             isTakeover = true;
             scheduledTaskHandler.postDelayed(closeAttacksTask, TAKEOVER_DURATION - millisSinceHour);
+            planningBanner.setVisibility(GONE);
+            takeoverBanner.setVisibility(VISIBLE);
         }
         else
         {
             Log.i("MapsFragment", "Started outside of takeover");
             isTakeover = false;
             scheduledTaskHandler.postDelayed(openAttacksTask, (MILLIS_PER_HOUR - millisSinceHour));
+            planningBanner.setVisibility(VISIBLE);
+            takeoverBanner.setVisibility(GONE);
         }
 
         // TODO properly fix errors due to null uid if user not logged in
@@ -214,7 +229,8 @@ public class MapScheduler {
     public void stopAll()
     {
         scheduledTaskHandler.removeCallbacksAndMessages(null);
-        buttonTimer.cancel();
+        planningTimer.cancel();
+        takeoverTimer.cancel();
     }
 
     /**
@@ -224,7 +240,6 @@ public class MapScheduler {
     {
         attackButton.setVisibility(GONE);
         defendButton.setVisibility(GONE);
-        timerButton.setVisibility(GONE);
     }
 
     /**
@@ -233,31 +248,23 @@ public class MapScheduler {
      */
     private void showButtons()
     {
-        if(User.getUid() == null)
-        {
-            hideButtons();
-        }
-        else if(isTakeover && !hasAttacked)
+        if(isTakeover && !hasAttacked && User.getUid() != null)
         {
             attackButton.setVisibility((isZoneOwned) ? GONE : VISIBLE);
             defendButton.setVisibility((isZoneOwned) ? VISIBLE : GONE);
-            timerButton.setVisibility(GONE);
         }
         else
         {
-            attackButton.setVisibility(GONE);
-            defendButton.setVisibility(GONE);
-            timerButton.setVisibility(VISIBLE);
+            hideButtons();
         }
     }
 
     /**
      * Private method to create the timer for the timer button
-     * @param button the button instance
      * @param hourDelta the amount of time which has gone by since the last hour
-     * @return the timer
      */
-    private CountDownTimer createTimer(Button button, long hourDelta)
+
+    private CountDownTimer createPlanningTimer(long hourDelta)
     {
         return new CountDownTimer(MILLIS_PER_HOUR - hourDelta, 1000) {
             @SuppressLint("SetTextI18n")
@@ -265,16 +272,49 @@ public class MapScheduler {
             public void onTick(long millisUntilFinished) {
                 @SuppressLint("SimpleDateFormat")
                 String timestamp = new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished));
-                button.setText(
-                        upper.getString(R.string.wait_button_text) +
+                planningBannerText.setText(
+                        upper.getString(R.string.planningBanner) +
                                 " " +
                                 timestamp
                 );
             }
+
             @Override
             public void onFinish() {
-                buttonTimer = createTimer(button, 0);
-                buttonTimer.start();
+                planningBanner.setVisibility(GONE);
+                takeoverBanner.setVisibility(VISIBLE);
+                planningTimer = createPlanningTimer(0);
+                planningTimer.start();
+            }
+        };
+    }
+
+    private CountDownTimer createTakeoverTimer(long hourDelta)
+    {
+        long stamp = TAKEOVER_DURATION - hourDelta;
+        if(stamp <= 0 )
+        {
+            stamp += MILLIS_PER_HOUR;
+        }
+        return new CountDownTimer(stamp, 1000) {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onTick(long millisUntilFinished) {
+                @SuppressLint("SimpleDateFormat")
+                String timestamp = new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished));
+                takeoverBannerText.setText(
+                        upper.getString(R.string.takeoverBanner) +
+                                " " +
+                                timestamp
+                );
+            }
+
+            @Override
+            public void onFinish() {
+                planningBanner.setVisibility(VISIBLE);
+                takeoverBanner.setVisibility(GONE);
+                takeoverTimer = createTakeoverTimer(TAKEOVER_DURATION);
+                takeoverTimer.start();
             }
         };
     }
