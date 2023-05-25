@@ -5,15 +5,14 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -31,6 +30,7 @@ import com.github.campus_capture.bootcamp.firebase.PlaceholderBackend;
 import com.github.campus_capture.bootcamp.map.MapScheduler;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.checkerframework.checker.units.qual.C;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
@@ -52,6 +52,8 @@ public class MapAttacksTest {
     private Section recordedSection;
     private boolean returnCode;
     private boolean hasAttackedInject;
+    private boolean attackFail;
+    private boolean registered;
 
     private View decorView;
 
@@ -60,6 +62,13 @@ public class MapAttacksTest {
         @Override
         public CompletableFuture<Boolean> attackZone(String uid, Section s, String zonename)
         {
+            if(attackFail)
+            {
+                registered = true;
+                CompletableFuture<Boolean> out = new CompletableFuture<>();
+                out.completeExceptionally(new RuntimeException("Oh no"));
+                return out;
+            }
             recordedZoneName = zonename;
             recordedUID = uid;
             recordedSection = s;
@@ -117,6 +126,7 @@ public class MapAttacksTest {
         User.setSection(Section.SC);
         hasAttackedInject = false;
         returnCode = true;
+        attackFail = false;
 
         Intents.init();
 
@@ -154,6 +164,7 @@ public class MapAttacksTest {
         User.setSection(Section.IN);
         hasAttackedInject = false;
         returnCode = true;
+        attackFail = false;
 
         Intents.init();
 
@@ -191,6 +202,7 @@ public class MapAttacksTest {
         User.setSection(Section.SC);
         hasAttackedInject = false;
         returnCode = false;
+        attackFail = false;
 
         Intents.init();
 
@@ -228,6 +240,7 @@ public class MapAttacksTest {
         User.setSection(Section.IN);
         hasAttackedInject = false;
         returnCode = false;
+        attackFail = false;
 
         Intents.init();
 
@@ -265,6 +278,7 @@ public class MapAttacksTest {
         User.setSection(Section.SC);
         hasAttackedInject = true;
         returnCode = false;
+        attackFail = false;
 
         Intents.init();
 
@@ -297,6 +311,7 @@ public class MapAttacksTest {
         User.setSection(Section.IN);
         hasAttackedInject = true;
         returnCode = false;
+        attackFail = false;
 
         Intents.init();
 
@@ -312,6 +327,40 @@ public class MapAttacksTest {
         onView(ViewMatchers.withId(R.id.attackButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.defendButton)).check(matches(not(isDisplayed())));
         onView(ViewMatchers.withId(R.id.takeoverPhaseBanner)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void attackErrorCorrectlyLogs() throws InterruptedException {
+        MainActivity.backendInterface = mock;
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MINUTE, 10);
+        time.set(Calendar.SECOND, 0);
+        time.set(Calendar.MILLISECOND, 0);
+        MapScheduler.overrideTime = true;
+        MapScheduler.time = time;
+        MapsFragment.locationOverride = true;
+        MapsFragment.fixedLocation = campusLocation;
+        User.setUid("Jotanus, the trusty hole rimmer");
+        User.setSection(Section.IN);
+        hasAttackedInject = false;
+        returnCode = false;
+        attackFail = true;
+        registered = false;
+
+        Intents.init();
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+        onView(ViewMatchers.withContentDescription("Navigate up")).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(3000);
+
+        onView(ViewMatchers.withId(R.id.defendButton)).perform(ViewActions.click());
+
+        assertTrue(registered);
     }
 
 }

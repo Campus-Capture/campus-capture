@@ -1,10 +1,12 @@
 package com.github.campus_capture.bootcamp.fragments;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static com.github.campus_capture.bootcamp.authentication.Section.*;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import static java.lang.System.out;
@@ -37,6 +39,7 @@ import com.github.campus_capture.bootcamp.firebase.PlaceholderBackend;
 import com.github.campus_capture.bootcamp.map.MapScheduler;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 
+import org.checkerframework.checker.units.qual.C;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -54,6 +57,19 @@ import java.util.concurrent.CompletableFuture;
 public class MapColorTest {
 
     private static final double DELTA_VAL = 1;
+    private boolean caught;
+
+    private final BackendInterface mock = new PlaceholderBackend()
+    {
+        @Override
+        public CompletableFuture<Map<String, Section>> getCurrentZoneOwners()
+        {
+            caught = true;
+            CompletableFuture<Map<String, Section>> out = new CompletableFuture<>();
+            out.completeExceptionally(new RuntimeException("Oh no"));
+            return out;
+        }
+    };
 
     @Rule
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
@@ -77,13 +93,32 @@ public class MapColorTest {
     @After
     public void close()
     {
-        //Intents.release();
+        Intents.release();
+    }
+
+    @Test
+    public void runThroughFailedZoneOwners() throws InterruptedException {
+        MainActivity.backendInterface = mock;
+        caught = false;
+
+        Intents.init();
+
+        Context context = getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+        onView(ViewMatchers.withContentDescription("Navigate up")).perform(ViewActions.click());
+
+        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+
+        Thread.sleep(3000);
+
+        assertTrue(caught);
     }
 
     //TODO: Revolve in issue #153
     @Ignore("To be (maybe) tested in issue #153")
     @Test
-    public void testZoneColors() throws InterruptedException {
+    public void testZoneColors() {
 
         // Note: this test currently doesn't work, just because I am out of energy to tackle this.
         // The gist is to take the maps view-port, export it to a bitmap, and then read the
