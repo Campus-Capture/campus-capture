@@ -1,10 +1,13 @@
 package com.github.campus_capture.bootcamp.activities;
 
+import static androidx.test.espresso.Espresso.onIdle;
 import static androidx.test.espresso.Espresso.onView;
 import static com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 import android.content.Intent;
 import android.util.Log;
@@ -14,17 +17,21 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.assertion.ViewAssertions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.adevinta.android.barista.interaction.BaristaClickInteractions;
+import com.adevinta.android.barista.interaction.BaristaMenuClickInteractions;
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -34,6 +41,7 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 
@@ -50,9 +58,10 @@ public class AuthenticationActivityTest {
     private final static String ALREADY_IN_PASSWORD_VER = "NoMoneyNoProblem";
     private final static String SMALL_PASSWORD = "pass";
     private final static String DUMB_USER = "dumb.user@epfl.ch";
-
-
-
+    private final static String ALREADY_REGISTER_EMAIL_NOT_LOGGED = "regis.nologson@epfl.ch";
+    private final static String ALREADY_REGISTER_PASSWORD_NOT_LOGGED = "IRegisteredForNowButIWillCloseTheAppJustAfterBecauseIAmWeird";
+    private final static String ALREADY_REGISTER_EMAIL_NOT_LOGGED_VER = "regis-ver.nologson@epfl.ch";
+    private final static String ALREADY_REGISTER_PASSWORD_NOT_LOGGED_VER = "IRegisteredAndVerifiedForNowButIWillCloseTheAppJustAfterBecauseIAmWeird";
 
     @Rule
     public ActivityScenarioRule<AuthenticationActivity> testRule = new ActivityScenarioRule<>(AuthenticationActivity.class);
@@ -120,6 +129,8 @@ public class AuthenticationActivityTest {
         //Close keyboard
         Espresso.closeSoftKeyboard();
 
+        onIdle();
+
         //Click the sign in button
         onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
 
@@ -181,6 +192,7 @@ public class AuthenticationActivityTest {
 
         //Click the register button
         onView(ViewMatchers.withId(R.id.register_button)).perform(ViewActions.click());
+        onIdle();
 
         //Assert that no intent was launched
         assertThat(Intents.getIntents().isEmpty(), is(true));
@@ -370,5 +382,36 @@ public class AuthenticationActivityTest {
         //Assert that the state is still working and we did not launch any intent
         assertTrue(testRule.getScenario().getState().isAtLeast(Lifecycle.State.STARTED));
         assertThat(Intents.getIntents().isEmpty(), is(true));
+    }
+
+    @Test
+    public void canResendMail() throws InterruptedException {
+        //Go to login screen
+        onView(ViewMatchers.withId(R.id.register_already_registered_button)).perform(ViewActions.click());
+
+        //Enter the name of the already registered but not verified user
+        onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(ALREADY_REGISTER_EMAIL_NOT_LOGGED));
+        onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(ALREADY_REGISTER_PASSWORD_NOT_LOGGED));
+
+        Espresso.closeSoftKeyboard();
+
+        // Click on the login button
+        onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
+        onIdle();
+
+        // Wait for the button to be redisplayed
+        Thread.sleep(SECONDS.toMillis(1));
+
+        // Check that the resend button is visible
+        onView(ViewMatchers.withId(R.id.login_resend_button)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+
+        // Click on the button
+        onView(ViewMatchers.withId(R.id.login_resend_button)).perform(ViewActions.click());
+
+        // Wait for the button to be redisplayed
+        Thread.sleep(SECONDS.toMillis(12));
+
+        // Check that the resend button is visible
+        onView(ViewMatchers.withId(R.id.login_resend_button)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 }
