@@ -146,7 +146,10 @@ public class SignInFragment extends Fragment {
         if(emailText.endsWith("@epfl.ch")){
             authenticate();
         } else {
-            Toast.makeText(getActivity(), "You must enter a epfl address", Toast.LENGTH_SHORT).show();
+            if(getActivity() != null)
+            {
+                Toast.makeText(getActivity(), "You must enter a epfl address", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -188,13 +191,19 @@ public class SignInFragment extends Fragment {
             } else {
                 //Make the resend button visible
                 resend_button.setVisibility(View.VISIBLE);
-                Toast.makeText(getActivity(), "Please, verify your email.", Toast.LENGTH_SHORT).show();
+                if(getActivity() != null)
+                {
+                    Toast.makeText(getActivity(), "Please, verify your email.", Toast.LENGTH_SHORT).show();
+                }
             }
         } else {
             // If sign in fails, display a message to the user.
             Log.w(TAG, "signInWithEmail:failure", task.getException());
-            Toast.makeText(getActivity(), "Authentication failed",
-                    Toast.LENGTH_SHORT).show();
+            if(getActivity() != null)
+            {
+                Toast.makeText(getActivity(), "Authentication failed",
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -203,8 +212,11 @@ public class SignInFragment extends Fragment {
      */
     private void setPasswordForgottenListener(){
         password_forgotten_button.setOnClickListener(view -> {
-            Toast.makeText(getActivity(), "That is sad", Toast.LENGTH_SHORT).show();
-            currentActivity.goToChangePasswordFragment(email.getText().toString());
+            if(getActivity() != null)
+            {
+                Toast.makeText(getActivity(), "That is sad", Toast.LENGTH_SHORT).show();
+                currentActivity.goToChangePasswordFragment(email.getText().toString());
+            }
         });
 
     }

@@ -53,8 +53,10 @@ public class ResetPasswordFragment extends Fragment {
     private void sendMailButtonListener(){
         emailText = email.getText().toString();
         mAuth.sendPasswordResetEmail(emailText);
-
-        Toast.makeText(getActivity(), "You can change your password with the link you receive at "+emailText+".", Toast.LENGTH_LONG).show();
+        if(getActivity() != null)
+        {
+            Toast.makeText(getActivity(), "You can change your password with the link you receive at " + emailText + ".", Toast.LENGTH_LONG).show();
+        }
 
         currentActivity.goToSignInFragment(emailText, "", false);
     }
