@@ -37,21 +37,25 @@ public class MainActivityTest {
     @Test
     public void NavigationDrawerOpensWhenMenuButtonPressed()
     {
+        Intents.init();
         onView(ViewMatchers.withContentDescription(DRAWER_BUTTON))
                 .perform(ViewActions.click());
 
         assertDisplayed(R.id.nav_view);
+        Intents.release();
     }
 
     @Test
     public void NavigationDrawerClosesWhenActionIsExecuted()
     {
+        Intents.init();
         onView(ViewMatchers.withContentDescription(DRAWER_BUTTON))
                 .perform(ViewActions.click());
 
         clickOn(R.id.nav_maps);
 
         assertNotDisplayed(R.id.nav_view);
+        Intents.release();
     }
 
     @Ignore("Buggy in CI")
@@ -115,6 +119,8 @@ public class MainActivityTest {
 
         onView(ViewMatchers.withText("Log out")).perform(ViewActions.click());
 
+        Thread.sleep(1000);
+
         //Assert that an intent was launched
         Intents.intended(IntentMatchers.hasComponent(AuthenticationActivity.class.getName()));
 
@@ -131,6 +137,8 @@ public class MainActivityTest {
                 .perform(ViewActions.click());
 
         onView(ViewMatchers.withText("Invite a friend!")).perform(ViewActions.click());
+
+        Thread.sleep(1000);
 
         //Assert that an intent was launched
         Intents.intended(IntentMatchers.hasAction("android.intent.action.CHOOSER"));
