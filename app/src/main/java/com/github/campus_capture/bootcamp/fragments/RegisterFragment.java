@@ -123,23 +123,9 @@ public class RegisterFragment extends Fragment {
             FirebaseUser user = mAuth.getCurrentUser();
 
             // Send the verification mail
-            if(user == null)
-            {
-                return;
-            }
             user.sendEmailVerification()
-                    .addOnSuccessListener(unused -> {
-                        if(getActivity() != null)
-                        {
-                            Toast.makeText(getActivity(), "Verification email sent", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        if(getActivity() != null)
-                        {
-                            Toast.makeText(getActivity(), "Verification email not sent", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    .addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Verification email sent", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Toast.makeText(getActivity(), "Verification email not sent", Toast.LENGTH_SHORT).show());
 
             //Go to sign in fragment
             currentActivity.goToSignInFragment(emailText, passwordText, true);
@@ -147,11 +133,8 @@ public class RegisterFragment extends Fragment {
         } else {
             // If register fails, display a message to the user.
             Log.w(TAG, "signInWithEmail:failure", task.getException());
-            if(getActivity() != null)
-            {
-                Toast.makeText(getActivity(), "Register failed",
-                        Toast.LENGTH_SHORT).show();
-            }
+            Toast.makeText(getActivity(), "Register failed",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
