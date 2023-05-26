@@ -99,9 +99,9 @@
 
     <Button
         android:id="@+id/login_resend_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Resend mail"
+        android:layout_width="200sp"
+        android:layout_height="50sp"
+        android:text="@string/login_resend_button_string"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/login_email_address"
         app:layout_constraintEnd_toEndOf="parent"

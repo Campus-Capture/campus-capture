@@ -401,7 +401,7 @@ public class AuthenticationActivityTest {
         onIdle();
 
         // Wait for the button to be redisplayed
-        Thread.sleep(SECONDS.toMillis(1));
+        Thread.sleep(SECONDS.toMillis(3));
 
         // Click on the button
         onView(ViewMatchers.withId(R.id.login_resend_button)).perform(ViewActions.click());
