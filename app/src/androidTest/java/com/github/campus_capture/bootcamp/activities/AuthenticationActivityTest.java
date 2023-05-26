@@ -2,6 +2,8 @@ package com.github.campus_capture.bootcamp.activities;
 
 import static androidx.test.espresso.Espresso.onIdle;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -314,6 +316,8 @@ public class AuthenticationActivityTest {
         database.getReference().child("Users").child("pp5iYDmG4tRfoLKjWvRf0s1bVJc8").child("section").setValue("IN");
         database.getReference().child("Users").child("pp5iYDmG4tRfoLKjWvRf0s1bVJc8").child("money").setValue(0);
 
+        Intents.init();
+
         //Go to login screen
         onView(ViewMatchers.withId(R.id.register_already_registered_button)).perform(ViewActions.click());
 
@@ -344,6 +348,8 @@ public class AuthenticationActivityTest {
             assertThat(theIntents.get(2).getComponent().getClassName(), is(MainActivity.class.getName()));
             return null;
         });
+
+        Intents.release();
     }
 
     @Test
@@ -408,7 +414,7 @@ public class AuthenticationActivityTest {
         Thread.sleep(SECONDS.toMillis(12));
 
         // Check that the resend button is visible
-        onView(ViewMatchers.withId(R.id.login_resend_button)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(ViewMatchers.withId(R.id.login_resend_button)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     @Test
@@ -426,6 +432,6 @@ public class AuthenticationActivityTest {
         onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
         onIdle();
 
-        onView(ViewMatchers.withText("Profile")).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(ViewMatchers.withId(R.id.profile_title)).check(matches(isDisplayed()));
     }
 }
