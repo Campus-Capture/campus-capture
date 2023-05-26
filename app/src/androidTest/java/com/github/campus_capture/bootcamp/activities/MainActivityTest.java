@@ -145,4 +145,5 @@ public class MainActivityTest {
 
         Intents.release();
     }
+
 }
