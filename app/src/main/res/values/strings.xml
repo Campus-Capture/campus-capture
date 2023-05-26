@@ -59,7 +59,7 @@ The rules are simple:
     <string name="TOS_text">By accepting those terms of service you agree that your data will be collected and used for non-legal activities such as DDoS-ing, Botting and…</string>
     <string name="invite_button">Invite your friends</string>
     <string name="invitation_text">Hey there, I need help defending our faculty\'s territory in Campus Capture!\nCome join me now:\u00A0</string>
-    <string name="invitation_link">https://github.com/Campus-Capture/campus-capture/releases</string>
+    <string name="invitation_link">&lt;App link here&gt;</string>
     <string name="login_actually_no_text">Actually no</string>
     <string name="login_string">Login</string>
     <string name="register_welcome_text">Register</string>
@@ -72,7 +72,7 @@ The rules are simple:
     <string name="profile_section">Section</string>
     <string name="profile_apply_button">Apply</string>
     <string name="about_text">This app was made with <b>love</b> (and lots of pain) by:
-        <ul>\n<li>Elija Dirren</li>\n<li>Benjamin Beuret</li>\n<li>David Karoubi</li>\n<li>Antoine Moix</li>\n<li>Raphaël Temperli</li>\n</ul>\nFor the course CS-306 <i>Software Development Project</i>\n\nThis project is open-source ✨\nYou can find the code <a href="https://github.com/Campus-Capture/campus-capture">on the GitHub repo.</a>\nIf you happen to catch a bug, make sure to let us know <a href="https://github.com/Campus-Capture/campus-capture/issues">here!</a>\n\nHave fun!
+    <ul>\n<li>Elija Dirren</li>\n<li>Benjamin Beuret</li>\n<li>David Karoubi</li>\n<li>Antoine Moix</li>\n<li>Raphaël Temperli</li>\n</ul>\nFor the course CS-306 <i>Software Development Project</i>\n\nThis project is open-source ✨\nYou can find the code <a href="https://github.com/Campus-Capture/campus-capture">on the GitHub repo.</a>\nIf you happen to catch a bug, make sure to let us know!\n\nHave fun!
     </string>
 
     <!-- for the section spinner-->
@@ -96,5 +96,5 @@ The rules are simple:
     <string name="menu_shop">Shop</string>
     <string name="power_up_spend_button_text">Spend</string>
     <string name="menu_about">About</string>
-    <string name="PowerUp1Name">Double Attack Power</string>
+    <string name="login_resend_button_string">Resend mail</string>
 </resources>

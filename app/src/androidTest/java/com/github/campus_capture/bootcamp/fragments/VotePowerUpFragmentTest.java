@@ -34,6 +34,7 @@ public class VotePowerUpFragmentTest {
         MainActivity.backendInterface = new PlaceholderBackend();
 
         User.setSection(Section.IN);
+        User.setUid("fakeUid");
     }
 
     @Test

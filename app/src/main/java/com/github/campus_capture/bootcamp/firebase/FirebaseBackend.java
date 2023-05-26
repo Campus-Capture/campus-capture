@@ -326,9 +326,17 @@ public class FirebaseBackend implements BackendInterface{
 
                     task.getResult().getChildren().forEach((powerUp) -> {
                         String powerUpName = powerUp.getKey();
-                        int value = powerUp.child("value").getValue(Integer.class);
-                        int fund = powerUp.child("funds/" + User.getSection()).getValue(Integer.class);
-                        powerUpList.add(new PowerUp(powerUpName, fund, value));
+
+                        Integer value = powerUp.child("value").getValue(int.class);
+                        Integer fund = powerUp.child("funds/" + User.getSection()).getValue(int.class);
+                        if(value==null){
+                            Log.e("FirebaseBackend", "Value is null.");
+                        } else if(fund==null) {
+                            Log.e("FirebaseBackend", "Fund is null. Section: " + User.getSection());
+                        } else {
+                            powerUpList.add(new PowerUp(powerUpName, fund, value));
+                        }
+
                     });
                     futureResult.complete(powerUpList);
                 }
