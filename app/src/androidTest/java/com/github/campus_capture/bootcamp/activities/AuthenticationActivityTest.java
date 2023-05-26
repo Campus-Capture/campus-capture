@@ -2,8 +2,6 @@ package com.github.campus_capture.bootcamp.activities;
 
 import static androidx.test.espresso.Espresso.onIdle;
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -11,7 +9,6 @@ import static org.junit.Assert.assertTrue;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -26,7 +23,6 @@ import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.adevinta.android.barista.interaction.BaristaClickInteractions;
 import com.adevinta.android.barista.interaction.BaristaMenuClickInteractions;
@@ -348,6 +344,7 @@ public class AuthenticationActivityTest {
             assertThat(theIntents.get(2).getComponent().getClassName(), is(MainActivity.class.getName()));
             return null;
         });
+
     }
 
     @Test
@@ -403,7 +400,7 @@ public class AuthenticationActivityTest {
         onIdle();
 
         // Wait for the button to be redisplayed
-        Thread.sleep(SECONDS.toMillis(1));
+        Thread.sleep(SECONDS.toMillis(3));
 
         // Click on the button
         onView(ViewMatchers.withId(R.id.login_resend_button)).perform(ViewActions.click());
@@ -412,7 +409,7 @@ public class AuthenticationActivityTest {
         Thread.sleep(SECONDS.toMillis(12));
 
         // Check that the resend button is visible
-        onView(ViewMatchers.withId(R.id.login_resend_button)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(ViewMatchers.withId(R.id.login_resend_button)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     @Test
@@ -430,6 +427,6 @@ public class AuthenticationActivityTest {
         onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
         onIdle();
 
-        onView(ViewMatchers.withText("Profile")).check(matches(isDisplayed()));
+        onView(ViewMatchers.withText("Profile")).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 }
