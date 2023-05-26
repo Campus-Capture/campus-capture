@@ -178,9 +178,13 @@ public class SignInFragment extends Fragment {
 
                     //Check if the user is in the DB, if yes, store in the memory and go to the MainActivity, otw
                     if(isIn){
-                        database.getUserSection(user.getUid()).thenAccept((section -> mSharedPreferences.edit().putString("Section", section.name()).apply()));
-                        mSharedPreferences.edit().putString("UID", user.getUid()).apply();
-                        currentActivity.goToMainActivity();
+                        database.getUserSection(user.getUid()).thenAccept((section -> {
+                            mSharedPreferences.edit().putString("Section", section.name()).apply();
+                            mSharedPreferences.edit().putString("UID", user.getUid()).apply();
+                            User.setSection(section);
+                            currentActivity.goToMainActivity();
+                        }));
+
                     } else {
                         currentActivity.goToProfileFragment();
                     }
