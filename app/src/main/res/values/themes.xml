@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.CampusCapture" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#C9EC7B7B</item>
+        <item name="colorPrimary">#C9E44C4C</item>
         <item name="colorPrimaryVariant">#680E0E</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
