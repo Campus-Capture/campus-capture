@@ -344,7 +344,6 @@ public class AuthenticationActivityTest {
             assertThat(theIntents.get(2).getComponent().getClassName(), is(MainActivity.class.getName()));
             return null;
         });
-
     }
 
     @Test
