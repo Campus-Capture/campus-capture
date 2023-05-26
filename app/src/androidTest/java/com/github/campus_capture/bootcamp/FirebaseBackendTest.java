@@ -32,6 +32,7 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 @RunWith(AndroidJUnit4.class)
@@ -481,7 +482,7 @@ public class FirebaseBackendTest {
 
             assertEquals(2, result.size());
 
-            if (result.get(0).getName() == "PU1"){
+            if (Objects.equals(result.get(0).getName(), "PU1")){
                 assertEquals(40, result.get(0).getFund());
                 assertEquals(60, result.get(0).getValue());
 
