@@ -434,11 +434,6 @@ public class AuthenticationActivityTest {
         onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
         onIdle();
 
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-
-        onView(ViewMatchers.withContentDescription("Navigate up")).perform(ViewActions.click());
-
         onView(ViewMatchers.withText("Profile")).check(matches(isDisplayed()));
     }
 }
