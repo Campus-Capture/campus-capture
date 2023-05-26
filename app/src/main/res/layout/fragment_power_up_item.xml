@@ -6,8 +6,8 @@
     android:layout_marginTop="0.5dp"
     android:layout_marginEnd="10dp"
     android:layout_marginBottom="0.5dp"
-    android:background="@color/grey"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:theme="@style/Theme.CampusCapture">
 
     <TextView
         android:id="@+id/power_up_name"

@@ -10,12 +10,11 @@
             android:id="@+id/power_up_money"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="viewEnd"
+            android:padding="10sp"
             android:paddingStart="10sp"
             android:paddingEnd="10sp"
-            android:padding="10sp"
-            android:background="@color/grey"
-            android:textSize="20sp"/>
+            android:textAlignment="viewEnd"
+            android:textSize="20sp" />
 
         <TextView
             android:layout_width="match_parent"
