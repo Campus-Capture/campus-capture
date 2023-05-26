@@ -1,4 +1,7 @@
 # Campus Capture (CC)
+[![Build Status](https://api.cirrus-ci.com/github/Campus-Capture/campus-capture.svg)](https://api.cirrus-ci.com/github/Campus-Capture/campus-capture.svg)
+[![Maintainability](https://api.codeclimate.com/v1/badges/7624d1bcb66e86b57a00/maintainability)](https://codeclimate.com/github/Campus-Capture/campus-capture/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/7624d1bcb66e86b57a00/test_coverage)](https://codeclimate.com/github/Campus-Capture/campus-capture/test_coverage)
 
 _Campus Capture_ is a competitive team-game centered around the [EPFL](https://www.epfl.ch/fr/) campus.  
 If you are a student at EPFL, you can take part in the fight to get your school to win!  
