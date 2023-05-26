@@ -429,6 +429,6 @@ public class AuthenticationActivityTest {
         onIdle();
 
         sleep(3000);
-        onView(ViewMatchers.withText(R.id.profile_confirm_button)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(ViewMatchers.withId(R.id.profile_confirm_button)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 }
