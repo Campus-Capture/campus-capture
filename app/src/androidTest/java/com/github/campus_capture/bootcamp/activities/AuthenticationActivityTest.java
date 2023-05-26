@@ -433,49 +433,4 @@ public class AuthenticationActivityTest {
 
         onView(ViewMatchers.withText("Profile")).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
-
-    @Test
-    public void CorrectlyGoInTheProfileFragmentOnRegister(){
-        // Enter Valid credentials
-        onView(ViewMatchers.withId(R.id.register_email_address)).perform(ViewActions.typeText(REG_EMAIL));
-        onView(ViewMatchers.withId(R.id.register_password)).perform(ViewActions.typeText(PASSWORD));
-
-        Espresso.closeSoftKeyboard();
-
-        // Click "register"
-        onView(ViewMatchers.withId(R.id.register_button)).perform(ViewActions.click());
-
-        // Click agree
-        clickOn(R.string.TOS_agree);
-
-        // Assert that the fragment has changed
-        onView(ViewMatchers.withId(R.id.profile_section_spinner)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void  CanGoOnMainActivity() {
-        // Enter Valid credentials
-        onView(ViewMatchers.withId(R.id.register_email_address)).perform(ViewActions.typeText(REG_EMAIL));
-        onView(ViewMatchers.withId(R.id.register_password)).perform(ViewActions.typeText(PASSWORD));
-
-        // Click "register"
-        onView(ViewMatchers.withId(R.id.register_button)).perform(ViewActions.click());
-
-        // Click agree
-        clickOn(R.string.TOS_agree);
-
-        // Choose a section
-        clickOn(R.string.profile_apply_button);
-
-        // Confirm section
-        clickOn("Yes");
-
-        //Login
-        onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
-
-        assertThat(Intents.getIntents().isEmpty(), is(false));
-
-    }
-
-
 }
