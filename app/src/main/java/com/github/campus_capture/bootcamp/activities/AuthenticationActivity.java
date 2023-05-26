@@ -99,10 +99,13 @@ public class AuthenticationActivity extends AppCompatActivity {
     {
         // Fragments are managed by transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new RegisterFragment(this));
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit(); // Commit the transaction
+        if(!fragmentManager.isDestroyed())
+        {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new RegisterFragment(this));
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit(); // Commit the transaction
+        }
     }
 
     /**
@@ -111,10 +114,13 @@ public class AuthenticationActivity extends AppCompatActivity {
     public void goToSignInFragment(String email, String password, boolean firstLogin){
         // Fragments are managed by transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(this, email, password, firstLogin));
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit(); // Commit the transaction
+        if(!fragmentManager.isDestroyed())
+        {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(this, email, password, firstLogin));
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit(); // Commit the transaction
+        }
     }
 
     /**
@@ -124,10 +130,13 @@ public class AuthenticationActivity extends AppCompatActivity {
     {
         // Fragments are managed by transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new ResetPasswordFragment(this, email));
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit(); // Commit the transaction
+        if(!fragmentManager.isDestroyed())
+        {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new ResetPasswordFragment(this, email));
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit(); // Commit the transaction
+        }
     }
 
     /**
@@ -136,10 +145,13 @@ public class AuthenticationActivity extends AppCompatActivity {
     public void goToProfileFragment(){
         // Fragments are managed by transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new ProfileFragment(this));
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit(); // Commit the transaction
+        if(!fragmentManager.isDestroyed())
+        {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new ProfileFragment(this));
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit(); // Commit the transaction
+        }
     }
 
     private void readUserInfoFromDisk(String uid) {

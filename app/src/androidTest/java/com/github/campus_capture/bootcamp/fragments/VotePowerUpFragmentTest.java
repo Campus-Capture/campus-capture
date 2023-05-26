@@ -39,8 +39,7 @@ public class VotePowerUpFragmentTest {
 
     @Test
     public void shopIsCorrectlySetup() {
-
-
+        
         onView(ViewMatchers.withContentDescription("Navigate up"))
                 .perform(ViewActions.click());
 
@@ -48,7 +47,7 @@ public class VotePowerUpFragmentTest {
 
         onView(ViewMatchers.withId(R.id.power_up_fund)).check(matches(withText("Teams fund: 70")));
         onView(ViewMatchers.withId(R.id.power_up_value)).check(matches(withText("Value: 80")));
-        onView(ViewMatchers.withId(R.id.power_up_name)).check(matches(withText("PowerUpTest")));
+        onView(ViewMatchers.withId(R.id.power_up_name)).check(matches(withText(R.string.PowerUp1Name)));
     }
 
     @Test
