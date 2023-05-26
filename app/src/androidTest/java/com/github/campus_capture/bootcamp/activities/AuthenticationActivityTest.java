@@ -428,5 +428,4 @@ public class AuthenticationActivityTest {
 
         onView(ViewMatchers.withText("Profile")).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
-
 }
