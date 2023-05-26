@@ -20,5 +20,9 @@
             android:id="@+id/nav_power_up"
             android:icon="@drawable/power_up_icon"
             android:title="@string/menu_shop" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/about_icon"
+            android:title="@string/menu_about" />
     </group>
 </menu>
