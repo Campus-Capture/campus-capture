@@ -39,7 +39,6 @@ public class ProfileFragment extends Fragment {
     private Section section;
     private SharedPreferences mSharedPreferences;
 
-
     public ProfileFragment(AuthenticationActivity activity) {
         currentActivity = activity;
     }
