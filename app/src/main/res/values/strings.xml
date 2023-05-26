@@ -71,6 +71,9 @@ The rules are simple:
     <string name="profile_title">Profile</string>
     <string name="profile_section">Section :</string>
     <string name="profile_apply_button">Apply</string>
+    <string name="about_text">This app was made with <b>love</b> (and lots of pain) by:
+    <ul>\n<li>Elija Dirren</li>\n<li>Benjamin Beuret</li>\n<li>David Karoubi</li>\n<li>Antoine Moix</li>\n<li>Raphaël Temperli</li>\n</ul>\nFor the course CS-306 <i>Software Development Project</i>\n\nThis project is open-source ✨\nYou can find the code <a href="https://github.com/Campus-Capture/campus-capture">on the GitHub repo.</a>\nIf you happen to catch a bug, make sure to let us know!\n\nHave fun!
+    </string>
 
     <!-- for the section spinner-->
     <string-array name="profile_sections">
@@ -88,9 +91,9 @@ The rules are simple:
         <item>MECA</item>
         <item>MT</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="power_up_title">Store</string>
     <string name="menu_shop">Shop</string>
     <string name="power_up_spend_button_text">Spend</string>
+    <string name="menu_about">About</string>
 </resources>

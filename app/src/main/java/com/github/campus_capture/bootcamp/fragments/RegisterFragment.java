@@ -128,7 +128,7 @@ public class RegisterFragment extends Fragment {
                     .addOnFailureListener(e -> Toast.makeText(getActivity(), "Verification email not sent", Toast.LENGTH_SHORT).show());
 
             //Go to sign in fragment
-            currentActivity.goToProfileFragment(emailText, passwordText);
+            currentActivity.goToSignInFragment(emailText, passwordText, true);
 
         } else {
             // If register fails, display a message to the user.
@@ -158,7 +158,7 @@ public class RegisterFragment extends Fragment {
      * Sets the Listener on the "already_registered_button"
      */
     private void setAlreadyRegisteredButtonListener() {
-        already_registered_button.setOnClickListener(view -> currentActivity.goToSignInFragment( "", "", false));
+        already_registered_button.setOnClickListener(view -> currentActivity.goToSignInFragment( email.getText().toString(), password.getText().toString(), false));
     }
 
     /**
