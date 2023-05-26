@@ -427,6 +427,6 @@ public class AuthenticationActivityTest {
         onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
         onIdle();
 
-        onView(ViewMatchers.withText("Profile")).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(ViewMatchers.withText(R.string.profile_title)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 }
