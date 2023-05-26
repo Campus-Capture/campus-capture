@@ -325,7 +325,7 @@ public class FirebaseBackend implements BackendInterface{
                     List<PowerUp> powerUpList = new ArrayList<>();
 
                     task.getResult().getChildren().forEach((powerUp) -> {
-                        String powerUpName = context.getString(R.string.PowerUp1Name);
+                        String powerUpName = powerUp.getKey();
                         int value = powerUp.child("value").getValue(Integer.class);
                         int fund = powerUp.child("funds/" + User.getSection()).getValue(Integer.class);
                         powerUpList.add(new PowerUp(powerUpName, fund, value));

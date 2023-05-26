@@ -54,7 +54,7 @@ public class PowerUpRecyclerViewAdapter extends RecyclerView.Adapter<PowerUpRecy
         fund = mValues.get(position).getFund();
 
         holder.mItem = mValues.get(position);
-        holder.powerUpName.setText(mValues.get(position).getName());
+        holder.powerUpName.setText(R.string.PowerUp1Name);
         holder.powerUpValue.setText(String.format(Locale.ENGLISH, "Value: %d", value));
         holder.powerUpFund.setText(String.format(Locale.ENGLISH, "Teams fund: %d", fund));
         holder.powerUpProgressBar.setProgress(100*fund/value);
