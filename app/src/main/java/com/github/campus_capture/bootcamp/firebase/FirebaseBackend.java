@@ -1,5 +1,7 @@
 package com.github.campus_capture.bootcamp.firebase;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.github.campus_capture.bootcamp.AppContext;
