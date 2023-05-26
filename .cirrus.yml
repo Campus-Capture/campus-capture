@@ -7,7 +7,8 @@ container:
   cpu: 8
   memory: 32G
   kvm: true
- accel_check_script: emulator -accel-check
+  
+accel_check_script: emulator -accel-check
 
 check_android_task:
   name: Run Android tests
