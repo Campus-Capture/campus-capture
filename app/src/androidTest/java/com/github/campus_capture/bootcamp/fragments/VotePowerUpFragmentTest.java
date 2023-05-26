@@ -38,8 +38,7 @@ public class VotePowerUpFragmentTest {
 
     @Test
     public void shopIsCorrectlySetup() {
-
-
+        
         onView(ViewMatchers.withContentDescription("Navigate up"))
                 .perform(ViewActions.click());
 
