@@ -362,5 +362,4 @@ public class MapAttacksTest {
 
         assertTrue(registered);
     }
-
 }
