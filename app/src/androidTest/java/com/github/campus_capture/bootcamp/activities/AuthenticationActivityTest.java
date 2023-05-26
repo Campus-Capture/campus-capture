@@ -318,8 +318,6 @@ public class AuthenticationActivityTest {
         database.getReference().child("Users").child("pp5iYDmG4tRfoLKjWvRf0s1bVJc8").child("section").setValue("IN");
         database.getReference().child("Users").child("pp5iYDmG4tRfoLKjWvRf0s1bVJc8").child("money").setValue(0);
 
-        Intents.init();
-
         //Go to login screen
         onView(ViewMatchers.withId(R.id.register_already_registered_button)).perform(ViewActions.click());
 
@@ -350,8 +348,6 @@ public class AuthenticationActivityTest {
             assertThat(theIntents.get(2).getComponent().getClassName(), is(MainActivity.class.getName()));
             return null;
         });
-
-        Intents.release();
     }
 
     @Test
