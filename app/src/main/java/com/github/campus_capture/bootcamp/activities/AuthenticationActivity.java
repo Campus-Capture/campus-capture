@@ -13,6 +13,7 @@ import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
+import com.github.campus_capture.bootcamp.firebase.FirebaseBackend;
 import com.github.campus_capture.bootcamp.fragments.ProfileFragment;
 import com.github.campus_capture.bootcamp.fragments.RegisterFragment;
 import com.github.campus_capture.bootcamp.fragments.ResetPasswordFragment;
@@ -43,12 +44,32 @@ public class AuthenticationActivity extends AppCompatActivity {
 
         mSharedPreferences = getPreferences(MODE_PRIVATE);
 
-        // Check if user is signed in (non-null) and go to main if yes.
+        FirebaseBackend database = new FirebaseBackend();
+
+        // Check if user had already registered and if the email is verified.
         FirebaseUser currentUser = auth.getCurrentUser();
         if(currentUser != null && currentUser.isEmailVerified()){
-            // Fetch section info from disk
-            readUserInfoFromDisk(currentUser.getUid());
-            goToMainActivity();
+
+            //Check if the user had already logged in (is in the DB)
+            database.isUserInDB(currentUser.getUid()).thenAccept((isIn) -> {
+                if(isIn){
+                    if(mSharedPreferences.contains(currentUser.getUid())){
+                        // Fetch section info from disk
+                        readUserInfoFromDisk(currentUser.getUid());
+                    } else {
+                        database.getUserSection(currentUser.getUid()).thenAccept((section -> {
+                            mSharedPreferences.edit().putString("Section", section.name()).apply();
+                            mSharedPreferences.edit().putString("UID", currentUser.getUid()).apply();
+                            User.setSection(section);
+                            User.setUid(currentUser.getUid());
+                        }));
+                    }
+                    goToMainActivity();
+                } else {
+                    // Go to sign in fragment
+                    goToSignInFragment(currentUser.getEmail(), "", false);
+                }
+            });
         } else {
             goToRegisterFragment();
         }
@@ -78,10 +99,13 @@ public class AuthenticationActivity extends AppCompatActivity {
     {
         // Fragments are managed by transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new RegisterFragment(this));
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit(); // Commit the transaction
+        if(!fragmentManager.isDestroyed())
+        {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new RegisterFragment(this));
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit(); // Commit the transaction
+        }
     }
 
     /**
@@ -90,10 +114,13 @@ public class AuthenticationActivity extends AppCompatActivity {
     public void goToSignInFragment(String email, String password, boolean firstLogin){
         // Fragments are managed by transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(this, email, password, firstLogin));
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit(); // Commit the transaction
+        if(!fragmentManager.isDestroyed())
+        {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new SignInFragment(this, email, password, firstLogin));
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit(); // Commit the transaction
+        }
     }
 
     /**
@@ -103,22 +130,28 @@ public class AuthenticationActivity extends AppCompatActivity {
     {
         // Fragments are managed by transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new ResetPasswordFragment(this, email));
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit(); // Commit the transaction
+        if(!fragmentManager.isDestroyed())
+        {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new ResetPasswordFragment(this, email));
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit(); // Commit the transaction
+        }
     }
 
     /**
      * Method which opens the profile fragment
      */
-    public void goToProfileFragment(String email, String password){
+    public void goToProfileFragment(){
         // Fragments are managed by transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new ProfileFragment(this, email, password));
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit(); // Commit the transaction
+        if(!fragmentManager.isDestroyed())
+        {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragmentContainerViewAuthentication, new ProfileFragment(this));
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit(); // Commit the transaction
+        }
     }
 
     private void readUserInfoFromDisk(String uid) {

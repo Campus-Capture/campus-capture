@@ -136,7 +136,7 @@ public class MapVoteTest {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
-        Thread.sleep(3000);
+        Thread.sleep(1000);
 
         onView(ViewMatchers.withId(R.id.currentZoneText)).check(matches(withText(containsString("Current zone:\nNone"))));
     }
@@ -180,10 +180,10 @@ public class MapVoteTest {
 
         Intents.init();
 
-        onView(ViewMatchers.withContentDescription("Navigate up"))
-                .perform(ViewActions.click());
+        //onView(ViewMatchers.withContentDescription("Navigate up"))
+        //        .perform(ViewActions.click());
 
-        onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
+        //onView(ViewMatchers.withId(R.id.nav_maps)).perform(ViewActions.click());
 
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));

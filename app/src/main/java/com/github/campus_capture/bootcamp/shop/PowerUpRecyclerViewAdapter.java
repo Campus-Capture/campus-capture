@@ -1,5 +1,6 @@
 package com.github.campus_capture.bootcamp.shop;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,11 +8,13 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.firebase.BackendInterface;
 
 import java.util.List;
 import java.util.Locale;
@@ -20,8 +23,19 @@ public class PowerUpRecyclerViewAdapter extends RecyclerView.Adapter<PowerUpRecy
 
     private final List<PowerUp> mValues;
 
-    public PowerUpRecyclerViewAdapter(List<PowerUp> items) {
+    private int userMoney;
+
+    private final BackendInterface backendInterface;
+    private final TextView powerUpMoney;
+
+    private int fund;
+    private int value;
+
+    public PowerUpRecyclerViewAdapter(List<PowerUp> items, int userMoney, BackendInterface backendInterface, TextView moneyView) {
         mValues = items;
+        this.backendInterface = backendInterface;
+        this.userMoney = userMoney;
+        powerUpMoney = moneyView;
     }
 
     @NonNull
@@ -36,21 +50,54 @@ public class PowerUpRecyclerViewAdapter extends RecyclerView.Adapter<PowerUpRecy
 
     @Override
     public void onBindViewHolder(@NonNull PowerUpRecyclerViewAdapter.ViewHolder holder, int position) {
-        int value = mValues.get(position).getValue();
-        int fund = mValues.get(position).getFund();
+        value = mValues.get(position).getValue();
+        fund = mValues.get(position).getFund();
 
         holder.mItem = mValues.get(position);
-        holder.powerUpName.setText(mValues.get(position).getName());
+        holder.powerUpName.setText(R.string.PowerUp1Name);
         holder.powerUpValue.setText(String.format(Locale.ENGLISH, "Value: %d", value));
         holder.powerUpFund.setText(String.format(Locale.ENGLISH, "Teams fund: %d", fund));
         holder.powerUpProgressBar.setProgress(100*fund/value);
 
-        //TODO: Change the max to be the money the user have
-        holder.powerUpSeekBar.setMax(value);
+        holder.powerUpSeekBar.setMax(userMoney);
 
         holder.powerUpSeekBar.setProgress(0);
 
         addSeekBarChangeListener(holder);
+
+        addSpendButtonListener(holder, mValues.get(position).getName());
+    }
+
+    private void addSpendButtonListener(ViewHolder holder, String powerUpName){
+        holder.powerUpButton.setOnClickListener(view -> {
+            int spendValue = holder.powerUpSeekBar.getProgress();
+            if(spendValue > userMoney){
+                Toast.makeText(powerUpMoney.getContext(), "Well... you are too broke.", Toast.LENGTH_LONG).show();
+            } else {
+                backendInterface.sendMoney(powerUpName, spendValue).thenAccept(b -> {
+                        if(b)
+                        {
+                            userMoney -= spendValue;
+                            powerUpMoney.setText(String.format(Locale.ENGLISH, "Money: %d", userMoney));
+
+                            fund += spendValue;
+                            holder.powerUpFund.setText(String.format(Locale.ENGLISH, "Teams fund: %d", fund));
+
+                            holder.powerUpProgressBar.setProgress(100*fund/value);
+
+                            holder.powerUpSeekBar.setMax(userMoney);
+                        }
+                        else
+                        {
+                            Toast.makeText(powerUpMoney.getContext(), "Server refused", Toast.LENGTH_LONG).show();
+                        }
+                }).exceptionally(e -> {
+                    Toast.makeText(powerUpMoney.getContext(), "Failed to buy item", Toast.LENGTH_LONG).show();
+                    Log.e("Shop_Screen", "Failed to buy item: " + e.getMessage());
+                    return null;
+                });
+            }
+        });
     }
 
     private void addSeekBarChangeListener(ViewHolder holder){
@@ -60,11 +107,12 @@ public class PowerUpRecyclerViewAdapter extends RecyclerView.Adapter<PowerUpRecy
                 String format;
                 if(i>0) {
                     format = String.format(Locale.ENGLISH, "I spend %d coins for my team.", i);
-
+                    holder.powerUpButton.setEnabled(true);
                 }
                 else
                 {
                     format = "I spend literally nothing for my team.";
+                    holder.powerUpButton.setEnabled(false);
                 }
                 holder.powerUpSpendText.setText(format);
             }
@@ -96,6 +144,7 @@ public class PowerUpRecyclerViewAdapter extends RecyclerView.Adapter<PowerUpRecy
         public PowerUp mItem;
         public final SeekBar powerUpSeekBar;
         public final TextView powerUpSpendText;
+
 
         public ViewHolder(View view) {
             super(view);

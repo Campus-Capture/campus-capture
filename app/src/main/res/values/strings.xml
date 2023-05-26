@@ -38,19 +38,26 @@
     <string name="vote_zone_toast">Attack registered</string>
     <string name="register_spectator_string">Spectator mode</string>
     <string name="rules_text">Welcome to <b>Campus Capture</b>, the fun game where you and your section compete against the other sections to see who can occupy the most buildings on campus!\n\n
-The rules are simple:\n
-&#8226; The map shows you all the zones on campus and who they belong to\n
-&#8226; A <b>take-over</b> is the time during which zones can be attacked and defended\n
-&#8226; Take-overs span the first 15 minutes of every hour\n
-&#8226; During every take-over, go to the zone you wish to attack or defend and press the button\n
-&#8226; The section with the most players in the same zone captures it\n
-&#8226; Zones award different amounts of points depending on how desirable they are\n
-&#8226; Follow the amount of points your section has under the scoreboard tab\n
-&#8226; If you need help, invite your friends to join you in your effort under the profile tab\n\n
-Have fun and good luck!</string>
+The rules are simple:
+\n<ul>
+\n<li>The map shows you all the zones on campus and who they belong to</li>
+\n\n<li>A <b>take-over</b> is the time during which zones can be attacked and defended</li>
+\n\n<li>Take-overs span the first 15 minutes of every hour</li>
+\n\n<li>During every take-over, go to the zone you wish to <b>attack or defend</b> and press the button</li>
+\n\n<li>The section with the most players in the same zone captures it</li>
+\n\n<li>You can check the number of players attacking a given zone by tapping on it</li>
+\n\n<li>Zones award different amounts of <b>points</b> depending on how desirable they are</li>
+\n\n<li>Every day, you will receive a certain amount of points to spend on <b>power-ups</b></li>
+\n\n<li>You can choose yourself how many of your points you\'re willing to spend for a given power-up</li>
+\n\n<li>If enough points come together, the power-up goes into effect; otherwise, the points are refunded</li>
+\n\n<li>Collaborate with your teammates to buy power-ups together to make your section stronger</li>
+\n\n<li>Follow the total amount of points your section has accumulated under the scoreboard tab</li>
+\n\n<li>If you need help, <b>invite your friends</b> to join you in your effort under the \'…\' in the top right corner</li>
+\n</ul>
+\n\n<b>Have fun and good luck!</b>\n\n\n</string>
     <string name="TOS_text">By accepting those terms of service you agree that your data will be collected and used for non-legal activities such as DDoS-ing, Botting and…</string>
     <string name="invite_button">Invite your friends</string>
-    <string name="invitation_text">Hey there, I need help defending our faculty\'s territory in Campus Capture!\nCome join me now: </string>
+    <string name="invitation_text">Hey there, I need help defending our faculty\'s territory in Campus Capture!\nCome join me now:\u00A0</string>
     <string name="invitation_link">&lt;App link here&gt;</string>
     <string name="login_actually_no_text">Actually no</string>
     <string name="login_string">Login</string>
@@ -66,6 +73,9 @@ Have fun and good luck!</string>
     <string name="profile_section">Section</string>
     <string name="profile_apply_button">Apply</string>
     <string name="TOS_agree">"I agree"</string>
+    <string name="about_text">This app was made with <b>love</b> (and lots of pain) by:
+    <ul>\n<li>Elija Dirren</li>\n<li>Benjamin Beuret</li>\n<li>David Karoubi</li>\n<li>Antoine Moix</li>\n<li>Raphaël Temperli</li>\n</ul>\nFor the course CS-306 <i>Software Development Project</i>\n\nThis project is open-source ✨\nYou can find the code <a href="https://github.com/Campus-Capture/campus-capture">on the GitHub repo.</a>\nIf you happen to catch a bug, make sure to let us know!\n\nHave fun!
+    </string>
 
     <!-- for the section spinner-->
     <string-array name="profile_sections">
@@ -83,8 +93,11 @@ Have fun and good luck!</string>
         <item>MECA</item>
         <item>MT</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="power_up_title">Store</string>
     <string name="menu_shop">Shop</string>
+    <string name="power_up_spend_button_text">Spend</string>
+    <string name="menu_about">About</string>
+    <string name="login_resend_button_string">Resend mail</string>
+    <string name="PowerUp1Name">Double Attack Power</string>
 </resources>

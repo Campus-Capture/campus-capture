@@ -12,14 +12,20 @@
 
     <fragment
         android:id="@+id/nav_rules"
-        android:name="com.github.campus_capture.bootcamp.ui.rules.NavRulesFragment"
+        android:name="com.github.campus_capture.bootcamp.fragments.RulesFragment"
         android:label="@string/menu_rules"
         tools:layout="@layout/fragment_rules" />
         
     <fragment
         android:id="@+id/nav_scoreboard"
-        android:name="com.github.campus_capture.bootcamp.ui.scoreboard.NavScoreboardFragment"
+        android:name="com.github.campus_capture.bootcamp.fragments.ScoreboardFragment"
         android:label="@string/menu_scoreboard"
         tools:layout="@layout/fragment_scoreboard" />
+
+    <fragment
+        android:id="@+id/nav_about"
+        android:name="com.github.campus_capture.bootcamp.fragments.AboutFragment"
+        android:label="@string/menu_about"
+        tools:layout="@layout/fragment_about" />
 
 </navigation>

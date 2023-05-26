@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.github.campus_capture.bootcamp.AppContext;
+import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
@@ -48,12 +49,6 @@ public class FirebaseBackend implements BackendInterface{
                             public void onSuccess(Void aVoid) {
                                 futureResultVoteZone.complete(true);
                             }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                futureResultVoteZone.completeExceptionally(new Throwable("Could not register the user vote"));
-                            }
                         });
             }
             return futureResultVoteZone;
@@ -71,12 +66,6 @@ public class FirebaseBackend implements BackendInterface{
                             @Override
                             public void onSuccess(Void aVoid) {
                                 futureResultUser.complete(true);
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                futureResultUser.completeExceptionally(new Throwable("Could not register that user did vote"));
                             }
                         });
             }
@@ -103,7 +92,11 @@ public class FirebaseBackend implements BackendInterface{
                     futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
                 }
                 else {
-                    futureResult.complete((Boolean) task.getResult().getValue());
+                    if(task.getResult().getValue() == null){
+                        futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
+                    } else{
+                        futureResult.complete((Boolean) task.getResult().getValue());
+                    }
                 }
             }
         });
@@ -194,11 +187,31 @@ public class FirebaseBackend implements BackendInterface{
                             public void onSuccess(Void aVoid) {
                                 futureRegisterUserResult.complete(true);
                             }
+                        });
+
+                userRef.child("money").setValue(0).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                futureRegisterUserResult.complete(true);
+                            }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                futureRegisterUserResult.completeExceptionally(new Throwable("Could not init user has_voted"));
+                                futureRegisterUserResult.completeExceptionally(new Throwable("Could not init user money"));
+                            }
+                        });
+
+                userRef.child("money").setValue(0).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                futureRegisterUserResult.complete(true);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                futureRegisterUserResult.completeExceptionally(new Throwable("Could not init user money"));
                             }
                         });
             }
@@ -226,12 +239,6 @@ public class FirebaseBackend implements BackendInterface{
                     public void onSuccess(Void aVoid) {
                         futureSetUserSectionResult.complete(true);
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        futureSetUserSectionResult.completeExceptionally(new Throwable("Could not set user section"));
-                    }
                 });
 
         return futureSetUserSectionResult;
@@ -253,7 +260,12 @@ public class FirebaseBackend implements BackendInterface{
                     futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
                 }
                 else {
-                    futureResult.complete( Section.valueOf(String.valueOf(task.getResult().getValue())) );
+                    String result = String.valueOf(task.getResult().getValue());
+                    if(result == "null"){
+                        futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
+                    } else{
+                        futureResult.complete( Section.valueOf(result) );
+                    }
                 }
             }
         });
@@ -311,11 +323,20 @@ public class FirebaseBackend implements BackendInterface{
                 }
                 else {
                     List<PowerUp> powerUpList = new ArrayList<>();
+
                     task.getResult().getChildren().forEach((powerUp) -> {
                         String powerUpName = powerUp.getKey();
-                        int value = powerUp.child("value").getValue(Integer.class);
-                        int fund = powerUp.child("funds/"+ User.getSection()).getValue(Integer.class);
-                        powerUpList.add(new PowerUp(powerUpName, fund, value));
+
+                        Integer value = powerUp.child("value").getValue(int.class);
+                        Integer fund = powerUp.child("funds/" + User.getSection()).getValue(int.class);
+                        if(value==null){
+                            Log.e("FirebaseBackend", "Value is null.");
+                        } else if(fund==null) {
+                            Log.e("FirebaseBackend", "Fund is null. Section: " + User.getSection());
+                        } else {
+                            powerUpList.add(new PowerUp(powerUpName, fund, value));
+                        }
+
                     });
                     futureResult.complete(powerUpList);
                 }
@@ -346,4 +367,58 @@ public class FirebaseBackend implements BackendInterface{
         });
         return futureResult;
     }
+
+    @Override
+    public CompletableFuture<Boolean> sendMoney(String name, int money) {
+
+
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
+
+        if(money <= 0){
+            result.completeExceptionally(new Throwable("Can't send money <= 0"));
+            return result;
+        }
+
+        AppContext context = AppContext.getAppContext();
+        FirebaseDatabase db = context.getFirebaseDB();
+        DatabaseReference userMoneyRef = db.getReference("Users/"+User.getUid()+"/money");
+        DatabaseReference powerupMoneyRef = db.getReference("PowerUp/"+name+"/funds/"+User.getSection());
+
+        // Spend the money first, if something goes wrong, as such no new funds are created
+        userMoneyRef.setValue(ServerValue.increment(-money))
+                .addOnSuccessListener(
+                    unused ->
+                        powerupMoneyRef.setValue(ServerValue.increment(money))
+                            .addOnSuccessListener(unused1 -> result.complete(true))
+                            .addOnFailureListener(unused2 -> result.completeExceptionally(new Throwable("Failed to add the money to the powerup"))))
+                .addOnFailureListener(
+                    unused3 ->
+                        result.completeExceptionally(new Throwable("Failed to take the money out of the player's funds")));
+
+        return result;
+
+    }
+
+    @Override
+    public CompletableFuture<Boolean> isUserInDB(String uid) {
+        CompletableFuture<Boolean> futureResult = new CompletableFuture<>();
+
+        AppContext context = AppContext.getAppContext();
+        FirebaseDatabase db = context.getFirebaseDB();
+        DatabaseReference userRef = db.getReference("Users");
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    futureResult.complete(task.getResult().hasChild(uid));
+                } else {
+                    futureResult.completeExceptionally(new Throwable("Could not get result from the database"));
+                }
+            }
+        });
+
+        return futureResult;
+    }
+
+
 }

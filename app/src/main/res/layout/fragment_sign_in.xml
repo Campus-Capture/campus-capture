@@ -91,4 +91,15 @@
         android:autofillHints="password" />
     <requestFocus />
 
+    <Button
+        android:id="@+id/login_resend_button"
+        android:layout_width="200sp"
+        android:layout_height="50sp"
+        android:text="@string/login_resend_button_string"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/login_email_address"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_greeting" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

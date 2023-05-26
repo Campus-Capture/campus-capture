@@ -68,4 +68,21 @@ public interface BackendInterface {
      * @return The money of the user
      */
     CompletableFuture<Integer> getMoney();
+
+    /**
+     * Method to signal to the back-end that a player has given some money for a given powerup
+     * This wraps the two previous unsafe methods from #149 into one, but pushes the logic for
+     * determining the success of transmission and so on behind the interface
+     * @param name The name of the powerup
+     * @param money the amount of funds transferred
+     * @return boolean: success
+     */
+    CompletableFuture<Boolean> sendMoney(String name, int money);
+
+    /**
+     * Tests if the user is in the realtime database
+     * @param uid The user's uid
+     * @return true if the user is in the database, false otherwise
+     */
+    CompletableFuture<Boolean> isUserInDB(String uid);
 }
