@@ -11,6 +11,7 @@ import static org.junit.Assert.assertTrue;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -25,6 +26,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.adevinta.android.barista.interaction.BaristaClickInteractions;
 import com.adevinta.android.barista.interaction.BaristaMenuClickInteractions;
@@ -432,6 +434,11 @@ public class AuthenticationActivityTest {
         onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
         onIdle();
 
-        onView(ViewMatchers.withId(R.id.profile_title)).check(matches(isDisplayed()));
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+        onView(ViewMatchers.withContentDescription("Navigate up")).perform(ViewActions.click());
+
+        onView(ViewMatchers.withText("Profile")).check(matches(isDisplayed()));
     }
 }
