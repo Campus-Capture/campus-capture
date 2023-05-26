@@ -4,9 +4,10 @@ env:
 
 container:
   image: cirrusci/android-sdk:30
-  cpu: 4
-  memory: 16G
+  cpu: 8
+  memory: 32G
   kvm: true
+ accel_check_script: emulator -accel-check
 
 check_android_task:
   name: Run Android tests
