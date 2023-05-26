@@ -44,6 +44,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+
 @RunWith(AndroidJUnit4.class)
 public class AuthenticationActivityTest {
 
