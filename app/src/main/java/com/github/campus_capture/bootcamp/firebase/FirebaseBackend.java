@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.github.campus_capture.bootcamp.AppContext;
+import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
