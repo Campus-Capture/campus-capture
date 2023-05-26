@@ -123,6 +123,10 @@ public class RegisterFragment extends Fragment {
             FirebaseUser user = mAuth.getCurrentUser();
 
             // Send the verification mail
+            if(user == null)
+            {
+                return;
+            }
             user.sendEmailVerification()
                     .addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Verification email sent", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> Toast.makeText(getActivity(), "Verification email not sent", Toast.LENGTH_SHORT).show());
