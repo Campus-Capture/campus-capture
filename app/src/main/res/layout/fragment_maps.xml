@@ -48,12 +48,13 @@
             />
         <Button
             android:id="@+id/timerButton"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:background="@color/grey"
             android:text="@string/wait_button_text"
             android:textSize="12sp"
             android:textColor="@color/dark_gray"
+            android:ems="10"
             android:layout_margin="5dp"
             android:visibility="gone"
             />
