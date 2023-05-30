@@ -1,16 +1,40 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.Bootcamp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.CampusCapture" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimary">#C9E44C4C</item>
+        <item name="colorPrimaryVariant">#680E0E</item>
+        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorSecondary">#60E3DE</item>
+        <item name="colorSecondaryVariant">#1E8786</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="button_style">
+        <item name="android:fontFamily">@font/cabinbold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="edit_text">
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textColorHint">@color/grey</item>
+    </style>
+
+    <style name="background_image" parent="Theme.CampusCapture">
+        <item name="android:background">@drawable/background_dark</item>
+    </style>
+
+    <style name="NoActionBar" parent="Theme.CampusCapture">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 </resources>

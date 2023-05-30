@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Bootcamp</string>
+    <string name="app_name">Campus Capture</string>
     <string name="title_activity_navigation_drawer">NavigationDrawerActivity</string>
-    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_title">Campus Capture</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
@@ -37,7 +37,7 @@
     <string name="no_zone_toast_text">No zone to attack found</string>
     <string name="position_not_found_text">Failed to retrieve position</string>
     <string name="vote_zone_toast">Attack registered</string>
-    <string name="register_spectator_string">Spectator mode</string>
+    <string name="register_spectator_string">Spectator</string>
     <string name="rules_text">Welcome to <b>Campus Capture</b>, the fun game where you and your section compete against the other sections to see who can occupy the most buildings on campus!\n\n
 The rules are simple:
 \n<ul>
@@ -69,7 +69,7 @@ The rules are simple:
     <string name="send_mail_button_string">Send mail</string>
     <string name="profile_subtitle_string">Please select the faculty you want to fight for!</string>
     <string name="profile_title">Profile</string>
-    <string name="profile_section">Section</string>
+    <string name="profile_section">Section :</string>
     <string name="profile_apply_button">Apply</string>
     <string name="about_text">This app was made with <b>love</b> (and lots of pain) by:
     <ul>\n<li>Elija Dirren</li>\n<li>Benjamin Beuret</li>\n<li>David Karoubi</li>\n<li>Antoine Moix</li>\n<li>Raphaël Temperli</li>\n</ul>\nFor the course CS-306 <i>Software Development Project</i>\n\nThis project is open-source ✨\nYou can find the code <a href="https://github.com/Campus-Capture/campus-capture">on the GitHub repo.</a>\nIf you happen to catch a bug, make sure to let us know!\n\nHave fun!

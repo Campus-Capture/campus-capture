@@ -3,6 +3,7 @@ package com.github.campus_capture.bootcamp.activities;
 import static androidx.test.espresso.Espresso.onIdle;
 import static androidx.test.espresso.Espresso.onView;
 import static com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn;
+import static com.adevinta.android.barista.interaction.BaristaSleepInteractions.sleep;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -427,6 +428,7 @@ public class AuthenticationActivityTest {
         onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
         onIdle();
 
-        onView(ViewMatchers.withText("Profile")).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        sleep(3000);
+        onView(ViewMatchers.withId(R.id.profile_confirm_button)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 }

@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.SignInFragment">
+    tools:context=".fragments.SignInFragment"
+    android:background="@color/transparent_black">
 
     <TextView
         android:id="@+id/login_greeting"
@@ -14,7 +15,7 @@
         android:ems="10"
         android:text="@string/login_welcome_text"
         android:textAlignment="center"
-        android:textColor="@color/black"
+        android:textColor="@color/grey"
         android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,28 +24,30 @@
         app:layout_constraintVertical_bias="0.07" />
 
     <Button
-        android:id="@+id/login_password_forgotten_button"
-        android:layout_width="255dp"
-        android:layout_height="50dp"
-        android:text="@string/login_password_forgotten_string"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.85" />
-
-    <Button
         android:id="@+id/login_button"
         android:layout_width="255dp"
         android:layout_height="50dp"
         android:text="@string/login_string"
         android:textSize="20sp"
+        android:theme="@style/button_style"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.725" />
+        app:layout_constraintVertical_bias="0.57" />
+
+    <Button
+        android:id="@+id/login_password_forgotten_button"
+        android:layout_width="255dp"
+        android:layout_height="50dp"
+        android:text="@string/login_password_forgotten_string"
+        android:textSize="15sp"
+        android:theme="@style/button_style"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.66" />
 
     <Button
         android:id="@+id/login_actually_no_button"
@@ -52,12 +55,13 @@
         android:layout_height="wrap_content"
         android:text="@string/login_actually_no_text"
         android:textSize="20sp"
+        android:theme="@style/button_style"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.6" />
+        app:layout_constraintVertical_bias="0.92" />
 
     <EditText
         android:id="@+id/login_email_address"
@@ -67,6 +71,7 @@
         android:ems="10"
         android:textSize="20sp"
         android:inputType="textEmailAddress"
+        android:theme="@style/edit_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,6 +88,7 @@
         android:ems="10"
         android:textSize="20sp"
         android:inputType="textPassword"
+        android:theme="@style/edit_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
