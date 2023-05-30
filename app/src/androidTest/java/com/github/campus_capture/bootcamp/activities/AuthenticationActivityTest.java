@@ -2,6 +2,8 @@ package com.github.campus_capture.bootcamp.activities;
 
 import static androidx.test.espresso.Espresso.onIdle;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn;
 import static com.adevinta.android.barista.interaction.BaristaSleepInteractions.sleep;
 import static org.hamcrest.CoreMatchers.is;
@@ -10,6 +12,7 @@ import static org.junit.Assert.assertTrue;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 
@@ -29,6 +32,7 @@ import com.adevinta.android.barista.interaction.BaristaClickInteractions;
 import com.adevinta.android.barista.interaction.BaristaMenuClickInteractions;
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.authentication.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -430,5 +434,32 @@ public class AuthenticationActivityTest {
 
         sleep(3000);
         onView(ViewMatchers.withId(R.id.profile_confirm_button)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    }
+
+    @Test
+    public void canSelectSection() {
+
+        //Go to login screen
+        onView(ViewMatchers.withId(R.id.register_already_registered_button)).perform(ViewActions.click());
+
+        //Enter the name of the already registered but not verified user
+        onView(ViewMatchers.withId(R.id.login_email_address)).perform(ViewActions.typeText(ALREADY_REGISTER_EMAIL_NOT_LOGGED_VER));
+        onView(ViewMatchers.withId(R.id.login_password)).perform(ViewActions.typeText(ALREADY_REGISTER_PASSWORD_NOT_LOGGED_VER));
+
+        Espresso.closeSoftKeyboard();
+
+        // Click on the login button
+        onView(ViewMatchers.withId(R.id.login_button)).perform(ViewActions.click());
+        onIdle();
+
+        // Click on confirm section
+        onView(ViewMatchers.withId((R.id.profile_confirm_button))).perform(ViewActions.click());
+
+        // Confirm choice
+        onView((ViewMatchers.withText("Yes"))).perform(ViewActions.click());
+
+        // Verify if Intent of going on main
+        Intents.intended(IntentMatchers.hasComponent(MainActivity.class.getName()));
+
     }
 }

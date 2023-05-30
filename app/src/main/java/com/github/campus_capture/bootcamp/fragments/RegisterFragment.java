@@ -41,8 +41,6 @@ public class RegisterFragment extends Fragment {
     private EditText password;
     private String passwordText;
     private FirebaseAuth mAuth;
-    private final String TOS_TEXT = AppContext.getAppContext().getString(R.string.TOS_text);
-
 
     public RegisterFragment(AuthenticationActivity activity) {
         currentActivity = activity;
@@ -72,7 +70,7 @@ public class RegisterFragment extends Fragment {
         email = view.findViewById(R.id.register_email_address);
         password = view.findViewById(R.id.register_password);
 
-        // Init Auth (Authenticater)
+        // Init Auth (Authentificater)
         AppContext context = AppContext.getAppContext();
         mAuth = context.getFirebaseAuth();
 
@@ -145,12 +143,12 @@ public class RegisterFragment extends Fragment {
         // Display the dialog popup
         new AlertDialog.Builder(getActivity())
                 .setTitle("License agreement")
-                .setPositiveButton("I agree", (dialog, which) -> {
+                .setPositiveButton(R.string.TOS_agree, (dialog, which) -> {
                     // Start the register protocol when "I agree" clicked
                     register();
                 })
                 .setNegativeButton("No", null)
-                .setMessage(TOS_TEXT)
+                .setMessage(R.string.TOS_text)
                 .show();
     }
 

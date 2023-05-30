@@ -19,9 +19,10 @@ import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.FirebaseBackend;
 
+/**
+ * This class represent the behaviour of the profil fragment.
+ */
 public class ProfileFragment extends Fragment {
-
-
 
     AdapterView.OnItemSelectedListener sectionSpinnerListener = new AdapterView.OnItemSelectedListener() {
         @Override
@@ -40,6 +41,12 @@ public class ProfileFragment extends Fragment {
     private SharedPreferences mSharedPreferences;
 
 
+    /**
+     *
+     * This fragment is displayed after the registration and before the
+     * login, thus it must keep track of what the given credentials was.
+     * @param activity The parent activity
+     */
     public ProfileFragment(AuthenticationActivity activity) {
         currentActivity = activity;
     }
@@ -73,9 +80,13 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Display on top of everything the warning for the section selection (it is permanent)
+     * @param view The view
+     */
     private void displayAlert(View view) {
         new AlertDialog.Builder(view.getContext())
-                .setTitle("Are you sure ?")
+                .setTitle(R.string.profile_alert_title)
                 .setPositiveButton("Yes", (dialog, which) -> {
                     User.setSection(section);
                     storeUserOnDB(User.getUid(), section);
@@ -83,7 +94,7 @@ public class ProfileFragment extends Fragment {
                     currentActivity.goToMainActivity();
                 })
                 .setNegativeButton("No", null)
-                .setMessage("Once selected, the selected section will be permanent ! Do you want to proceed ?")
+                .setMessage(R.string.profile_selection_warning)
                 .show();
     }
 
