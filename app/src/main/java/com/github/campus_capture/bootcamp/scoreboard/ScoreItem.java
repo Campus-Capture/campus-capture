@@ -5,7 +5,7 @@ package com.github.campus_capture.bootcamp.scoreboard;
  */
 public class ScoreItem implements Comparable<ScoreItem> {
     private final String label; // The label (team name)
-    private final int value; // The value (team score)
+    private int value; // The value (team score)
 
     /**
      * Item constructor
@@ -46,5 +46,10 @@ public class ScoreItem implements Comparable<ScoreItem> {
     public int compareTo(ScoreItem i) {
         int res = -Integer.compare(value, i.getValue());
         return (res == 0) ? label.compareTo(i.getLabel()) : res;
+    }
+
+    public void addScore(int i)
+    {
+        value += i;
     }
 }
