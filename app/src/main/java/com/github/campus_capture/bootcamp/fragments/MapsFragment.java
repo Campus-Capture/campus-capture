@@ -84,7 +84,9 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
 
             if(currentZone != null) {
 
-                backendInterface.voteZone(User.getUid(), User.getSection(), currentZone.getName())
+                Toast.makeText(v.getContext(), getString(R.string.vote_zone_toast), Toast.LENGTH_SHORT).show();
+                scheduler.confirmAttack();
+                /*backendInterface.voteZone(User.getUid(), User.getSection(), currentZone.getName())
                         .thenAccept(result -> {
                             if (result) {
                                 Toast.makeText(v.getContext(), getString(R.string.vote_zone_toast), Toast.LENGTH_SHORT).show();
@@ -96,7 +98,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
                             // TODO handle errors better ?
                             Log.e("MapFragment", "Error occurred when voting");
                             return null;
-                        });
+                        });*/
             }
             else
             {

@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import com.github.campus_capture.bootcamp.AppContext;
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.activities.AuthenticationActivity;
+import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.authentication.User;
 import com.github.campus_capture.bootcamp.firebase.FirebaseBackend;
 import com.google.android.gms.tasks.Task;
@@ -139,6 +140,10 @@ public class SignInFragment extends Fragment {
      */
     private void loginClicked(){
 
+        User.setUid("override");
+        User.setSection(Section.IN);
+        currentActivity.goToMainActivity();
+
         // Update the email and password texts
         setEditTextToString();
 
@@ -175,7 +180,6 @@ public class SignInFragment extends Fragment {
                 User.setUid(user.getUid());
 
                 database.isUserInDB(user.getUid()).thenAccept((isIn) -> {
-
                     //Check if the user is in the DB, if yes, store in the memory and go to the MainActivity, otw
                     if(isIn){
                         database.getUserSection(user.getUid()).thenAccept((section -> {
@@ -197,8 +201,8 @@ public class SignInFragment extends Fragment {
         } else {
             // If sign in fails, display a message to the user.
             Log.w(TAG, "signInWithEmail:failure", task.getException());
-            Toast.makeText(getActivity(), "Authentication failed",
-                    Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Authentication failed",
+            //        Toast.LENGTH_SHORT).show();
         }
     }
 

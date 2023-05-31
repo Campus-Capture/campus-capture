@@ -26,6 +26,8 @@ import com.github.campus_capture.bootcamp.fragments.MapsFragment;
 import com.github.campus_capture.bootcamp.storage.entities.Zone;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.checkerframework.checker.units.qual.C;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -145,6 +147,8 @@ public class MapScheduler {
         if(!overrideTime)
         {
             time = Calendar.getInstance();
+            time.set(Calendar.MINUTE, 14);
+            time.set(Calendar.SECOND, 30);
         }
     }
 
