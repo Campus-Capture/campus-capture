@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -48,6 +49,55 @@ public class MapScheduler {
     private CountDownTimer buttonTimer;
     public static boolean overrideTime = false;
     public static Calendar time;
+
+    private final Map<String, Section> zonesOwnersBeforeEndOfTakeover = new HashMap<String, Section>(){{
+        put("Agora", Section.AR);
+        put("BC", Section.AR);
+        put("BS", Section.IN);
+        put("CE", Section.IN);
+        put("CM ME", Section.IN);
+        put("CO Est", Section.GC);
+        put("CO Ouest", Section.MT);
+        put("ELA ELB", Section.MX);
+        put("ELL", Section.GM);
+        put("Forum RLC", Section.GM);
+        put("INF INJ", Section.MA);
+        put("INM" , Section.GC);
+        put("INN INR Terasse", Section.SC);
+        put("MA", Section.IN);
+        put("MXC MXD", Section.PH);
+        put("MXE MXH", Section.SV);
+        put("MXG Terrasse", Section.EL);
+        put("Patio RLC", Section.IN);
+        put("SG1", Section.AR);
+        put("SV AI", Section.MT);
+        put("Sat Terrasse", Section.IN);
+        }};
+
+    private final Map<String, Section> zonesOwnersAfterEndOfTakeover = new HashMap<String, Section>(){{
+        put("Agora", Section.IN);
+        put("BC", Section.AR);
+        put("BS", Section.IN);
+        put("CE", Section.IN);
+        put("CM ME", Section.IN);
+        put("CO Est", Section.GC);
+        put("CO Ouest", Section.MT);
+        put("ELA ELB", Section.MX);
+        put("ELL", Section.GM);
+        put("Forum RLC", Section.GM);
+        put("INF INJ", Section.MA);
+        put("INM", Section.GC);
+        put("INN INR Terasse", Section.SC);
+        put("MA", Section.IN);
+        put("MXC MXD", Section.PH);
+        put("MXE MXH", Section.SV);
+        put("MXG Terrasse", Section.EL);
+        put("Patio RLC", Section.IN);
+        put("SG1", Section.AR);
+        put("SV AI", Section.MT);
+        put("Sat Terrasse", Section.IN);
+    }};
+
 
     // Task to refresh the zone display at the top of the map
     private final Runnable zoneRefreshTask = new Runnable() {
@@ -92,15 +142,11 @@ public class MapScheduler {
         @Override
         public void run()
         {
-            backendInterface.getCurrentZoneOwners()
-                    .thenAccept( (result) -> {
-                        zoneState = result;
-                        upper.refreshZoneColors(zoneState);
-                        Log.i("MapScheduler", "Refreshed the zone owners");
-                    }).exceptionally( e -> {
-                        Log.e("MapScheduler", "Error ocurred when retrieving the zone owners:\t" + e.getMessage());
-                        return null;
-                    });
+            if(!MapsFragment.endOfTakeOver){
+                upper.refreshZoneColors(zonesOwnersBeforeEndOfTakeover);
+            } else {
+                upper.refreshZoneColors(zonesOwnersAfterEndOfTakeover);
+            }
         }
     };
 
@@ -142,6 +188,7 @@ public class MapScheduler {
         defendButton = view.findViewById(R.id.defendButton);
         timerButton = view.findViewById(R.id.timerButton);
 
+        zoneState = zonesOwnersBeforeEndOfTakeover;
         if(!overrideTime)
         {
             time = Calendar.getInstance();
@@ -183,19 +230,8 @@ public class MapScheduler {
             scheduledTaskHandler.postDelayed(openAttacksTask, (MILLIS_PER_HOUR - millisSinceHour));
         }
 
-        // TODO properly fix errors due to null uid if user not logged in
-        backendInterface.hasAttacked(User.getUid()).thenAccept( (result) -> {
-
-            // TODO tmp solution ?
-            if(result != null){
-                hasAttacked = result;
-                refreshZoneState.run();
-            }
-        }).exceptionally( e -> {
-            // TODO handle errors better ?
-            Log.e("MapScheduler", "Error ocurred when retrieving if the user has attacked");
-            return null;
-        });
+        hasAttacked = MapsFragment.attacked;
+        refreshZoneState.run();
 
         zoneRefreshTask.run();
     }
@@ -233,14 +269,10 @@ public class MapScheduler {
      */
     private void showButtons()
     {
-        if(User.getUid() == null)
+        if(!MapsFragment.attacked)
         {
-            hideButtons();
-        }
-        else if(isTakeover && !hasAttacked)
-        {
-            attackButton.setVisibility((isZoneOwned) ? GONE : VISIBLE);
-            defendButton.setVisibility((isZoneOwned) ? VISIBLE : GONE);
+            attackButton.setVisibility(VISIBLE);
+            defendButton.setVisibility(GONE);
             timerButton.setVisibility(GONE);
         }
         else

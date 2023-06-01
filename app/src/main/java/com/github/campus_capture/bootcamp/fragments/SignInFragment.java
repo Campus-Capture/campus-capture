@@ -90,14 +90,8 @@ public class SignInFragment extends Fragment {
         mAuth = context.getFirebaseAuth();
 
         // Init listeners on the buttons
-        setActuallyNoButtonListener();
         setLoginButtonListener();
-        setPasswordForgottenListener();
 
-        setResendButtonListener();
-        if(firstLogin){
-            resendVisibilityDelay();
-        }
 
         // Inflate the layout for this fragment
         return view;
@@ -131,7 +125,7 @@ public class SignInFragment extends Fragment {
      * Sets the OnClickListener on the "login_button"
      */
     private void setLoginButtonListener(){
-        login_button.setOnClickListener(view -> loginClicked());
+        login_button.setOnClickListener(view -> currentActivity.goToMainActivity());
     }
 
     /**

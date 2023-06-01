@@ -12,18 +12,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.campus_capture.bootcamp.R;
+import com.github.campus_capture.bootcamp.authentication.Section;
 import com.github.campus_capture.bootcamp.firebase.BackendInterface;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreItem;
 import com.github.campus_capture.bootcamp.scoreboard.ScoreRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ScoreboardFragment#newInstance} factory method to
+ * Use the {@link ScoreboardFragment} factory method to
  * create an instance of this fragment.
  */
 public class ScoreboardFragment extends Fragment {
+
+    private final List<ScoreItem> mockScores = new ArrayList<>();
 
     private BackendInterface backendInterface;
 
@@ -50,15 +54,24 @@ public class ScoreboardFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.scoreboard_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        backendInterface.getScores().thenAccept((scores) ->{
+        if(MapsFragment.endOfTakeOver) {
+            mockScores.add(new ScoreItem(Section.IN.name(), 3));
 
-            recyclerView.setAdapter(new ScoreRecyclerViewAdapter(scores));
+            mockScores.add(new ScoreItem(Section.AR.name(), 2));
+        } else {
 
-        }).exceptionally( e -> {
-            // TODO handle errors better ?
-            Log.e("ScoreboardFragmennt", "Error ocurred when fetching scores");
-            return null;
-        });
+            mockScores.add(new ScoreItem(Section.AR.name(), 3));
+
+            mockScores.add(new ScoreItem(Section.IN.name(), 2));
+        }
+
+        for (Section s: Section.values()) {
+            if(!s.equals(Section.AR) && !s.equals(Section.IN)) {
+                mockScores.add(new ScoreItem(s.name(), 1));
+            }
+        }
+
+        recyclerView.setAdapter(new ScoreRecyclerViewAdapter(mockScores));
 
         return view;
     }

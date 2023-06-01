@@ -40,39 +40,8 @@ public class AuthenticationActivity extends AppCompatActivity {
 
         // Init Auth (Authenticater)
         AppContext context = AppContext.getAppContext();
-        FirebaseAuth auth = context.getFirebaseAuth();
 
-        mSharedPreferences = getPreferences(MODE_PRIVATE);
-
-        FirebaseBackend database = new FirebaseBackend();
-
-        // Check if user had already registered and if the email is verified.
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if(currentUser != null && currentUser.isEmailVerified()){
-
-            //Check if the user had already logged in (is in the DB)
-            database.isUserInDB(currentUser.getUid()).thenAccept((isIn) -> {
-                if(isIn){
-                    if(mSharedPreferences.contains(currentUser.getUid())){
-                        // Fetch section info from disk
-                        readUserInfoFromDisk(currentUser.getUid());
-                    } else {
-                        database.getUserSection(currentUser.getUid()).thenAccept((section -> {
-                            mSharedPreferences.edit().putString("Section", section.name()).apply();
-                            mSharedPreferences.edit().putString("UID", currentUser.getUid()).apply();
-                            User.setSection(section);
-                            User.setUid(currentUser.getUid());
-                        }));
-                    }
-                    goToMainActivity();
-                } else {
-                    // Go to sign in fragment
-                    goToSignInFragment(currentUser.getEmail(), "", false);
-                }
-            });
-        } else {
-            goToRegisterFragment();
-        }
+        goToRegisterFragment();
 
     }
 

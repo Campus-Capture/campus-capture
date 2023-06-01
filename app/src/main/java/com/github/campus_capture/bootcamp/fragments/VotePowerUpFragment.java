@@ -13,9 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.campus_capture.bootcamp.R;
 import com.github.campus_capture.bootcamp.firebase.BackendInterface;
+import com.github.campus_capture.bootcamp.shop.PowerUp;
 import com.github.campus_capture.bootcamp.shop.PowerUpRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -27,9 +30,15 @@ public class VotePowerUpFragment extends Fragment {
 
     private int userMoney;
 
+    public static int mockMoney = 20;
+
+    public static List<PowerUp> mockPowerUps;
+
 
     public VotePowerUpFragment(BackendInterface backend) {
         backendInterface = backend;
+        mockPowerUps = new ArrayList<>();
+        mockPowerUps.add(new PowerUp("Double attacks", 20, 30));
     }
 
     @Override
@@ -45,22 +54,15 @@ public class VotePowerUpFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_vote_power_up, container, false);
 
-        backendInterface.getMoney().thenAccept((money) -> {
-            userMoney = money;
-            ((TextView) view.findViewById(R.id.power_up_money)).setText(String.format(Locale.ENGLISH, "Money: %d", money));
 
-        }).exceptionally(e->{
-            Log.e("VotePowerUpFragment", "Error occurred when fetching money: "+e);
-            return null;
-        });
+        ((TextView) view.findViewById(R.id.power_up_money)).setText(String.format(Locale.ENGLISH, "Money: %d", mockMoney));
+
+
 
         RecyclerView recyclerView = view.findViewById(R.id.power_up_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        backendInterface.getPowerUps().thenAccept((powerUpList) -> recyclerView.setAdapter(new PowerUpRecyclerViewAdapter(powerUpList, userMoney, backendInterface, (TextView) view.findViewById(R.id.power_up_money)))).exceptionally(e -> {
-            Log.e("VotePowerUpFragmennt", "Error ocurred when fetching power ups: "+e);
-            return null;
-        });
+        recyclerView.setAdapter(new PowerUpRecyclerViewAdapter(mockPowerUps, mockMoney, backendInterface, (TextView) view.findViewById(R.id.power_up_money)));
 
         return view;
     }

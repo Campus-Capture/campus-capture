@@ -1,5 +1,7 @@
 package com.github.campus_capture.bootcamp.fragments;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
@@ -10,6 +12,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +76,9 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
     private Map<Polygon, Marker> zoneLabels;
     public static boolean locationOverride = false;
     public static LatLng fixedLocation = null;
+
+    public static boolean attacked = false;
+    public static boolean endOfTakeOver = false;
     private final View.OnClickListener attackListener = v ->
     {
         LatLng currentPosition = getCurrentPosition();
@@ -83,20 +91,17 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
             Zone currentZone = findCurrentZone(currentPosition);
 
             if(currentZone != null) {
+                attacked = true;
+                Toast.makeText(v.getContext(), getString(R.string.vote_zone_toast), Toast.LENGTH_SHORT).show();
+                scheduler.confirmAttack();
 
-                backendInterface.voteZone(User.getUid(), User.getSection(), currentZone.getName())
-                        .thenAccept(result -> {
-                            if (result) {
-                                Toast.makeText(v.getContext(), getString(R.string.vote_zone_toast), Toast.LENGTH_SHORT).show();
-                                scheduler.confirmAttack();
-                            } else {
-                                Toast.makeText(v.getContext(), getString(R.string.op_failed_toast_text), Toast.LENGTH_SHORT).show();
-                            }
-                        }).exceptionally( e -> {
-                            // TODO handle errors better ?
-                            Log.e("MapFragment", "Error occurred when voting");
-                            return null;
-                        });
+                final Handler handler = new Handler(Looper.getMainLooper());
+                handler.postDelayed(() -> {
+                    endOfTakeOver = true;
+                    scheduler.startColorRefresh();
+
+                }, SECONDS.toMillis(10));
+
             }
             else
             {
@@ -191,33 +196,46 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
     private void refreshCurrentAttacks(Marker m, GoogleMap map)
     {
         Section zoneOwner = scheduler.getCurrentZoneOwner(m.getTitle());
+
         String displayOwner = (zoneOwner == null) ? "None" : zoneOwner.toString();
-        if(scheduler.isTakeover())
-        {
-            backendInterface.getCurrentAttacks(m.getTitle()).thenAccept(attacks -> {
-                if(!attacks.isEmpty())
-                {
-                    StringBuilder indicator = new StringBuilder("Current owner: ");
-                    indicator.append(displayOwner);
-                    indicator.append("<br>Current attacks:<br>");
-                    for (Map.Entry<Section, Integer> entry : attacks.entrySet())
-                    {
-                        if (entry.getValue() > 0) {
-                            indicator.append(entry.getKey().toString())
-                                    .append(": ")
-                                    .append(entry.getValue())
-                                    .append("<br>");
-                        }
-                    }
-                    m.setSnippet(indicator.toString());
+
+        Map<Section, Integer> attacks = new HashMap<>();
+
+        if (m.getTitle() != null && m.getTitle().equals("Agora")) {
+            if(!endOfTakeOver) {
+                displayOwner = Section.AR.name();
+
+                if (!attacked) {
+                    attacks.put(Section.AR, 2);
+                    attacks.put(Section.IN, 1);
+                } else {
+                    attacks.put(Section.AR, 2);
+                    attacks.put(Section.IN, 3);
                 }
-            }).exceptionally(e -> {
-                Log.e("MapsFragment", "Failed retrieving the current attacks for the zone " + m.getTitle());
-                return null;
-            });
+            } else {
+                displayOwner = Section.IN.name();
+
+            }
         }
-        else
+
+
+
+        if(!attacks.isEmpty())
         {
+            StringBuilder indicator = new StringBuilder("Current owner: ");
+            indicator.append(displayOwner);
+            indicator.append("<br>Current attacks:<br>");
+            for (Map.Entry<Section, Integer> entry : attacks.entrySet())
+            {
+                if (entry.getValue() > 0) {
+                    indicator.append(entry.getKey().toString())
+                            .append(": ")
+                            .append(entry.getValue())
+                            .append("<br>");
+                }
+            }
+            m.setSnippet(indicator.toString());
+        } else {
             m.setSnippet("Current owner: " + displayOwner);
         }
         m.showInfoWindow();
@@ -346,16 +364,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
      */
     public Zone findCurrentZone(LatLng position)
     {
-        ZoneDAO zoneDAO = zoneDB.zoneDAO();
-        List<Zone> zones = zoneDAO.getAll();
-        for(Zone z : zones)
-        {
-            if(PolyUtil.containsLocation(position, z.getVertices(), false))
-            {
-                return z;
-            }
-        }
-        return null;
+        return zoneDB.zoneDAO().findByName("Agora");
     }
 
     /**
@@ -365,26 +374,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
      */
     public LatLng getCurrentPosition()
     {
-        if(!locationOverride)
-        {
-            Location loc = null;
-            try
-            {
-                if (!permissionDenied)
-                {
-                    loc = map.getMyLocation();
-                }
-            }
-            catch (Exception e)
-            {
-                Log.e("MapsFragment", "Failed retrieving location");
-            }
-            return (loc == null) ? null : new LatLng(loc.getLatitude(), loc.getLongitude());
-        }
-        else
-        {
-            return fixedLocation;
-        }
+        return new LatLng(46.5184848,6.5618875);
     }
 
     @Override

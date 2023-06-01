@@ -38,7 +38,7 @@ import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
-    public static BackendInterface backendInterface = new FirebaseBackend();
+    public static BackendInterface backendInterface;
 
     /**
      * Required empty constructor, which will set the placeholder as the back-end
@@ -70,11 +70,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Add a listener for the navigation drawer
         NavigationView navView = findViewById(R.id.nav_view);
         navView.setNavigationItemSelectedListener(this);
-
-        //If the user is not registered, the shop button will be made invisible
-        if(User.getUid() == null){
-            navView.getMenu().findItem(R.id.nav_power_up).setVisible(false);
-        }
     }
 
     /**
@@ -187,10 +182,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(item.getItemId())
         {
             case R.id.action_logout:
-                logOut();
+
                 break;
             case R.id.action_invite:
-                sendInvite();
+
                 break;
             default:
                 break;
@@ -221,9 +216,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         User.setName(null);
         User.setUid(null);
         User.setSection(null);
-
-        AppContext context = (AppContext) getApplicationContext();
-        context.getFirebaseAuth().signOut();
 
         // Use this to pass the name of the origin activity
         //log_in_intent.putExtra("message", "From: " + FirstActivity.class.getSimpleName());

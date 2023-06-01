@@ -70,14 +70,9 @@ public class RegisterFragment extends Fragment {
         email = view.findViewById(R.id.register_email_address);
         password = view.findViewById(R.id.register_password);
 
-        // Init Auth (Authentificater)
-        AppContext context = AppContext.getAppContext();
-        mAuth = context.getFirebaseAuth();
 
         // Init listeners on the buttons
         setAlreadyRegisteredButtonListener();
-        setRegisterButtonListener();
-        setSpectatorButtonListener();
         // Inflate the layout for this fragment
         return view;
     }

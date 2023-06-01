@@ -74,28 +74,16 @@ public class PowerUpRecyclerViewAdapter extends RecyclerView.Adapter<PowerUpRecy
             if(spendValue > userMoney){
                 Toast.makeText(powerUpMoney.getContext(), "Well... you are too broke.", Toast.LENGTH_LONG).show();
             } else {
-                backendInterface.sendMoney(powerUpName, spendValue).thenAccept(b -> {
-                        if(b)
-                        {
-                            userMoney -= spendValue;
-                            powerUpMoney.setText(String.format(Locale.ENGLISH, "Money: %d", userMoney));
 
-                            fund += spendValue;
-                            holder.powerUpFund.setText(String.format(Locale.ENGLISH, "Teams fund: %d", fund));
+                userMoney -= spendValue;
+                powerUpMoney.setText(String.format(Locale.ENGLISH, "Money: %d", userMoney));
 
-                            holder.powerUpProgressBar.setProgress(100*fund/value);
+                fund += spendValue;
+                holder.powerUpFund.setText(String.format(Locale.ENGLISH, "Teams fund: %d", fund));
 
-                            holder.powerUpSeekBar.setMax(userMoney);
-                        }
-                        else
-                        {
-                            Toast.makeText(powerUpMoney.getContext(), "Server refused", Toast.LENGTH_LONG).show();
-                        }
-                }).exceptionally(e -> {
-                    Toast.makeText(powerUpMoney.getContext(), "Failed to buy item", Toast.LENGTH_LONG).show();
-                    Log.e("Shop_Screen", "Failed to buy item: " + e.getMessage());
-                    return null;
-                });
+                holder.powerUpProgressBar.setProgress(100*fund/value);
+
+                holder.powerUpSeekBar.setMax(userMoney);
             }
         });
     }
