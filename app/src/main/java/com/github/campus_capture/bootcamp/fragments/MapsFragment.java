@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -183,6 +184,25 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
         });
 
         scheduler.startColorRefresh();
+
+        String polygons[]  = polygonMap.keySet().toArray(new String[0]);
+
+        new CountDownTimer(1000000, 200) {
+            int iter = 0;
+            @Override
+            public void onTick(long millisUntilFinished) {
+                if(iter > 100 && iter < polygons.length + 100)
+                {
+                    polygonMap.get(polygons[iter - 100]).setFillColor(SectionColors.getColor(Section.SC, getContext()));
+                }
+                iter++;
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        }.start();
     };
 
     /**
