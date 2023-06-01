@@ -65,9 +65,6 @@ public class ScoreboardFragment extends Fragment {
             mockScores.add(new ScoreItem(Section.IN.name(), 2));
         }
 
-        mockScores.add(new ScoreItem(Section.AR.name(), 3));
-
-
         for (Section s: Section.values()) {
             if(!s.equals(Section.AR) && !s.equals(Section.IN) && !s.equals(Section.NONE)) {
                 mockScores.add(new ScoreItem(s.name(), 2));

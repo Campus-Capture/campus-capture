@@ -74,7 +74,6 @@ public class MapScheduler {
         put("Sat Terrasse", Section.AR);
 
         put("MED", Section.CGC);
-        put("CM CE", Section.EL);
         put("ELD ELG ELH DLL", Section.GC);
         put("BI", Section.EL);
         }};
@@ -103,7 +102,6 @@ public class MapScheduler {
         put("Sat Terrasse", Section.AR);
 
         put("MED", Section.CGC);
-        put("CM CE", Section.EL);
         put("ELD ELG ELH DLL", Section.GC);
         put("BI", Section.EL);
     }};
@@ -212,7 +210,8 @@ public class MapScheduler {
     {
         hasAttacked = true;
         showButtons();
-        buttonTimer = createTimer(timerButton, 0);
+        buttonTimer.cancel();
+        buttonTimer = createTimer(timerButton, 45*MILLIS_PER_MIN+10*MILLIS_PER_SEC);
         buttonTimer.start();
     }
 
@@ -226,7 +225,8 @@ public class MapScheduler {
 
         Log.i("MapsFragment", "Millis since hour: " + millisSinceHour);
 
-
+        buttonTimer = createTimer(timerButton, 45*MILLIS_PER_MIN-10*MILLIS_PER_SEC);
+        buttonTimer.start();
 
 
         if(millisSinceHour < TAKEOVER_DURATION)
@@ -303,7 +303,7 @@ public class MapScheduler {
      */
     private CountDownTimer createTimer(Button button, long hourDelta)
     {
-        return new CountDownTimer(MILLIS_PER_MIN*45 + MILLIS_PER_SEC*10, 1000) {
+        return new CountDownTimer(hourDelta, 1000) {
             @SuppressLint("SetTextI18n")
             @Override
             public void onTick(long millisUntilFinished) {
