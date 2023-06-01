@@ -207,7 +207,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
 
                 if (!attacked) {
                     attacks.put(Section.AR, 2);
-                    attacks.put(Section.IN, 1);
+                    attacks.put(Section.IN, 2);
                 } else {
                     attacks.put(Section.AR, 2);
                     attacks.put(Section.IN, 3);

@@ -52,50 +52,60 @@ public class MapScheduler {
 
     private final Map<String, Section> zonesOwnersBeforeEndOfTakeover = new HashMap<String, Section>(){{
         put("Agora", Section.AR);
-        put("BC", Section.AR);
-        put("BS", Section.IN);
-        put("CE", Section.IN);
-        put("CM ME", Section.IN);
-        put("CO Est", Section.GC);
-        put("CO Ouest", Section.MT);
-        put("ELA ELB", Section.MX);
-        put("ELL", Section.GM);
-        put("Forum RLC", Section.GM);
-        put("INF INJ", Section.MA);
-        put("INM" , Section.GC);
-        put("INN INR Terasse", Section.SC);
-        put("MA", Section.IN);
-        put("MXC MXD", Section.PH);
-        put("MXE MXH", Section.SV);
-        put("MXG Terrasse", Section.EL);
-        put("Patio RLC", Section.IN);
-        put("SG1", Section.AR);
-        put("SV AI", Section.MT);
-        put("Sat Terrasse", Section.IN);
+        put("BC", Section.CGC);
+        put("BS", Section.EL);
+        put("CE", Section.GC);
+        put("CM ME", Section.MA);
+        put("CO Est", Section.GM);
+        put("CO Ouest", Section.IN);
+        put("ELA ELB", Section.MT);
+        put("ELL", Section.MA);
+        put("Forum RLC", Section.MX);
+        put("INF INJ", Section.MT);
+        put("INM" , Section.MX);
+        put("INN INR Terasse", Section.PH);
+        put("MA", Section.PH);
+        put("MXC MXD", Section.SC);
+        put("MXE MXH", Section.SC);
+        put("MXG Terrasse", Section.SIE);
+        put("Patio RLC", Section.SIE);
+        put("SG1", Section.IN);
+        put("SV AI", Section.AR);
+        put("Sat Terrasse", Section.AR);
+
+        put("MED", Section.CGC);
+        put("CM CE", Section.EL);
+        put("ELD ELG ELH DLL", Section.GC);
+        put("BI", Section.EL);
         }};
 
     private final Map<String, Section> zonesOwnersAfterEndOfTakeover = new HashMap<String, Section>(){{
         put("Agora", Section.IN);
-        put("BC", Section.AR);
-        put("BS", Section.IN);
-        put("CE", Section.IN);
-        put("CM ME", Section.IN);
-        put("CO Est", Section.GC);
-        put("CO Ouest", Section.MT);
-        put("ELA ELB", Section.MX);
-        put("ELL", Section.GM);
-        put("Forum RLC", Section.GM);
-        put("INF INJ", Section.MA);
-        put("INM", Section.GC);
-        put("INN INR Terasse", Section.SC);
-        put("MA", Section.IN);
-        put("MXC MXD", Section.PH);
-        put("MXE MXH", Section.SV);
-        put("MXG Terrasse", Section.EL);
-        put("Patio RLC", Section.IN);
-        put("SG1", Section.AR);
-        put("SV AI", Section.MT);
-        put("Sat Terrasse", Section.IN);
+        put("BC", Section.CGC);
+        put("BS", Section.EL);
+        put("CE", Section.GC);
+        put("CM ME", Section.MA);
+        put("CO Est", Section.GM);
+        put("CO Ouest", Section.IN);
+        put("ELA ELB", Section.MT);
+        put("ELL", Section.MA);
+        put("Forum RLC", Section.MX);
+        put("INF INJ", Section.MT);
+        put("INM" , Section.MX);
+        put("INN INR Terasse", Section.PH);
+        put("MA", Section.PH);
+        put("MXC MXD", Section.SC);
+        put("MXE MXH", Section.SC);
+        put("MXG Terrasse", Section.SIE);
+        put("Patio RLC", Section.SIE);
+        put("SG1", Section.IN);
+        put("SV AI", Section.AR);
+        put("Sat Terrasse", Section.AR);
+
+        put("MED", Section.CGC);
+        put("CM CE", Section.EL);
+        put("ELD ELG ELH DLL", Section.GC);
+        put("BI", Section.EL);
     }};
 
 
@@ -202,6 +212,8 @@ public class MapScheduler {
     {
         hasAttacked = true;
         showButtons();
+        buttonTimer = createTimer(timerButton, 0);
+        buttonTimer.start();
     }
 
     /**
@@ -214,8 +226,8 @@ public class MapScheduler {
 
         Log.i("MapsFragment", "Millis since hour: " + millisSinceHour);
 
-        buttonTimer = createTimer(timerButton, millisSinceHour);
-        buttonTimer.start();
+
+
 
         if(millisSinceHour < TAKEOVER_DURATION)
         {
@@ -291,7 +303,7 @@ public class MapScheduler {
      */
     private CountDownTimer createTimer(Button button, long hourDelta)
     {
-        return new CountDownTimer(MILLIS_PER_HOUR - hourDelta, 1000) {
+        return new CountDownTimer(MILLIS_PER_MIN*45 + MILLIS_PER_SEC*10, 1000) {
             @SuppressLint("SetTextI18n")
             @Override
             public void onTick(long millisUntilFinished) {
