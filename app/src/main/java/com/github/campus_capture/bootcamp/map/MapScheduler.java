@@ -211,7 +211,7 @@ public class MapScheduler {
         hasAttacked = true;
         showButtons();
         buttonTimer.cancel();
-        buttonTimer = createTimer(timerButton, 45*MILLIS_PER_MIN+10*MILLIS_PER_SEC);
+        buttonTimer = createTimer(timerButton, 45*MILLIS_PER_MIN+5*MILLIS_PER_SEC);
         buttonTimer.start();
     }
 

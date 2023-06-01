@@ -100,7 +100,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
                     endOfTakeOver = true;
                     scheduler.startColorRefresh();
 
-                }, SECONDS.toMillis(10));
+                }, SECONDS.toMillis(5));
 
             }
             else
