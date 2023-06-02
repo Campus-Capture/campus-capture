@@ -84,7 +84,7 @@ public class SignInFragment extends Fragment {
         password = view.findViewById(R.id.login_password);
 
         //Set text
-        email.setText("not.steveJobs@epfl.ch");
+        email.setText("notSteveJobs@epfl.ch");
         password.setText("DefinitelyNotSteveJobs");
 
         // Init Auth (Authenticater)

@@ -69,7 +69,7 @@
         android:layout_height="50dp"
         android:hint="@string/login_email_string"
         android:ems="10"
-        android:textSize="20sp"
+        android:textSize="19sp"
         android:inputType="textEmailAddress"
         android:theme="@style/edit_text"
         app:layout_constraintBottom_toBottomOf="parent"
