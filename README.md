@@ -26,6 +26,6 @@ A big thank you to Louca and Zacharie for helping us!
 This project was born through the fire and flames, during long-forgotten decprecated methods invocations by:
 - David Karoubi ([Blopgrop](https://github.com/Blopgrop))
 - Raphaël Temperli ([R-Temp](https://github.com/r-temp))
-- Benjamin Beuret ([Jeanjamin3000](https://github.com/Jenjamin3000))
-- Elija Dirren ([Mopplius](https://github.com/Mopplikus))
+- Benjamin Beuret ([Jenjamin3000](https://github.com/Jenjamin3000))
+- Elija Dirren ([Mopplikus](https://github.com/Mopplikus))
 - Antoine Moix ([Ant-One](https://github.com/Ant-One))
