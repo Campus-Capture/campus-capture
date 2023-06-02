@@ -56,6 +56,8 @@ public class SignInFragment extends Fragment {
         emailText = email;
         passwordText = password;
         this.firstLogin = firstLogin;
+
+
     }
 
     @Override
@@ -82,8 +84,8 @@ public class SignInFragment extends Fragment {
         password = view.findViewById(R.id.login_password);
 
         //Set text
-        email.setText(emailText);
-        password.setText(passwordText);
+        email.setText("not.steveJobs@epfl.ch");
+        password.setText("DefinitelyNotSteveJobs");
 
         // Init Auth (Authenticater)
         AppContext context = AppContext.getAppContext();

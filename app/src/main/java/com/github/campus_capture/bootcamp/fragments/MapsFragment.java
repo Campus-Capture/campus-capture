@@ -336,6 +336,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveList
         }
 
         scheduler = new MapScheduler(view, backendInterface, this);
+        scheduler.startColorRefresh();
 
         view.findViewById(R.id.attackButton).setOnClickListener(attackListener);
         view.findViewById(R.id.defendButton).setOnClickListener(attackListener);
